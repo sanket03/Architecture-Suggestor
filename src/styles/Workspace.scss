@@ -1,0 +1,12 @@
+@import './Diagram.scss';
+@import './Questions.scss';
+
+#workspace {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    grid-template-areas: "questions diagram";
+    width: 80%;
+    height: 60%;
+    margin: auto;
+    grid-column-gap: 15px;
+}

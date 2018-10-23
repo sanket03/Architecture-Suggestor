@@ -1,0 +1,23 @@
+#questions-container {
+    grid-area: questions;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+
+    .question {
+        margin: 20px 0;
+        .question-title {
+            margin-left: 5px;
+        }
+    
+        .option {
+            margin: 5px 0 5px 10px;
+        }
+    }
+
+    .disable {
+        opacity: 0.3;
+        pointer-events: none;
+    }
+}
