@@ -2,143 +2,136 @@ const architectureDataObj = {
     '1' : {
         'name':'Data Warehousing and Reporting',
         'type':'some_type',
-        'levels': [
-            {
-                'level':'1',
-                'name':'Upstream Data Sources',
-                'options':[
-                    {
-                        'id':'111',
-                        'name':'Azure SQL DB',
-                        'isActive' : false,
-                        'parent_entities':[]
-                    },
-                    {
-                        'id':'112',
-                        'name':'Stream Sources',
-                        'isActive' : false,
-                        'parent_entities':[]
+        'levels': {
+                '1': {
+                    'name':'Upstream Data Sources',
+                    'isActive':false,
+                    'options': {
+                        '111': {
+                                'name':'Azure SQL DB',
+                                'isActive' : false,
+                                'parent_entities':[]
+                            },
+                        '112':
+                            {
+                                'name':'Stream Sources',
+                                'isActive' : false,
+                                'parent_entities':[]
+                            }
                     }
-                ]
-            },
-            {
-                'level':'2',
-                'name':'Ingestion',
-                'options':[
-                    {
-                        'id':'111',
-                        'name':'Azure SQL DB',
-                        'isActive' : false,
-                        'parent_entities':['111']
-                    },
-                    {
-                        'id':'113',
-                        'name':'ADLS',
-                        'isActive' : false,
-                        'parent_entities':['111']
-                    },
-                    {
-                        'id':'114',
-                        'name':'Event Hub',
-                        'isActive' : false,
-                        'parent_entities':['112']
+                },
+                '2': {
+                    'name':'Ingestion',
+                    'isActive':false,
+                    'options': {
+                        '111': {
+                                'name':'Azure SQL DB',
+                                'isActive' : false,
+                                'parent_entities':['111']
+                            },
+                        '113':
+                            {
+                                'name':'ADLS',
+                                'isActive' : false,
+                                'parent_entities':['111']
+                            },
+                        '114':
+                        {
+                            'name':'Event Hub',
+                            'isActive' : false,
+                            'parent_entities':['112']
+                        }
                     }
-                ]
-            },
-            {
-                'level':'3',
-                'name':'Staging',
-                'options':[
-                    {
-                        'id':'111',
-                        'name':'Azure SQL DB',
-                        'isActive' : false,
-                        'parent_entities':['111']
-                    },
-                    {
-                        'id':'115',
-                        'name':'ADW',
-                        'isActive' : false,
-                        'parent_entities':['111']
-                    },
-                    {
-                        'id':'116',
-                        'name':'AML',
-                        'isActive' : false,
-                        'parent_entities':['111,112']
-                    },
-                    {
-                        'id':'117',
-                        'name':'Cognitive Services',
-                        'isActive' : false,
-                        'parent_entities':['111,112']
-                    },
-                    {
-                        'id':'118',
-                        'name':'HD Insights',
-                        'isActive' : false,
-                        'parent_entities':['111,112']
-                    },
-                    {
-                        'id':'119',
-                        'name':'Stream Analytics',
-                        'isActive' : false,
-                        'parent_entities':['112']
+                },
+                '3': {
+                    'name':'Staging',
+                    'isActive':false,
+                    'options': {
+                        '111': {
+                                'name':'Azure SQL DB',
+                                'isActive' : false,
+                                'parent_entities':['111']
+                            },
+                        '115':
+                            {
+                                'name':'ADW',
+                                'isActive' : false,
+                                'parent_entities':['111']
+                            },
+                        '116':
+                        {
+                            'name':'AML',
+                            'isActive' : false,
+                            'parent_entities':['111','114']
+                        },
+                        '117':
+                        {
+                            'name':'Cognitive Services',
+                            'isActive' : false,
+                            'parent_entities':['111','114']
+                        },
+                        '118':
+                        {
+                            'name':'HD Insights',
+                            'isActive' : false,
+                            'parent_entities':['111','114']
+                        },
+                        '119':
+                        {
+                            'name':'Stream Analytics',
+                            'isActive' : false,
+                            'parent_entities':['114']
+                        }
                     }
-                ]
-            },
-            {
-                'level':'4',
-                'name':'Publishing',
-                'options':[
-                    {
-                        'id':'111',
-                        'name':'Azure SQL DB',
-                        'isActive' : false,
-                        'parent_entities':['111,116,117']
-                    },
-                    {
-                        'id':'115',
-                        'name':'ADW',
-                        'isActive' : false,
-                        'parent_entities':['115','116','117','118','119']
-                    },
-                    {
-                        'id':'116',
-                        'name':'AML Web Services',
-                        'isActive' : false,
-                        'parent_entities':['115','116','117','118','119']
-                    },
-                    {
-                        'id':'117',
-                        'name':'Cloud Services',
-                        'isActive' : false,
-                        'parent_entities':['115','116','117','118','119']
+                },
+                '4':{
+                    'name':'Publishing',
+                    'isActive':false,
+                    'options': {
+                        '111': {
+                                'name':'Azure SQL DB',
+                                'isActive' : false,
+                                'parent_entities':['111','116','117']
+                            },
+                        '115':
+                            {
+                                'name':'ADW',
+                                'isActive' : false,
+                                'parent_entities':['115','116','117','118','119']
+                            },
+                        '116':
+                        {
+                            'name':'AML Web Services',
+                            'isActive' : false,
+                            'parent_entities':['115','116','117','118','119']
+                        },
+                        '121':
+                        {
+                            'name':'Cloud Services',
+                            'isActive' : false,
+                            'parent_entities':['115','116','117','118','119']
+                        }
                     }
-                ]
-            },
-            {
-                'level':'5',
-                'name':'Consumption',
-                'options':[
-                    {
-                        'id':'122',
-                        'name':'Power BI',
-                        'isActive' : false,
-                        'parent_entities':['111,115,120,121']
-                    },
-                    {
-                        'id':'123',
-                        'name':'HTML Reports',
-                        'isActive' : false,
-                        'parent_entities':['111,115,120,121']
+                },
+                '5': {
+                    'name':'Consumption',
+                    'isActive':false,
+                    'options': {
+                        '122': {
+                                'name':'Power BI',
+                                'isActive' : false,
+                                'parent_entities':['116','111','115','121']
+                        },
+                        '123':{
+                                'name':'HTML Reports',
+                                'isActive' : false,
+                                'parent_entities':['116','111','115','121']
+                        }
                     }
-                ]
-            },
-        ]
+                }
+            }
     }
 }
-
 
 const questionsObj = {
     '1': {
@@ -158,17 +151,19 @@ const questionsObj = {
         ],
         '3': [
             {
-                'question' : 'Do you want to apply machine learning on your data?',
-                'choices' : 'Yes|No',
-                'id':'3'
-            }, 
-            {
                 'question' : 'Do you need to embrace the power of Cognitive services?',
                 'choices' : 'Yes|No',
                 'id':'4'
             }
         ],
         '4': [
+            {
+                'question' : 'Do you want to apply machine learning on your data?',
+                'choices' : 'Yes|No',
+                'id':'3'
+            }
+        ],
+        '5': [
             {
                 'question' : 'Is there a need to consume data from multiple sources and report it without much development effort?',
                 'choices' : 'Yes|No',

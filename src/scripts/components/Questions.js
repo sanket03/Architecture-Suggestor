@@ -4,23 +4,18 @@ export default class Questions extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {
-      activeQuestion: new Set([1])
-    }
-
-    this.setActiveQuestion = this.setActiveQuestion.bind(this);
   }
 
-  renderQuestions(questionObj) {
+  renderQuestions({questionsObj, activeQuestion}) {
     let questionCount = 0;
-    return Object.keys(questionObj).map(level => 
-      questionObj[level].map((obj, index) => {
+    return Object.keys(questionsObj).map(level => 
+      questionsObj[level].map((obj, index) => {
         questionCount = questionCount + 1;
         return (
           <div 
             key = {index}
-            className = { this.state.activeQuestion.has(questionCount) ? 'question' : 'disable question'}
-            data-filterid = {questionObj.id}
+            className = { activeQuestion.has(questionCount) ? 'question' : 'disable question'}
+            data-id = {obj['id']}
             data-level = {level}
           >
           <span>{questionCount}.</span>
@@ -44,25 +39,22 @@ export default class Questions extends Component {
           type = 'radio'
           id = {questionObj.id + index}
           name = {questionCount}
-          onChange = {this.setActiveQuestion}
+          onChange = {this.props.onOptionSelectHandler}
         />
-        <label htmlFor={questionObj.id + index}>
+        <label 
+          htmlFor={questionObj.id + index}
+          className='pointer'
+        >
           {choice}
         </label>
       </div>
     ))
   }
 
-  setActiveQuestion(event) {
-    this.setState({
-      activeQuestion: this.state.activeQuestion.add(parseInt(event.target.name)+1)
-    });
-  }
-
   render() {
     return (
       <div id='questions-container'>
-        {this.renderQuestions(this.props.questionsObj)}
+        {this.renderQuestions(this.props)}
       </div>
     );
   }

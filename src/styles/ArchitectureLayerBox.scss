@@ -1,0 +1,20 @@
+.outer-box {
+    min-height: 35%;
+    max-height: 80%;
+    width: 125px;
+    margin: 0 25px;
+
+    .inner-box {
+        display: flex;
+        flex-direction: column;
+        background-color: #F7F7F7;
+
+        .hide {
+            display: none;
+        }   
+    }
+}
+
+.hide {
+    visibility: hidden;
+}   

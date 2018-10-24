@@ -39,7 +39,7 @@ export default class App extends Component {
           selectArchitectureType= {this.selectArchitectureType}
         />
         <Workspace 
-          architectureDataObj={solutionsList[this.state.selectedSolutionId]} 
+          architectureDataObj={architectureDataObj[this.state.selectedSolutionId]} 
           filterAzureIdentityMapping={filterAzureIdentityMapping}
           questionsObj={questionsObj[this.state.selectedSolutionId]}
           />

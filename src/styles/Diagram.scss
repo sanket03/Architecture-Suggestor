@@ -2,4 +2,15 @@
     grid-area: diagram;
     background-color: #fff;
     border-radius: 10px;
+    padding: 10px;
+    position: relative;
+
+    #diagram-wrapper {
+        display: flex;
+        justify-content: flex-start;
+        color: black;
+        position: absolute;
+        top: 50%;
+        transform: translatey(-50%);
+    }
 }
