@@ -7,8 +7,6 @@ export default class Diagram extends Component {
     super(props);
   }
 
-
-
   render() {
     return (
       <div id='diagram-container'>
