@@ -1,0 +1,88 @@
+// Variables for media queries
+$media-desktop-width: 992px;
+$media-tablet-width: 768px;
+
+// Color codes
+$color-light-grey: #f4f4f4;
+$color-dark-grey: #3e3d4d;
+$color-white: #fff;
+
+// Mixin for setting height and width 
+@mixin dimension($width: auto, $height: auto) {
+    width: $width;
+    height: $height;
+}
+
+// Mixin for setting min/max width/height
+@mixin minmaxDimension($min-width: 0, $max-width: none, $min-height: 0, $max-height: none) {
+    min-width: $min-width;
+    max-width: $max-height;
+    min-height: $min-height;
+    max-height: $max-height;
+}
+// Mixin for setting flex properties
+@mixin flexbox($direction: row, $justify-content: flex-start, $align-items: stretch) {
+    display: flex;
+    flex-direction: $direction;
+    justify-content: $justifyContent;
+    align-items: $alignItems
+}
+
+// Mixin for setting element padding
+@mixin padding($top: 0, $right: 0, $bottom: 0, $left: 0, $all: none) {
+    @if $all == none {
+        padding-top: $top;
+        padding-right: $right;
+        padding-bottom: $bottom;
+        padding-left: $left;
+    } @else {
+        padding: $all;
+    }
+}
+
+// Mixin for setting element margin
+@mixin margin($top: 0, $right: 0, $bottom: 0, $left: 0, $all: none) {
+    @if $all == none {
+        margin-top: $top;
+        margin-right: $right;
+        margin-bottom: $bottom;
+        margin-left: $left;
+    } @else {
+        margin: $all;
+    }
+}
+
+// Mixin for element position
+@mixin position($type: relative, $top:auto, $right:auto, $bottom: auto, $left:auto, $zindex: auto) {
+    position: $type;
+    top: $top;
+    right: $right;
+    bottom: $bottom;
+    left: $left;
+    z-index: $zindex;
+}
+
+// Mixin for fonts
+@mixin font($font-style: normal, $font-variant: normal, $font-weight: normal, $font-size: medium, $font-family: 'Segoe UI') {
+    font-style: $font-style;
+    font-variant: $font-variant;
+    font-weight: $font-weight;
+    font-size: $font-size;
+    font-family: $font-family;
+}
+
+// Mixin for background color and font color
+@mixin color($bg-color: inherit, $color: inherit) {
+    color: $color;
+    background-color: $bg-color;
+}
+
+//Mixin for css grids
+@mixin parentPropsInCssGrid($grid-template-columns: none, $grid-template-rows: none, $grid-template-areas: none, $grid-column-gap: 0, $grid-row-gap: 0) {
+    display: grid;
+    grid-template-columns: $grid-template-columns;
+    grid-template-rows: $grid-template-rows;
+    grid-template-areas: $grid-template-areas;
+    grid-column-gap: $grid-column-gap;
+    grid-row-gap: $grid-row-gap;
+}

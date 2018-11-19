@@ -1,11 +1,13 @@
+@import './common.scss';
 
 html, body {
-    width: 100%;
-    font-family: 'Segoe UI',SegoeUI,'Segoe WP',Tahoma,Arial,sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-}
+    @include dimension(100%);
+    @include margin($all:0);
+    @include font($font-family: 'Segoe UI');   
+    @include color($bg-color:$color-light-grey);
+    @include dimension($height:100%);
 
-#root {
-    height: 100vh;
+    #root {
+        @include dimension($height:100%);
+    }
 }

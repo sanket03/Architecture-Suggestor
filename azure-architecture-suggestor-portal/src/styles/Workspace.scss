@@ -1,12 +1,19 @@
 @import './Diagram.scss';
 @import './Questions.scss';
+@import './common.scss';
 
-#workspace {
-    display: grid;
-    grid-template-columns: 35% 65%;
-    grid-template-areas: "questions diagram";
-    width: 80%;
-    height: 60%;
-    margin: auto;
-    grid-column-gap: 15px;
+@media(min-width: $media-desktop-width) {
+    #workspace {
+        @include parentPropsInCssGrid($grid-template-columns: 35% 65%, $grid-template-areas: "questions diagram", $grid-column-gap: 15px);
+        @include dimension(80%, 60%);
+        @include margin(auto, auto, 25px, auto);
+    }
+}
+
+@media(max-width: $media-desktop-width) {
+    #workspace {
+        @include parentPropsInCssGrid($grid-template-rows: 50% 50%, $grid-template-areas: "questions questions" "diagram diagram", $grid-row-gap: 15px);
+        @include dimension(80%, 60%);
+        @include margin(auto, auto, 25px, auto);
+    }
 }

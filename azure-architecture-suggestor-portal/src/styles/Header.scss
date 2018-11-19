@@ -1,15 +1,18 @@
+@import './common.scss';
+
+// CSS for all screen sizes
 #header {
-    background-color: #3e3d4d;
-    color: #FFF;
 
+    @include color($color-dark-grey, $color-white);
+    
     .custom-row {
-        width: 80%;
-        margin: auto;
-        padding: 40px;
-
-        p, h1 {
-            margin: 0;
-            padding: 5px;
+        @include dimension(80%);
+        @include padding(40px, 0, 40px, 0);
+        @include margin($all: auto);
+        
+        p, h2 {
+            @include margin($all: 0);
+            @include padding(5px, 0, 5px, 0);
         }
     }
 }
