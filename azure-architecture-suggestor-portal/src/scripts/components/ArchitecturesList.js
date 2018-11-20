@@ -9,6 +9,7 @@ const ArchitecturesList = (props) => {
     selectRef
   } = props;
 
+  // Render architectures list
   const renderArchitecturesList = (architecturesList) => {
     return Object.keys(architecturesList).map(item =>
       <option 

@@ -2,13 +2,15 @@ import React, { Component } from 'react';
 import Header from '../components/Header';
 import ArchitecturesList from '../components/ArchitecturesList'
 import Workspace from './Workspace';
-import {solutionsList, architectureDetails, questionEntityMapping, questionDetails} from '../utilities/data';
+import appModule from '../utilities/config';
+import serviceModule from '../utilities/serviceCalls';
 
 import '../../styles/App.scss';
 
 export default class App extends Component {
   constructor() {
     super();
+    this.defaultArchitectureId = 1;
     this.architecturesList = {};
     this.architectureDetails = {};
     this.questionDetails = {};
@@ -19,7 +21,7 @@ export default class App extends Component {
 
     // Setting initial state
     this.state = {
-      architectureId: 1
+      architectureId: 0
     }
 
     // Binding context to methods
@@ -27,30 +29,38 @@ export default class App extends Component {
   }
 
   // Fetch list of architectures and details for a default architecture
-  componentDidMount() {
-    // This should be replaced with fetch API
-    let promise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve(solutionsList);
-      }, 2000)
-    })
+  async componentDidMount() {
+    let {
+      url,
+      controllers
+    } = appModule.appConfig;
 
-    promise.then(solutionsList => {
-      this.architecturesList = solutionsList;
+    let {
+      getArchitecturesList,
+      getArchitectureDetails,
+      getQuestionDetails,
+      getQuestionEntityMapping
+    } = controllers;
 
-      // Send a call to get details for default architecure Id
-      this.architectureDetails = architectureDetails[this.state.architectureId];
-      this.questionDetails = questionDetails[this.state.architectureId];
-      this.questionEntityMapping = questionEntityMapping;
+    // Fetch architectures List
+    this.architecturesList = await serviceModule.fetchData(`${url}${getArchitecturesList}`);
+
+    // Fetch architecture details for a default architecture
+    this.architectureDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getArchitectureDetails}/${this.defaultArchitectureId}`);
+
+    // Fetch question details for a default architecture
+    this.questionDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getQuestionDetails}/${this.defaultArchitectureId}`);
+
+    // Fetch question details for a default architecture
+    this.questionEntityMapping = await serviceModule.fetchData(`${url}${getQuestionEntityMapping}`);
+
       this.setState(() => ({
         architectureId: 1
       }))
-    })
   }
 
   selectArchitecture() {
     let selectedNode = this.selectedDropdownNode.current.value;
-    console.log(selectedNode);
     // Get data for selected architecture
     this.setState(() => ({
       architectureId: 1
@@ -61,16 +71,24 @@ export default class App extends Component {
     return (
       <>
         <Header />
-        <ArchitecturesList
-          architecturesList = {this.architecturesList}
-          onchangeHandler = {this.selectArchitecture}
-          selectRef = {this.selectedDropdownNode}
-        />
-        <Workspace 
-          architectureDetails = {this.architectureDetails} 
-          questionDetails = {this.questionDetails}
-          questionEntityMapping = {this.questionEntityMapping}
-        />
+        {
+          this.state.architectureId !== 0 ?                                            
+                                            (
+                                            <>
+                                              <ArchitecturesList
+                                              architecturesList = {this.architecturesList}
+                                              onchangeHandler = {this.selectArchitecture}
+                                              selectRef = {this.selectedDropdownNode}
+                                              />
+                                              <Workspace 
+                                                architectureDetails = {this.architectureDetails[this.state.architectureId].groups} 
+                                                questionDetails = {this.questionDetails[this.state.architectureId].groups}
+                                                questionEntityMapping = {this.questionEntityMapping}
+                                              />
+                                            </>
+                                            )
+                                          : ''
+        }
       </>
     );
   }

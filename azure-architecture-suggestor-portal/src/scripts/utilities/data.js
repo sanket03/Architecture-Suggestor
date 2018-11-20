@@ -113,108 +113,117 @@ const architectureDetails = {
 
 const questionDetails = {
     '1': {
-        'g1': [
+        'groups' :{
+        '1': [
             {
                 'question' : 'Do you need entity1 in your architecture solution?',
                 'choices' : 'Yes|No',
-                'id': '1'
+                'id': '1',
+                'isActive': true
             },
             {
                 'question' : 'Do you need entity2 in your architecture solution?',
                 'choices' : 'Yes|No',
-                'id': '2'
+                'id': '2',
+                'isActive': true
             }
         ],
-        'g2': [
+        '2': [
             {
                 'question' : 'Do you need entity3 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '3'
+                'id': '3',
+                'isActive': true
             },
             {
                 'question' : 'Do you need entity4 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '4'
+                'id': '4',
+                'isActive': true
             }
         ],
-        'g3': [
+        '3': [
             {
                 'question' : 'Do you need entity5 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '5'
+                'id': '5',
+                'isActive': true
             },
             {
                 'question' : 'Do you need entity6 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '6'
+                'id': '6',
+                'isActive': true
             }
         ],
-        'g4': [
+        '4': [
             {
                 'question' : 'Do you need entity7 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '7'
+                'id': '7',
+                'isActive': true
             },
             {
                 'question' : 'Do you need entity8 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '8'
+                'id': '8',
+                'isActive': true
             }
         ],
-        'g5': [
+        '5': [
             {
                 'question' : 'Do you need entity9 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '9'
+                'id': '9',
+                'isActive': true
             },
             {
                 'question' : 'Do you need entity10 or entity11 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '10'
+                'id': '10',
+                'isActive': true
             },
             {
                 'question' : 'Do you need entity11 in your architecture solution ?',
                 'choices' : 'Yes|No',
-                'id': '11'
+                'id': '11',
+                'isActive': true
             }
         ]
-    }
+    }}
 }
 
 const questionEntityMapping = {
     '1' : {
-        'e1' : 'Yes',
+        '1' : 'Yes',
     },
     '2' : {
-        'e2' : 'Yes',
+        '2' : 'Yes',
     },
     '3' : {
-        'e3' : 'Yes',
+        '3' : 'Yes',
     },
     '4' : {
-        'e4' : 'Yes',
+        '4' : 'Yes',
     },
     '5' : {
-        'e5' : 'Yes',
+        '5' : 'Yes',
     },
     '6' : {
-        'e6' : 'Yes',
+        '6' : 'Yes',
     },
     '7' : {
-        'e7' : 'Yes',
+        '7' : 'Yes',
     },
     '8' : {
-        'e8' : 'Yes',
+        '8' : 'Yes',
     },
     '9' : {
-        'e9' : 'Yes',
+        '9' : 'Yes',
     },
     '10' : {
-        'e10' : 'Yes',
-        'e11' : 'Yes'
-    },
-    '11':{
-        'e11' : 'No'
+        '10' : 'Yes',
+        '11' : 'Yes'
     }
 }
 

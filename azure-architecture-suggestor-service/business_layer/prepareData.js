@@ -2,17 +2,41 @@ const databaseHelper = require('../utilities/databaseHelper');
 const {appConfig} = require('../utilities/config');
 
 const prepareDataModule = (()=>{
-    const getArchitectureDetails = async () => {
+    
+    // Get list of available architectures
+    const getArchitecturesList = async () => {
+        let architecturesList = await databaseHelper.getDataFromDB(appConfig.storedProcedures.getArchitecturesList);
+
+        // Get recordset and the number of records(tables) is always 1
+        let recordset = architecturesList.recordset;
+        let preparedDataObject = {};
+
+        recordset.forEach((row) => {
+            preparedDataObject[row.architecture_id] = row.architecture_name
+        })
+
+        return preparedDataObject;
+    }
+
+    // Get details for an architecture
+    const getArchitectureDetails = async (architectureId) => {
+
+        // Create params
+        let params = [{
+            'input': 'architecture_id',
+            'value': architectureId,
+            'type' : 'TinyInt'
+        }]
 
         // Fetch resultset from DB
-        let architectureDetails = await databaseHelper.getDataFromDB(appConfig.storedProcedures.getArchitectureDetails);
+        let architectureDetails = await databaseHelper.getDataFromDB(appConfig.storedProcedures.getArchitectureDetails, params);
+
 
         // Get recordset and the number of records(tables) is always 1
         let recordset = architectureDetails.recordset;
-        let preparedDataObject = {};
 
         // Prepare object with static fields
-        preparedDataObject[recordset[0].architecture_id] = {
+        let preparedDataObject = {
             'name': recordset[0].architecture_name,
             'groups': {}
         }
@@ -24,13 +48,13 @@ const prepareDataModule = (()=>{
         recordset.forEach((row) => {
 
             // Initialize object members
-            let groupId = `g${row.group_id}`;
-            let entityId = `e${row.entity_id}`;
+            let groupId = row.group_id;
+            let entityId = row.entity_id;
             let entityName = row.entity_name;
-            let relatedGroup = row.related_group !== null ? `g${row.related_group}` : null;
-            let connector = row.connector !== null ? row.connector : null;
-            let questionId = row.question_id !== null ? `q${row.question_id}` : null;
-            let parentEntity = row.parent_entities !== null ? `e${row.parent_entities}` : null;
+            let relatedGroup = row.related_group;
+            let connector = row.connector;
+            let questionId = row.question_id;
+            let parentEntity = row.parent_entities
 
             // If groupId not in entity groups then initialize it with static fields
             if(!(groupId in entityGroups)) {
@@ -50,22 +74,94 @@ const prepareDataModule = (()=>{
                 entityGroup.entities[entityId] = {
                     'name': entityName,
                     'isActive': false,
-                    'parentEntities': new Set(),
-                    'questions': new Set()
+                    'parentEntities': [],
+                    'questions': []
                 }
             }
 
+            // Set parent entities and related groups for an entity
             let entity = entityGroup.entities[entityId];
-            parentEntity !== null && entity.parentEntities.add(parentEntity);           
-            questionId !== null && entity.questions.add(questionId);
-        })
+            parentEntity !== null && !entity.parentEntities.includes(parentEntity) && entity.parentEntities.push(parentEntity);
+            questionId !== null && !entity.questions.includes(questionId) && entity.questions.push(questionId);   
+        })     
+        preparedDataObject.groups = entityGroups;
+        return preparedDataObject;
+    }
+
+    // Get details for questions related to an architecture
+    const getQuestionDetails = async (architectureId) => {
+
+        // Create params
+        let params = [{
+            'input': 'architecture_id',
+            'value': architectureId,
+            'type' : 'TinyInt'
+        }]
+
+        let questionDetails = await databaseHelper.getDataFromDB(appConfig.storedProcedures.getQuestionDetails, params);
+
+        // Get recordset as the number of records(tables) is always 1
+        let recordset = questionDetails.recordset;
+
+        // Prepare object with static fields
+        let preparedDataObject = {
+            'groups' : {}
+        };
+
+        let entityGroups = preparedDataObject.groups;
         
-        preparedDataObject[recordset[0].architecture_id].groups = entityGroups;
+        recordset.forEach((row) => {
+            let groupId = row.group_id;
+            let questionId = row.question_id;
+            let description = row.description;
+            let choices = row.choices;
+
+            if(!(groupId in entityGroups)) {
+                entityGroups[groupId] = [];
+            }
+
+            // Initialize question object and push it to the list of questions for a group
+            let questionObj = {
+                'id': questionId,
+                'question' : description,
+                'choices': choices,
+                'isActive': true
+            }
+            entityGroups[groupId].push(questionObj);
+        })
+        return preparedDataObject;
+    }
+    
+    // Get question to entity mapping
+    const getQuestionEntityMapping = async () => {
+        let questionEntityMap = await databaseHelper.getDataFromDB(appConfig.storedProcedures.getQuestionEntityMapping);
+
+        // Get recordset and the number of records(tables) is always 1
+        let recordset = questionEntityMap.recordset;
+        let preparedDataObject = {};
+
+        recordset.forEach((row) => {
+            let questionId = row.question_id;
+            let entityId = row.entity_id;
+            let options = row.option;
+
+            if(!(questionId in preparedDataObject)) {
+                preparedDataObject[questionId] = {};
+            }
+
+            if(!(entityId in preparedDataObject[questionId])) {
+                preparedDataObject[questionId][entityId] = {}
+            }
+            preparedDataObject[questionId][entityId] = options;
+        })
         return preparedDataObject;
     }
 
     return {
-        getArchitectureDetails
+        getArchitecturesList,
+        getArchitectureDetails,
+        getQuestionDetails,
+        getQuestionEntityMapping
     }
 })();
 
