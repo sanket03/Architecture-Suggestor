@@ -1,5 +1,6 @@
 import React from 'react';
-
+import QuestionComponent from './QuestionComponent';
+import QuestionChoice from './QuestionChoice';
 const Questions = (props) => {
 
   // Render active questions
@@ -10,18 +11,16 @@ const Questions = (props) => {
         if(question.isActive) {
           questionCount = questionCount + 1;
           return (
-            <div 
+            <QuestionComponent 
               key = {index}
-              className = 'question'
-              data-id = {question['id']}
-              data-group = {group}
+              question = {question} 
+              index = {index} 
+              group = {group}
+              questionCount = {questionCount}
             >
-            <span>{questionCount}.</span>
-            <span className = 'question-title'>
-              {question['question']}
-            </span>
-            {renderChoices(question, questionCount,onOptionSelectHandler)}
-            </div>
+              {renderChoices(question, questionCount,onOptionSelectHandler)}
+            </QuestionComponent>
+
           )
         } else {
           return (<></>);
@@ -33,23 +32,15 @@ const Questions = (props) => {
   // Render respective choices for a
   const renderChoices = (questionObj, questionCount, onOptionSelectHandler) => {
     return questionObj['choices'].split('|').map((choice, index) => (
-      <div 
-        className = 'option'
-        key = {questionObj.id + index}
+      <QuestionChoice 
+        onOptionSelectHandler = {onOptionSelectHandler}
+        questionObj = {questionObj}
+        questionCount = {questionCount}
+        index = {index}
+        key = {index}
       >
-        <input 
-          type = 'radio'
-          id = {questionObj.id + index}
-          name = {questionCount}
-          onChange = {onOptionSelectHandler}
-        />
-        <label 
-          htmlFor={questionObj.id + index}
-          className='pointer'
-        >
-          {choice}
-        </label>
-      </div>
+        {choice}
+      </QuestionChoice>
     ))
   }
 

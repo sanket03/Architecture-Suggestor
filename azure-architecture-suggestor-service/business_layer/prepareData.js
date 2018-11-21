@@ -122,10 +122,10 @@ const prepareDataModule = (()=>{
 
             // Initialize question object and push it to the list of questions for a group
             let questionObj = {
-                'id': questionId,
+                'id': questionId.toString(),
                 'question' : description,
                 'choices': choices,
-                'isActive': true
+                'isActive': false
             }
             entityGroups[groupId].push(questionObj);
         })

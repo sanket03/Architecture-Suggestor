@@ -76,9 +76,9 @@ export default class App extends Component {
                                             (
                                             <>
                                               <ArchitecturesList
-                                              architecturesList = {this.architecturesList}
-                                              onchangeHandler = {this.selectArchitecture}
-                                              selectRef = {this.selectedDropdownNode}
+                                                architecturesList = {this.architecturesList}
+                                                onchangeHandler = {this.selectArchitecture}
+                                                selectRef = {this.selectedDropdownNode}
                                               />
                                               <Workspace 
                                                 architectureDetails = {this.architectureDetails[this.state.architectureId].groups} 
