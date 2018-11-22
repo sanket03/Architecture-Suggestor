@@ -1,236 +1,283 @@
 const architectureDetails = {
     '1' : {
-        'name':'Some_architecture',
-        'groups': {
-                'g1': {
-                    'name':'group1',
-                    'isActive':false,
-                    'related_groups':{
-                        'group2':'conn1',
-                        'group3':'conn2',
-                    },
-                    'entities': {
-                        'e1': {
-                                'name':'entity1',
-                                'isActive' : false,
-                                'parent_entities':[]
-                            },
-                        'e2':
-                            {
-                                'name':'entity2',
-                                'isActive' : false,
-                                'parent_entities':[]
-                            }
-                    }
-                },
-                'g2': {
-                    'name':'group2',
-                    'isActive':false,
-                    'related_groups':{
-                    },
-                    'entities': {
-                        'e3': {
-                                'name':'entity1',
-                                'isActive' : false,
-                                'parent_entities':['e1']
-                            },
-                        'e4':
-                            {
-                                'name':'entity2',
-                                'isActive' : false,
-                                'parent_entities':['e2']
-                            }
-                    }
-                },
-                'g3': {
-                    'name':'group3',
-                    'isActive':false,
-                    'related_groups':{
-                        'group4':''
-                    },
-                    'entities': {
-                        'e5': {
-                                'name':'entity5',
-                                'isActive' : false,
-                                'parent_entities':['e1']
-                            },
-                        'e6':
-                            {
-                                'name':'entity6',
-                                'isActive' : false,
-                                'parent_entities':['e2']
-                            }
-                    }
-                },
-                'g4': {
-                    'name':'group4',
-                    'isActive':false,
-                    'related_groups':{
-                        'group5':''
-                    },
-                    'entities': {
-                        'e7': {
-                                'name':'entity5',
-                                'isActive' : false,
-                                'parent_entities':['e5']
-                            },
-                        'e8':
-                            {
-                                'name':'entity6',
-                                'isActive' : false,
-                                'parent_entities':['e5', 'e6']
-                            }
-                    }
-                },
-                'g5': {
-                    'name':'group5',
-                    'isActive':false,
-                    'related_groups':{
-                    },
-                    'entities': {
-                        'e9': {
-                                'name':'entity5',
-                                'isActive' : false,
-                                'parent_entities':['e7']
-                            },
-                        'e10':
-                            {
-                                'name':'entity6',
-                                'isActive' : false,
-                                'parent_entities':['e8']
-                            },
-                        'e11':
-                        {
-                            'name':'entity6',
-                            'isActive' : false,
-                            'parent_entities':['e7', 'e8']
-                        }
-                    }
-                }
+        "name": "architecture 1",
+        "groups": {
+          "1": {
+            "name": "group 1",
+            "isActive": false,
+            "relatedGroups": {
+              "2": "con1",
+              "3": "con2"
+            },
+            "entities": {
+              "1": {
+                "name": "entity1",
+                "isActive": false,
+                "parentEntities": [],
+                "questions": [
+                  1
+                ]
+              },
+              "2": {
+                "name": "entity2",
+                "isActive": false,
+                "parentEntities": [],
+                "questions": [
+                  2
+                ]
+              }
+            }
+          },
+          "2": {
+            "name": "group 2",
+            "isActive": false,
+            "relatedGroups": {},
+            "entities": {
+              "3": {
+                "name": "entity3",
+                "isActive": false,
+                "parentEntities": [
+                  "1"
+                ],
+                "questions": [
+                  3
+                ]
+              },
+              "4": {
+                "name": "entity4",
+                "isActive": false,
+                "parentEntities": [
+                  "2"
+                ],
+                "questions": [
+                  4
+                ]
+              }
+            }
+          },
+          "3": {
+            "name": "group 3",
+            "isActive": false,
+            "relatedGroups": {
+              "4": null
+            },
+            "entities": {
+              "5": {
+                "name": "entity5",
+                "isActive": false,
+                "parentEntities": [
+                  "1"
+                ],
+                "questions": [
+                  5
+                ]
+              },
+              "6": {
+                "name": "entity6",
+                "isActive": false,
+                "parentEntities": [
+                  "2"
+                ],
+                "questions": [
+                  6
+                ]
+              }
+            }
+          },
+          "4": {
+            "name": "group 4",
+            "isActive": false,
+            "relatedGroups": {
+              "5": null
+            },
+            "entities": {
+              "7": {
+                "name": "entity7",
+                "isActive": false,
+                "parentEntities": [
+                  "5"
+                ],
+                "questions": [
+                  7
+                ]
+              },
+              "8": {
+                "name": "entity8",
+                "isActive": false,
+                "parentEntities": [
+                  "5,6"
+                ],
+                "questions": [
+                  8
+                ]
+              }
+            }
+          },
+          "5": {
+            "name": "group 5",
+            "isActive": false,
+            "relatedGroups": {},
+            "entities": {
+              "9": {
+                "name": "entity9",
+                "isActive": false,
+                "parentEntities": [
+                  "7"
+                ],
+                "questions": [
+                  9
+                ]
+              },
+              "10": {
+                "name": "entity10",
+                "isActive": false,
+                "parentEntities": [
+                  "8"
+                ],
+                "questions": [
+                  10
+                ]
+              },
+              "11": {
+                "name": "entity11",
+                "isActive": false,
+                "parentEntities": [
+                  "7,8"
+                ],
+                "questions": [
+                  10,
+                  11
+                ]
+              }
+            }
+          }
         }
-    }
+      }
 }
 
 const questionDetails = {
     '1': {
-        'groups' :{
-        '1': [
+        "groups": {
+          "1": [
             {
-                'question' : 'Do you need entity1 in your architecture solution?',
-                'choices' : 'Yes|No',
-                'id': '1',
-                'isActive': true
+              "id": "1",
+              "question": "Do you need entity1 in your architecture solution?",
+              "choices": "yes|no",
+              "isActive": false
             },
             {
-                'question' : 'Do you need entity2 in your architecture solution?',
-                'choices' : 'Yes|No',
-                'id': '2',
-                'isActive': true
+              "id": "2",
+              "question": "Do you need entity2 in your architecture solution?",
+              "choices": "yes|no",
+              "isActive": false
             }
-        ],
-        '2': [
+          ],
+          "2": [
             {
-                'question' : 'Do you need entity3 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '3',
-                'isActive': true
+              "id": "3",
+              "question": "Do you need entity3 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             },
             {
-                'question' : 'Do you need entity4 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '4',
-                'isActive': true
+              "id": "4",
+              "question": "Do you need entity4 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             }
-        ],
-        '3': [
+          ],
+          "3": [
             {
-                'question' : 'Do you need entity5 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '5',
-                'isActive': true
+              "id": "5",
+              "question": "Do you need entity5 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             },
             {
-                'question' : 'Do you need entity6 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '6',
-                'isActive': true
+              "id": "6",
+              "question": "Do you need entity6 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             }
-        ],
-        '4': [
+          ],
+          "4": [
             {
-                'question' : 'Do you need entity7 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '7',
-                'isActive': true
+              "id": "7",
+              "question": "Do you need entity7 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             },
             {
-                'question' : 'Do you need entity8 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '8',
-                'isActive': true
+              "id": "8",
+              "question": "Do you need entity8 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             }
-        ],
-        '5': [
+          ],
+          "5": [
             {
-                'question' : 'Do you need entity9 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '9',
-                'isActive': true
+              "id": "9",
+              "question": "Do you need entity9 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             },
             {
-                'question' : 'Do you need entity10 or entity11 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '10',
-                'isActive': true
+              "id": "10",
+              "question": "Do you need entity10 or  entity 11 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             },
             {
-                'question' : 'Do you need entity11 in your architecture solution ?',
-                'choices' : 'Yes|No',
-                'id': '11',
-                'isActive': true
+              "id": "11",
+              "question": "Do you need entity11 in your architecture solution ?",
+              "choices": "yes|no",
+              "isActive": false
             }
-        ]
-    }}
+          ]
+        }
+      }
 }
 
 const questionEntityMapping = {
-    '1' : {
-        '1' : 'Yes',
+    "1": {
+      "1": "yes"
     },
-    '2' : {
-        '2' : 'Yes',
+    "2": {
+      "2": "yes"
     },
-    '3' : {
-        '3' : 'Yes',
+    "3": {
+      "3": "yes"
     },
-    '4' : {
-        '4' : 'Yes',
+    "4": {
+      "4": "yes"
     },
-    '5' : {
-        '5' : 'Yes',
+    "5": {
+      "5": "yes"
     },
-    '6' : {
-        '6' : 'Yes',
+    "6": {
+      "6": "yes"
     },
-    '7' : {
-        '7' : 'Yes',
+    "7": {
+      "7": "yes"
     },
-    '8' : {
-        '8' : 'Yes',
+    "8": {
+      "8": "yes"
     },
-    '9' : {
-        '9' : 'Yes',
+    "9": {
+      "9": "yes"
     },
-    '10' : {
-        '10' : 'Yes',
-        '11' : 'Yes'
+    "10": {
+      "10": "yes",
+      "11": "no"
+    },
+    "11": {
+      "11": "yes"
     }
-}
+  }
 
 
 const solutionsList = {
-    '1': 'Some_Architecture',
-    '2': 'Some_Architecture2'
+    "1":"architecture 1"
 }
 
 export {

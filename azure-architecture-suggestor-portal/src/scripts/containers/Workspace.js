@@ -12,22 +12,20 @@ export default class Workspace extends Component {
             render: true
         }
 
-        this.activeQuestions = {}
+        this.groupList = Object.keys(this.props.architectureDetails);
+        this.groupListPointer = 1;
 
-        this.groupQueue = [];
+        this.groupQueue = [this.groupList[0]];
         this.groupQueueHead = 0;
-        this.activeGroup = 1;
+        this.activeGroup = this.groupList[0];
         
         this.entityQueue = [];
         this.entityQueueHead = 0;
-        this.activeEntity = 0
+        this.activeEntity = '';
 
         this.questionQueue = [];
         this.questionQueueHead = 0;
-        this.activeQuestion = 0;
-
-        this.groupList = Object.keys(this.props.architectureDetails);
-        this.groupListPointer = 1;
+        this.activeQuestion = '';
 
         // Binding context to methods
         this.filterQuestionsPerGroups = this.filterQuestionsPerGroups.bind(this);
@@ -36,19 +34,27 @@ export default class Workspace extends Component {
 
     // Add related groups to group queue
     addGroupsToQueue(groups) {
-        if(Object.keys(groups).length > 0)  {
-            this.groupQueue.push(...Object.keys(groups));
+        let relatedGroupsList = Object.keys(groups);
+
+        // If related groups are present then add to the queue
+        // Else add the next group as per architecture
+        // Check if they are already present
+        if(relatedGroupsList.length > 0)  {
+            relatedGroupsList.forEach((group)=> {
+                !this.groupQueue.includes(group) && this.groupQueue.push(group);
+            })
         } else {
-            this.groupQueue.push(this.groupList[this.groupListPointer])
+            let nextGroupInGroupList = this.groupList[this.groupListPointer]
+            !this.groupQueue.includes(nextGroupInGroupList) && this.groupQueue.push(nextGroupInGroupList);
             this.groupListPointer += 1;
         }
         console.log(this.groupQueue);
     }
 
     // Set isActive flag for a group
-    setActiveGroups(groupObj) {
+    setActiveGroup(architectureDetails) {
         this.activeGroup = this.groupQueue[this.groupQueueHead]
-        groupObj.isActive = true;
+        architectureDetails[this.activeGroup].isActive = true;
         this.groupQueueHead += 1;
     }
 
@@ -60,7 +66,6 @@ export default class Workspace extends Component {
     // Set isActive flag for entities
     setActiveEntity(entities) {
         this.activeEntity = this.entityQueue[this.entityQueueHead];
-        entities[this.activeEntity].isActive = true;
         this.entityQueueHead += 1;
     }
 
@@ -88,22 +93,90 @@ export default class Workspace extends Component {
         });
     }
 
+    // Check whether entity queue has exhaused
+    ifGroupQueueHasElements() {
+        return this.groupQueue.length > this.groupQueueHead;
+    }
+
+    // Check whether entity queue has exhaused
+    ifEntityQueueHasElements() {
+        return this.entityQueue.length > this.entityQueueHead;
+    }
+
+    // Check whether entity queue has exhaused
+    ifQuestionQueueHasElements() {
+        return this.questionQueue.length > this.questionQueueHead;
+    }
+
+    performActiveGroupUpdation(architectureDetails, questionDetails) {
+        this.addGroupsToQueue(architectureDetails[this.activeGroup].relatedGroups);
+        if(this.ifGroupQueueHasElements()) {
+            this.setActiveGroup(architectureDetails);
+            this.addEntitiesToQueue(architectureDetails[this.activeGroup].entities);
+            while(this.ifEntityQueueHasElements()) {
+                this.setActiveEntity(architectureDetails[this.activeGroup].entities);
+                let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
+                if(activeEntityQuestions.length > 0) {
+                    this.addQuestionsToQueue(architectureDetails[this.activeGroup].entities[this.activeEntity].questions);
+                    this.setActiveQuestion();
+                    this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
+                    break;
+                }
+            }
+        }
+    }
+
+    performActiveEntityUpdation(architectureDetails, questionDetails, filteredEntities) {
+        let shouldUpdateActiveGroup = true;
+        while(this.ifEntityQueueHasElements()) {
+            this.setActiveEntity(architectureDetails[this.activeGroup].entities);
+            let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
+            if(filteredEntities.includes(this.activeEntity) && activeEntityQuestions.length > 0) {
+                shouldUpdateActiveGroup = false;
+                this.addQuestionsToQueue(activeEntityQuestions);
+                this.setActiveQuestion();
+                this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
+                break;
+            }
+        }
+
+        if(shouldUpdateActiveGroup) {
+            this.performActiveGroupUpdation(architectureDetails, questionDetails);
+        }
+    }
+
     // Get the filtered entities as per current option select
     filterEntitiesOnOptionSelect(questionId, choice, questionEntityMapping, entities) {
         let filteredEntities = [];
         let groupEntities = Object.keys(entities);
         let entitiesForQuestion = questionEntityMapping[questionId];
+        let traversedEntities = this.entityQueue.slice(0, this.entityQueueHead - 1);
         for(let entity in entitiesForQuestion) {
             if(entitiesForQuestion[entity].split('|').includes(choice)) {
                 filteredEntities.push(entity);
             }
         }
+
         // If no entities match the current choice, then remove those entities from filtered list
         if(filteredEntities.length === 0) {
             filteredEntities = groupEntities.filter((entity) => {
                 return Object.keys(entitiesForQuestion).indexOf(entity) === -1;
             })
         }
+
+        // Remove entities which were already filtered in previous pass
+        filteredEntities = filteredEntities.filter((entity) => {
+            if(traversedEntities.includes(entity)) {
+                return entities[entity].isActive
+            } else {
+                return true
+            }
+        })
+
+        for(let entity in entities) {
+            entities[entity].isActive = filteredEntities.includes(entity);
+        }
+        
         return filteredEntities;
     }
 
@@ -128,36 +201,23 @@ export default class Workspace extends Component {
 
         // If active entity is among the filtered entities
         // Render the next question
-        // Else set 
+        // If question queue has ended or active entity not in filtered entities
+        // Then for each entity in entity queue, set that entity as active entity
+        // Check if that entity is part of filtered entities
+        // If yes, then check whether that entity have any questions associated with it
+        // If yes, then repeat from addQuestionsToQueue and break the loop
+        // If no, then continue the loop until entity queue has exhausted
+        // Change the active group if end of entity queue
+
         if(filteredEntities.includes(this.activeEntity)) {
-            if(this.questionQueue.length > this.questionQueueHead) {
+            if(this.ifQuestionQueueHasElements()) {
                 this.setActiveQuestion();
                 this.filterQuestionsPerGroups(activeGroup, this.activeQuestion, questionDetails); 
+            } else {
+                this.performActiveEntityUpdation(architectureDetails, questionDetails, filteredEntities);
             }
         } else {
-            let shouldUpdateActiveGroup = true;
-            do {
-                if(this.entityQueue.length > this.entityQueueHead) {
-                    this.setActiveEntity(architectureDetails[activeGroup].entities);
-                    if(filteredEntities.includes(this.activeEntity)) {
-                        shouldUpdateActiveGroup = false;
-                        this.addQuestionsToQueue(architectureDetails[activeGroup].entities[this.activeEntity].questions);
-                        this.setActiveQuestion();
-                        this.filterQuestionsPerGroups(activeGroup, this.activeQuestion, questionDetails);
-                        break;
-                    }
-                }
-            } while(this.entityQueue.length > this.entityQueueHead)
-
-            if(shouldUpdateActiveGroup) {
-                this.setActiveGroups(architectureDetails[activeGroup]);
-                this.addGroupsToQueue(architectureDetails[activeGroup].relatedGroups);
-                this.addEntitiesToQueue(architectureDetails[activeGroup].entities);
-                this.setActiveEntity(architectureDetails[activeGroup].entities);
-                this.addQuestionsToQueue(architectureDetails[activeGroup].entities[this.activeEntity].questions);
-                this.setActiveQuestion();
-                this.filterQuestionsPerGroups(activeGroup, this.activeQuestion, questionDetails);
-            }
+            this.performActiveEntityUpdation(architectureDetails, questionDetails, filteredEntities);
         }
 
         this.setState(() => ({
@@ -173,6 +233,7 @@ export default class Workspace extends Component {
 
         let activeGroup = this.activeGroup;
         this.addGroupsToQueue(architectureDetails[activeGroup].relatedGroups);
+        this.setActiveGroup(architectureDetails);
         this.addEntitiesToQueue(architectureDetails[activeGroup].entities);
         this.setActiveEntity(architectureDetails[activeGroup].entities);
         this.addQuestionsToQueue(architectureDetails[activeGroup].entities[this.activeEntity].questions);
@@ -181,7 +242,6 @@ export default class Workspace extends Component {
     }
 
     render() {
-        console.log('hi');
         let {
             architectureDetails,
             questionDetails,
