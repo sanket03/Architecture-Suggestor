@@ -25,13 +25,13 @@ export default class ArchitectureLayerBox extends Component {
 
   render() {
       let {
-          levelData,
+          groupData,
           show
       } = this.props;
     return (
         <div className = {show ? 'show outer-box': 'hide outer-box'}>
             <div className = 'inner-box'>    
-                {this.renderEntities(levelData.options)}
+                {this.renderEntities(groupData.entities)}
             </div>
         </div>
     );

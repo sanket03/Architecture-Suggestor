@@ -27,6 +27,8 @@ export default class Workspace extends Component {
         this.questionQueueHead = 0;
         this.activeQuestion = '';
 
+        this.questionResponseMap = {}
+
         // Binding context to methods
         this.filterQuestionsPerGroups = this.filterQuestionsPerGroups.bind(this);
         this.onOptionSelectHandler = this.onOptionSelectHandler.bind(this);
@@ -43,12 +45,11 @@ export default class Workspace extends Component {
             relatedGroupsList.forEach((group)=> {
                 !this.groupQueue.includes(group) && this.groupQueue.push(group);
             })
-        } else {
-            let nextGroupInGroupList = this.groupList[this.groupListPointer]
-            !this.groupQueue.includes(nextGroupInGroupList) && this.groupQueue.push(nextGroupInGroupList);
-            this.groupListPointer += 1;
-        }
-        console.log(this.groupQueue);
+        } //else {
+        //     let nextGroupInGroupList = this.groupList[this.groupListPointer]
+        //     !this.groupQueue.includes(nextGroupInGroupList) && this.groupQueue.push(nextGroupInGroupList);
+        //     this.groupListPointer += 1;
+        // }
     }
 
     // Set isActive flag for a group
@@ -58,15 +59,29 @@ export default class Workspace extends Component {
         this.groupQueueHead += 1;
     }
 
+    // Reset group queue
+    resetGroupQueue(index) {
+        this.groupQueue = this.groupQueue.slice(0, index + 1);
+        this.groupQueueHead = index;
+        this.setActiveGroup(this.props.architectureDetails)
+    }
+
     // Add entities to group queue
     addEntitiesToQueue(entities) {
         this.entityQueue.push(...Object.keys(entities));   
     }
 
     // Set isActive flag for entities
-    setActiveEntity(entities) {
+    setActiveEntity() {
         this.activeEntity = this.entityQueue[this.entityQueueHead];
         this.entityQueueHead += 1;
+    }
+
+    // Reset entity queue
+    resetEntityQueue() {
+        this.entityQueue = [];
+        this.entityQueueHead = 0;
+        this.activeEntity = '';
     }
 
     // Add questions to the queue
@@ -87,11 +102,20 @@ export default class Workspace extends Component {
     // Get groups with questions to be rendered
     filterQuestionsPerGroups(activeGroup, activeQuestion, questionDetails) {
         questionDetails[activeGroup].forEach((questionObj) => {
-            if(questionObj.id === activeQuestion.toString()) {
-                questionObj.isActive = true;
-            }
-        });
+            // if(questionObj.id === activeQuestion.toString()) {
+            //     questionObj.isActive = true;
+            // }
+            questionObj.isActive = this.questionQueue.includes(parseInt(questionObj.id)) 
+        }, this);
     }
+
+    // Reset question queue
+    resetQuestionQueue(index) {
+        this.questionQueue = this.questionQueue.slice(0, index + 1);
+        this.questionQueueHead = index;
+        //this.setActiveQuestion();
+    }
+    
 
     // Check whether entity queue has exhaused
     ifGroupQueueHasElements() {
@@ -117,7 +141,7 @@ export default class Workspace extends Component {
                 this.setActiveEntity(architectureDetails[this.activeGroup].entities);
                 let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
                 if(activeEntityQuestions.length > 0) {
-                    this.addQuestionsToQueue(architectureDetails[this.activeGroup].entities[this.activeEntity].questions);
+                    this.addQuestionsToQueue(activeEntityQuestions);
                     this.setActiveQuestion();
                     this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
                     break;
@@ -141,6 +165,7 @@ export default class Workspace extends Component {
         }
 
         if(shouldUpdateActiveGroup) {
+            this.resetEntityQueue();
             this.performActiveGroupUpdation(architectureDetails, questionDetails);
         }
     }
@@ -173,6 +198,7 @@ export default class Workspace extends Component {
             }
         })
 
+        // Set isActive true for filtered entities in architectureDetails object
         for(let entity in entities) {
             entities[entity].isActive = filteredEntities.includes(entity);
         }
@@ -180,6 +206,82 @@ export default class Workspace extends Component {
         return filteredEntities;
     }
 
+    // Check whether the question has already been answered
+    isQuestionAlreadyAnswered(questionId) {
+        return this.questionResponseMap.hasOwnProperty(questionId);
+    }
+
+    // Set question response map
+    setQuestionResponseMap(questionId, entity, choice) {
+        this.questionResponseMap[questionId] = {
+            'entity': entity,
+            'response': choice
+        };    
+    }
+
+    // Reset isActive flag for groups in architecture details object
+    resetActiveGroups(groupId, architectureDetails) {
+        this.resetGroupQueue(this.groupQueue.indexOf(groupId));
+        for(let group in architectureDetails) {
+            architectureDetails[group].isActive = this.groupQueue.includes(group);
+        }
+    }
+
+    // Reset isActive flag for entities in groups which are inactive
+    resetActiveEntitiesForInactiveGroups(architectureDetails) {
+        Object.keys(architectureDetails).forEach((group) => {
+            if(!architectureDetails[group].isActive) {
+                for(let entity in architectureDetails[group].entities) {
+                    architectureDetails[group].entities[entity].isActive = false;
+                }
+            }
+        });
+    }
+    
+    // Reset isActive flag for questions in the groups which are inactive
+    resetActiveQuestionsForInactiveGroups(questionDetails, architectureDetails) {
+        Object.keys(questionDetails).forEach((group) => {
+            if(!architectureDetails[group].isActive) {
+                questionDetails[group].forEach((question) => {
+                    question.isActive = false;
+                });
+            }
+        });
+    }
+
+    getActiveEntityForAlreadyAnsweredQuestion(questionId) {
+        return this.questionResponseMap[questionId].entity
+    }
+
+    resetActiveEntitiesToRightOfEntityQueueHead(entities) {
+        this.entityQueue.forEach((entity, index) => {
+            if(index >= this.entityQueueHead) {
+                entities[entity].isActive = false;
+            }
+        })
+    }
+
+    resetActiveEntitiesToLeftOfEntityQueueHead(group, questionEntityMapping) {
+        let entities = group.entities;
+        this.entityQueue.forEach((entity, index) => {
+            if(index < this.entityQueueHead) {
+                let entityQuestions = this.getEntityQuestions(entities[entity]);
+                entityQuestions.forEach((questionId) => {
+                    if(this.questionQueue.includes(questionId)) {
+                        let entityResponseChoice = questionEntityMapping[questionId][entity].choice;
+                        let actualResponse = this.questionResponseMap[questionId].response;
+                        entities[entity].isActive = (entityResponseChoice === actualResponse)
+                    } else {
+                        entities[entity].isActive = false;
+                    }
+                })
+            }
+        })
+    }
+
+    getEntityQuestions(entity) {
+        return entity.questions;
+    }
 
     // Handler for option select
     onOptionSelectHandler(event) {
@@ -189,16 +291,34 @@ export default class Workspace extends Component {
             questionEntityMapping
         } = this.props;
 
-        let activeGroup = this.activeGroup;
-
         // Get the groupId, questionId and choice for the selected question
         let groupId = event.target.closest('.question').getAttribute('data-group');
         let questionId = event.target.closest('.question').getAttribute('data-id');
         let choice = event.target.nextElementSibling.innerHTML;
 
+        if(this.isQuestionAlreadyAnswered(questionId)) {
+            this.resetActiveGroups(groupId, architectureDetails);
+            this.resetActiveEntitiesForInactiveGroups(architectureDetails);
+            this.resetActiveQuestionsForInactiveGroups(questionDetails, architectureDetails);
+            this.resetEntityQueue();
+            this.resetQuestionQueue(this.questionQueue.indexOf(parseInt(questionId)));
+            this.addEntitiesToQueue(architectureDetails[this.activeGroup].entities);
+            this.entityQueueHead = this.entityQueue.indexOf(this.getActiveEntityForAlreadyAnsweredQuestion(questionId));
+            this.setActiveEntity();
+            let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
+            this.addQuestionsToQueue(activeEntityQuestions);
+            this.setActiveQuestion();
+            this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
+            this.resetActiveEntitiesToRightOfEntityQueueHead(architectureDetails[groupId].entities);
+            this.resetActiveEntitiesToLeftOfEntityQueueHead(architectureDetails[groupId], questionEntityMapping);
+        } 
+
+        // Set the response for currently answered question;
+        this.setQuestionResponseMap(questionId, this.activeEntity, choice);
+
         // Get the filtered entities corresponding to the choice selected
         let filteredEntities = this.filterEntitiesOnOptionSelect(questionId, choice, questionEntityMapping, architectureDetails[groupId].entities);
-
+  
         // If active entity is among the filtered entities
         // Render the next question
         // If question queue has ended or active entity not in filtered entities
@@ -212,7 +332,7 @@ export default class Workspace extends Component {
         if(filteredEntities.includes(this.activeEntity)) {
             if(this.ifQuestionQueueHasElements()) {
                 this.setActiveQuestion();
-                this.filterQuestionsPerGroups(activeGroup, this.activeQuestion, questionDetails); 
+                this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails); 
             } else {
                 this.performActiveEntityUpdation(architectureDetails, questionDetails, filteredEntities);
             }
@@ -242,19 +362,16 @@ export default class Workspace extends Component {
     }
 
     render() {
-        let {
-            architectureDetails,
-            questionDetails,
-            questionEntityMapping
-        } = this.props;
+        console.log(this.questionQueue);
         return (
             <div id = 'workspace'>
                 <Questions 
-                    questionsObj = {questionDetails}
+                    questionsObj = {this.props.questionDetails}
                     onOptionSelectHandler = {this.onOptionSelectHandler}
                 />
-                <Diagram 
-                />
+                <Diagram
+                    architectureDetails = {this.props.architectureDetails}
+                />  
             </div>
         )
     }
