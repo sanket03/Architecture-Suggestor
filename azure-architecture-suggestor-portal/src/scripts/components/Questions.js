@@ -4,12 +4,14 @@ import QuestionChoice from './QuestionChoice';
 const Questions = (props) => {
 
   // Render active questions
-  const renderQuestions = ({questionsObj, onOptionSelectHandler}) => {
+  const renderQuestions = ({questionsObj, onOptionSelectHandler, questionResponseMap}) => {
     let questionCount = 0;
     return Object.keys(questionsObj).map(group => 
       questionsObj[group].map((question, index) => {
         if(question.isActive) {
           questionCount = questionCount + 1;
+          let isAnswered = questionResponseMap.hasOwnProperty(question.id)
+          let selectedChoice = isAnswered ? questionResponseMap[question.id].response : '';
           return (
             <QuestionComponent 
               key = {index}
@@ -18,9 +20,8 @@ const Questions = (props) => {
               group = {group}
               questionCount = {questionCount}
             >
-              {renderChoices(question, questionCount,onOptionSelectHandler)}
+              {renderChoices(question, questionCount, selectedChoice, onOptionSelectHandler)}
             </QuestionComponent>
-
           )
         } else {
           return (<></>);
@@ -30,18 +31,21 @@ const Questions = (props) => {
   }
 
   // Render respective choices for a
-  const renderChoices = (questionObj, questionCount, onOptionSelectHandler) => {
-    return questionObj['choices'].split('|').map((choice, index) => (
-      <QuestionChoice 
-        onOptionSelectHandler = {onOptionSelectHandler}
-        questionObj = {questionObj}
-        questionCount = {questionCount}
-        index = {index}
-        key = {index}
-      >
-        {choice}
-      </QuestionChoice>
-    ))
+  const renderChoices = (questionObj, questionCount, selectedChoice, onOptionSelectHandler) => {
+    return questionObj['choices'].split('|').map((choice, index) => {
+      let isChecked = selectedChoice === choice ? true : false; 
+      return (
+        <QuestionChoice 
+          onOptionSelectHandler = {onOptionSelectHandler}
+          questionObj = {questionObj}
+          questionCount = {questionCount}
+          index = {index}
+          key = {index}
+          isChecked = {isChecked}
+        >
+          {choice}
+        </QuestionChoice>
+    )})
   }
 
     return (

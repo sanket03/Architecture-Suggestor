@@ -4,7 +4,8 @@ const QuestionChoice = (props) => {
         onOptionSelectHandler,
         questionObj,
         questionCount,
-        index
+        index,
+        isChecked
     } = props;
 
     return (
@@ -17,6 +18,7 @@ const QuestionChoice = (props) => {
           id = {questionObj.id + index}
           name = {questionCount}
           onChange = {onOptionSelectHandler}
+          checked = {isChecked}
         />
         <label 
           htmlFor={questionObj.id + index}

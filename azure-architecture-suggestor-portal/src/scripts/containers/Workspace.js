@@ -45,11 +45,7 @@ export default class Workspace extends Component {
             relatedGroupsList.forEach((group)=> {
                 !this.groupQueue.includes(group) && this.groupQueue.push(group);
             })
-        } //else {
-        //     let nextGroupInGroupList = this.groupList[this.groupListPointer]
-        //     !this.groupQueue.includes(nextGroupInGroupList) && this.groupQueue.push(nextGroupInGroupList);
-        //     this.groupListPointer += 1;
-        // }
+        }
     }
 
     // Set isActive flag for a group
@@ -61,8 +57,22 @@ export default class Workspace extends Component {
 
     // Reset group queue
     resetGroupQueue(index) {
+        let architectureDetails = this.props.architectureDetails;
         this.groupQueue = this.groupQueue.slice(0, index + 1);
         this.groupQueueHead = index;
+
+        // Traverse the queue to check if the parent group is present
+        // As siblings need to be added in the group Queue
+        for(let index = this.groupQueueHead-1; index >= 0;index--) {
+            let groupId = this.groupQueue[index];
+            let relatedGroups = architectureDetails[groupId].relatedGroups;
+            if(relatedGroups.hasOwnProperty(this.groupQueue[this.groupQueueHead])) {
+                Object.keys(relatedGroups).forEach((group)=> {
+                    (!this.groupQueue.includes(group)) && this.groupQueue.push(group);
+                })
+            }
+            break;
+        }
         this.setActiveGroup(this.props.architectureDetails)
     }
 
@@ -102,9 +112,6 @@ export default class Workspace extends Component {
     // Get groups with questions to be rendered
     filterQuestionsPerGroups(activeGroup, activeQuestion, questionDetails) {
         questionDetails[activeGroup].forEach((questionObj) => {
-            // if(questionObj.id === activeQuestion.toString()) {
-            //     questionObj.isActive = true;
-            // }
             questionObj.isActive = this.questionQueue.includes(parseInt(questionObj.id)) 
         }, this);
     }
@@ -113,7 +120,6 @@ export default class Workspace extends Component {
     resetQuestionQueue(index) {
         this.questionQueue = this.questionQueue.slice(0, index + 1);
         this.questionQueueHead = index;
-        //this.setActiveQuestion();
     }
     
 
@@ -223,7 +229,8 @@ export default class Workspace extends Component {
     resetActiveGroups(groupId, architectureDetails) {
         this.resetGroupQueue(this.groupQueue.indexOf(groupId));
         for(let group in architectureDetails) {
-            architectureDetails[group].isActive = this.groupQueue.includes(group);
+            let indexInGroupQueue = this.groupQueue.indexOf(group);
+            architectureDetails[group].isActive = this.groupQueue.includes(group) && indexInGroupQueue < this.groupQueueHead;
         }
     }
 
@@ -279,6 +286,12 @@ export default class Workspace extends Component {
         })
     }
 
+    resetQuestionResponseMap() {
+        for(let questionId in this.questionResponseMap) {
+            !this.questionQueue.includes(parseInt(questionId)) && (delete this.questionResponseMap[questionId]);
+        }
+    }
+
     getEntityQuestions(entity) {
         return entity.questions;
     }
@@ -311,6 +324,7 @@ export default class Workspace extends Component {
             this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
             this.resetActiveEntitiesToRightOfEntityQueueHead(architectureDetails[groupId].entities);
             this.resetActiveEntitiesToLeftOfEntityQueueHead(architectureDetails[groupId], questionEntityMapping);
+            this.resetQuestionResponseMap();
         } 
 
         // Set the response for currently answered question;
@@ -362,12 +376,12 @@ export default class Workspace extends Component {
     }
 
     render() {
-        console.log(this.questionQueue);
         return (
             <div id = 'workspace'>
                 <Questions 
                     questionsObj = {this.props.questionDetails}
                     onOptionSelectHandler = {this.onOptionSelectHandler}
+                    questionResponseMap = {this.questionResponseMap}
                 />
                 <Diagram
                     architectureDetails = {this.props.architectureDetails}
