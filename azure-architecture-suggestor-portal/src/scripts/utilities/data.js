@@ -13,7 +13,7 @@ const architectureDetails = {
               "1": {
                 "name": "entity1",
                 "isActive": false,
-                "parentEntities": [],
+                "parentEntities": {},
                 "questions": [
                   1
                 ]
@@ -21,7 +21,7 @@ const architectureDetails = {
               "2": {
                 "name": "entity2",
                 "isActive": false,
-                "parentEntities": [],
+                "parentEntities": {},
                 "questions": [
                   2
                 ]
@@ -36,9 +36,9 @@ const architectureDetails = {
               "3": {
                 "name": "entity3",
                 "isActive": false,
-                "parentEntities": [
-                  "1"
-                ],
+                "parentEntities": {
+                    "1": ["1"] 
+                },
                 "questions": [
                   3
                 ]
@@ -46,9 +46,9 @@ const architectureDetails = {
               "4": {
                 "name": "entity4",
                 "isActive": false,
-                "parentEntities": [
-                  "2"
-                ],
+                "parentEntities": {
+                    "1": ["2"]   
+                },
                 "questions": [
                   4
                 ]
@@ -65,9 +65,9 @@ const architectureDetails = {
               "5": {
                 "name": "entity5",
                 "isActive": false,
-                "parentEntities": [
-                  "1"
-                ],
+                "parentEntities": {
+                    "1": ["1"]
+                },
                 "questions": [
                   5
                 ]
@@ -75,9 +75,9 @@ const architectureDetails = {
               "6": {
                 "name": "entity6",
                 "isActive": false,
-                "parentEntities": [
-                  "2"
-                ],
+                "parentEntities": {
+                    "1": ["2"]   
+                },
                 "questions": [
                   6
                 ]
@@ -94,9 +94,9 @@ const architectureDetails = {
               "7": {
                 "name": "entity7",
                 "isActive": false,
-                "parentEntities": [
-                  "5"
-                ],
+                "parentEntities": {
+                    "3": ["5"]   
+                },
                 "questions": [
                   7
                 ]
@@ -104,9 +104,9 @@ const architectureDetails = {
               "8": {
                 "name": "entity8",
                 "isActive": false,
-                "parentEntities": [
-                  "5,6"
-                ],
+                "parentEntities": {
+                    "3": ["5","6"]   
+                },
                 "questions": [
                   8
                 ]
@@ -121,9 +121,9 @@ const architectureDetails = {
               "9": {
                 "name": "entity9",
                 "isActive": false,
-                "parentEntities": [
-                  "7"
-                ],
+                "parentEntities": {
+                    "4": ["7"]   
+                },
                 "questions": [
                   9
                 ]
@@ -131,9 +131,9 @@ const architectureDetails = {
               "10": {
                 "name": "entity10",
                 "isActive": false,
-                "parentEntities": [
-                  "8"
-                ],
+                "parentEntities": {
+                    "4": ["8"]   
+                },
                 "questions": [
                   10
                 ]
@@ -141,9 +141,9 @@ const architectureDetails = {
               "11": {
                 "name": "entity11",
                 "isActive": false,
-                "parentEntities": [
-                  "7,8"
-                ],
+                "parentEntities": {
+                    "4": ["7","8"]   
+                },
                 "questions": [
                   10,
                   11

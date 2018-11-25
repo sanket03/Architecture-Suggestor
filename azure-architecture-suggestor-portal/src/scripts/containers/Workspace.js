@@ -62,7 +62,7 @@ export default class Workspace extends Component {
         this.groupQueueHead = index;
 
         // Traverse the queue to check if the parent group is present
-        // As siblings need to be added in the group Queue
+        // As siblings need to be added in the group queue
         for(let index = this.groupQueueHead-1; index >= 0;index--) {
             let groupId = this.groupQueue[index];
             let relatedGroups = architectureDetails[groupId].relatedGroups;
@@ -76,9 +76,38 @@ export default class Workspace extends Component {
         this.setActiveGroup(this.props.architectureDetails)
     }
 
+    // Check if any parent entity in any of the parent groups is active
+    checkForActiveParentEntities(parentEntityObj, architectureDetails) {
+        let checkForActiveParentEntitiesInOtherGroups = true;
+        let activeParentEntitypresent = false;
+        for(let group in parentEntityObj) {
+            let parentEntitiesList = parentEntityObj[group];
+            for(let parentEntity of parentEntitiesList) {
+                if(architectureDetails[group].entities[parentEntity].isActive) {
+                    checkForActiveParentEntitiesInOtherGroups = false;
+                    activeParentEntitypresent = true;
+                    break;
+                }
+            }
+            if(!checkForActiveParentEntitiesInOtherGroups) {
+                break;
+            }
+        }
+        return activeParentEntitypresent;
+    }
+
     // Add entities to group queue
     addEntitiesToQueue(entities) {
-        this.entityQueue.push(...Object.keys(entities));   
+        // Add to the queue only if parent entities are present
+        for(let entity in entities) {
+            let parentEntityObj = entities[entity].parentEntities;
+            if(Object.keys(parentEntityObj).length > 0) {
+                this.checkForActiveParentEntities(parentEntityObj, this.props.architectureDetails) && this.entityQueue.push(entity);
+            } else {
+                this.entityQueue.push(entity);   
+            }
+        }
+        console.log(this.entityQueue);   
     }
 
     // Set isActive flag for entities
@@ -111,8 +140,9 @@ export default class Workspace extends Component {
 
     // Get groups with questions to be rendered
     filterQuestionsPerGroups(activeGroup, activeQuestion, questionDetails) {
+        let traversedQuestions = this.questionQueue.slice(0, this.questionQueueHead);
         questionDetails[activeGroup].forEach((questionObj) => {
-            questionObj.isActive = this.questionQueue.includes(parseInt(questionObj.id)) 
+            questionObj.isActive = traversedQuestions.includes(parseInt(questionObj.id)) 
         }, this);
     }
 
@@ -120,6 +150,7 @@ export default class Workspace extends Component {
     resetQuestionQueue(index) {
         this.questionQueue = this.questionQueue.slice(0, index + 1);
         this.questionQueueHead = index;
+        console.log('questionQueue: ', this.questionQueue)
     }
     
 
@@ -196,19 +227,23 @@ export default class Workspace extends Component {
         }
 
         // Remove entities which were already filtered in previous pass
+        // Also remove those which are not present in entity queue 
+        // As their parent entities were inactive 
         filteredEntities = filteredEntities.filter((entity) => {
             if(traversedEntities.includes(entity)) {
-                return entities[entity].isActive
+                return entities[entity].isActive;
             } else {
-                return true
+                return this.entityQueue.includes(entity);
             }
         })
+
 
         // Set isActive true for filtered entities in architectureDetails object
         for(let entity in entities) {
             entities[entity].isActive = filteredEntities.includes(entity);
         }
         
+        console.log('filtered: ', filteredEntities);
         return filteredEntities;
     }
 
@@ -260,6 +295,7 @@ export default class Workspace extends Component {
         return this.questionResponseMap[questionId].entity
     }
 
+    // Reset isActive flag to false for entities to right of current entity in queue
     resetActiveEntitiesToRightOfEntityQueueHead(entities) {
         this.entityQueue.forEach((entity, index) => {
             if(index >= this.entityQueueHead) {
@@ -268,14 +304,16 @@ export default class Workspace extends Component {
         })
     }
 
+    // Reset isActive flag for entities to the left of current active entity 
+    // If they are already filtered in previous passes
     resetActiveEntitiesToLeftOfEntityQueueHead(group, questionEntityMapping) {
         let entities = group.entities;
         this.entityQueue.forEach((entity, index) => {
-            if(index < this.entityQueueHead) {
+            if(index < this.entityQueueHead-1) {
                 let entityQuestions = this.getEntityQuestions(entities[entity]);
                 entityQuestions.forEach((questionId) => {
                     if(this.questionQueue.includes(questionId)) {
-                        let entityResponseChoice = questionEntityMapping[questionId][entity].choice;
+                        let entityResponseChoice = questionEntityMapping[questionId][entity];
                         let actualResponse = this.questionResponseMap[questionId].response;
                         entities[entity].isActive = (entityResponseChoice === actualResponse)
                     } else {
