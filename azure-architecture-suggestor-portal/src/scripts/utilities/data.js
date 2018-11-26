@@ -52,7 +52,23 @@ const architectureDetails = {
                 "questions": [
                   4
                 ]
-              }
+              },
+              "12": {
+                "name": "entity12",
+                "isActive": false,
+                "parentEntities": {
+                },
+                "questions": [
+                ]
+              },
+              "13": {
+                "name": "entity13",
+                "isActive": false,
+                "parentEntities": {
+                },
+                "questions": [
+                ]
+              },
             }
           },
           "3": {

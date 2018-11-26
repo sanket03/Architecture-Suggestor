@@ -34,6 +34,6 @@ export default class ArchitectureLayerBox extends Component {
                 {this.renderEntities(groupData.entities)}
             </div>
         </div>
-    );
+    )
   }
 }

@@ -29,6 +29,8 @@ export default class Workspace extends Component {
 
         this.questionResponseMap = {}
 
+        this.loadCount = 0;
+
         // Binding context to methods
         this.filterQuestionsPerGroups = this.filterQuestionsPerGroups.bind(this);
         this.onOptionSelectHandler = this.onOptionSelectHandler.bind(this);
@@ -414,6 +416,7 @@ export default class Workspace extends Component {
     }
 
     render() {
+        this.loadCount += 1;
         return (
             <div id = 'workspace'>
                 <Questions 
@@ -423,6 +426,7 @@ export default class Workspace extends Component {
                 />
                 <Diagram
                     architectureDetails = {this.props.architectureDetails}
+                    loadCount = {this.loadCount}
                 />  
             </div>
         )
