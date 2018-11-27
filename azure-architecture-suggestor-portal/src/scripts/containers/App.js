@@ -14,7 +14,7 @@ import '../../styles/App.scss';
 export default class App extends Component {
   constructor() {
     super();
-    this.defaultArchitectureId = 1;
+    this.defaultArchitectureId = 2;
     this.architecturesList = {};
     this.architectureDetails = {};
     this.questionDetails = {};
@@ -64,7 +64,7 @@ export default class App extends Component {
     this.questionEntityMapping = questionEntityMapping;
     
     this.setState(() => ({
-        architectureId: 1
+        architectureId: 2
       }))
   }
 
@@ -72,7 +72,7 @@ export default class App extends Component {
     let selectedNode = this.selectedDropdownNode.current.value;
     // Get data for selected architecture
     this.setState(() => ({
-      architectureId: 1
+      architectureId: 2
     }))
   }
 

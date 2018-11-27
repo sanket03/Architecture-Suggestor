@@ -1,17 +1,35 @@
 .outer-box {
-    min-height: 35%;
-    max-height: 80%;
-    width: 125px;
-    margin: 0 25px;
+    width: 100px;
+    margin: 0 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
 
     .inner-box {
         display: flex;
         flex-direction: column;
         background-color: #F7F7F7;
+        font-size: 12px;
+        text-align: center;
+        justify-content: space-around;
+        padding: 10px;
+        min-height: 100px;
+        width: 100%;
 
         .hide {
             display: none;
-        }   
+        } 
+    }
+
+    .layer-name {
+        font-size: 14px;
+    }
+
+    .arrow {
+        position: absolute;
+        right: -50%;
     }
 }
 

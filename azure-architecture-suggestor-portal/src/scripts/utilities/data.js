@@ -12,7 +12,7 @@ const architectureDetails = {
             "entities": {
               "1": {
                 "name": "entity1",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {},
                 "questions": [
                   1
@@ -20,7 +20,7 @@ const architectureDetails = {
               },
               "2": {
                 "name": "entity2",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {},
                 "questions": [
                   2
@@ -35,7 +35,7 @@ const architectureDetails = {
             "entities": {
               "3": {
                 "name": "entity3",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "1": ["1"] 
                 },
@@ -45,7 +45,7 @@ const architectureDetails = {
               },
               "4": {
                 "name": "entity4",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "1": ["2"]   
                 },
@@ -55,7 +55,7 @@ const architectureDetails = {
               },
               "12": {
                 "name": "entity12",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                 },
                 "questions": [
@@ -63,7 +63,7 @@ const architectureDetails = {
               },
               "13": {
                 "name": "entity13",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                 },
                 "questions": [
@@ -80,7 +80,7 @@ const architectureDetails = {
             "entities": {
               "5": {
                 "name": "entity5",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "1": ["1"]
                 },
@@ -90,7 +90,7 @@ const architectureDetails = {
               },
               "6": {
                 "name": "entity6",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "1": ["2"]   
                 },
@@ -109,7 +109,7 @@ const architectureDetails = {
             "entities": {
               "7": {
                 "name": "entity7",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "3": ["5"]   
                 },
@@ -119,7 +119,7 @@ const architectureDetails = {
               },
               "8": {
                 "name": "entity8",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "3": ["5","6"]   
                 },
@@ -136,7 +136,7 @@ const architectureDetails = {
             "entities": {
               "9": {
                 "name": "entity9",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "4": ["7"]   
                 },
@@ -146,7 +146,7 @@ const architectureDetails = {
               },
               "10": {
                 "name": "entity10",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "4": ["8"]   
                 },
@@ -156,7 +156,7 @@ const architectureDetails = {
               },
               "11": {
                 "name": "entity11",
-                "isActive": false,
+                "isActive": true,
                 "parentEntities": {
                     "4": ["7","8"]   
                 },
