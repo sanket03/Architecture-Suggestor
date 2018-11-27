@@ -54,7 +54,8 @@ const prepareDataModule = (()=>{
             let relatedGroup = row.related_group;
             let connector = row.connector;
             let questionId = row.question_id;
-            let parentEntity = row.parent_entities
+            let parentEntity = row.parent_entities;
+            let parentEntityGroupId = row.parent_group_id;
 
             // If groupId not in entity groups then initialize it with static fields
             if(!(groupId in entityGroups)) {
@@ -73,15 +74,20 @@ const prepareDataModule = (()=>{
             if(!(entityId in entityGroup.entities)) {
                 entityGroup.entities[entityId] = {
                     'name': entityName,
-                    'isActive': false,
-                    'parentEntities': [],
+                    'isActive': true,
+                    'parentEntities': {},
                     'questions': []
                 }
             }
 
             // Set parent entities and related groups for an entity
             let entity = entityGroup.entities[entityId];
-            parentEntity !== null && !entity.parentEntities.includes(parentEntity) && entity.parentEntities.push(parentEntity);
+            if(parentEntity !== null) {
+                let parentEntitiesObj = entity.parentEntities;
+                parentEntitiesObj[parentEntityGroupId] = !parentEntitiesObj.hasOwnProperty(parentEntityGroupId) ?  [] : parentEntitiesObj[parentEntityGroupId]
+                !parentEntitiesObj[parentEntityGroupId].includes(parentEntity) && parentEntitiesObj[parentEntityGroupId].push(parentEntity);
+            }
+            // parentEntity !== null && !entity.parentEntities.includes(parentEntity) && entity.parentEntities.push(parentEntity);
             questionId !== null && !entity.questions.includes(questionId) && entity.questions.push(questionId);   
         })     
         preparedDataObject.groups = entityGroups;
@@ -114,7 +120,7 @@ const prepareDataModule = (()=>{
             let groupId = row.group_id;
             let questionId = row.question_id;
             let description = row.description;
-            let choices = row.choices;
+            let choices = row.choices.toLowerCase();
 
             if(!(groupId in entityGroups)) {
                 entityGroups[groupId] = [];
