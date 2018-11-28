@@ -109,7 +109,6 @@
                     this.entityQueue.push(entity);   
                 }
             }
-            console.log(this.entityQueue);   
         }
 
         // Set isActive flag for entities
@@ -154,7 +153,6 @@
             this.questionQueueHead = index;
         }
         
-
         // Check whether entity queue has exhaused
         ifGroupQueueHasElements() {
             return this.groupQueue.length > this.groupQueueHead;
@@ -183,6 +181,7 @@
 
         performActiveGroupUpdation(architectureDetails, questionDetails) {
             this.addGroupsToQueue(architectureDetails[this.activeGroup].relatedGroups);
+            let shouldUpdateActiveGroup = true;
             if(this.ifGroupQueueHasElements()) {
                 this.setActiveGroup(architectureDetails);
                 this.addEntitiesToQueue(architectureDetails[this.activeGroup].entities);
@@ -190,11 +189,16 @@
                     this.setActiveEntity(architectureDetails[this.activeGroup].entities);
                     let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
                     if(this.hasNonTraversedQuestions(activeEntityQuestions)) {
+                        shouldUpdateActiveGroup = false;
                         this.addQuestionsToQueue(activeEntityQuestions);
                         this.setActiveQuestion();
                         this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
                         break;
                     }
+                }
+                if(shouldUpdateActiveGroup) {
+                    this.resetEntityQueue();
+                    this.performActiveGroupUpdation(architectureDetails, questionDetails);
                 }
             }
         }
@@ -261,7 +265,7 @@
             // Set isActive true for filtered entities in architectureDetails object
             for(let entity in entities) {
                 entities[entity].isActive = filteredEntities.includes(entity);
-                if(!entities[entity].isActive && !entities[entity].hasOwnProperty('filteredBy')) {
+                if(!entities[entity].isActive && !entities[entity].filteredBy.length) {
                     entities[entity].filteredBy = questionId;
                 }
             }
@@ -298,7 +302,7 @@
                 if(!architectureDetails[group].isActive) {
                     for(let entity in architectureDetails[group].entities) {
                         architectureDetails[group].entities[entity].isActive = true;
-                        delete architectureDetails[group].entities[entity].filteredBy;
+                        architectureDetails[group].entities[entity].filteredBy = '';
                     }
                 }
             });
@@ -358,13 +362,13 @@
                         if(this.questionQueue.includes(filteredById)) {
                             if(filteredById == this.activeQuestion) {
                                 entities[entity].isActive = true;
-                                delete entities[entity].filteredBy;
+                                entities[entity].filteredBy = '';
                             } else {
                                 entities[entity] = false;
                             }
                         } else {
                             entities[entity].isActive = true;
-                            delete entities[entity].filteredBy;
+                            entities[entity].filteredBy = '';
                         }
                     }
                 }
@@ -373,7 +377,11 @@
 
         resetQuestionResponseMap() {
             for(let questionId in this.questionResponseMap) {
-                !this.questionQueue.includes(parseInt(questionId)) && (delete this.questionResponseMap[questionId]);
+                // Remove all the questions after the clicked question
+                // If there is a need to show the question with choices in scenario where the succeeding questions are same 
+                // Even after a previous question is clicked then check for questionId inclusion in this.questionqueue rather than traversedQuestions
+                let traversedQuestions = this.questionQueue.slice(0, this.questionQueueHead);
+                !traversedQuestions.includes(parseInt(questionId)) && (delete this.questionResponseMap[questionId]);
             }
         }
 
@@ -470,6 +478,8 @@
                     />
                     <Diagram
                         architectureDetails = {this.props.architectureDetails}
+                        questionDetails = {this.props.questionDetails}
+                        questionResponseMap = {this.questionResponseMap}
                         loadCount = {this.loadCount}
                     />  
                 </div>

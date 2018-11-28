@@ -185,7 +185,8 @@ const architectureDetails = {
                 "parentEntities": {},
                 "questions": [
                   18
-                ]
+                ],
+                "filteredBy": ""
               },
               "13": {
                 "name": "Sensors & IoT",
@@ -193,7 +194,8 @@ const architectureDetails = {
                 "parentEntities": {},
                 "questions": [
                   18
-                ]
+                ],
+                "filteredBy": ""
               },
               "14": {
                 "name": "Events & Streams",
@@ -201,13 +203,15 @@ const architectureDetails = {
                 "parentEntities": {},
                 "questions": [
                   18
-                ]
+                ],
+                "filteredBy": ""
               },
               "15": {
                 "name": "Business Apps(Structured Data)",
                 "isActive": true,
                 "parentEntities": {},
-                "questions": []
+                "questions": [],
+                "filteredBy": ""
               }
             }
           },
@@ -227,7 +231,8 @@ const architectureDetails = {
                     "15"
                   ]
                 },
-                "questions": []
+                "questions": [],
+                "filteredBy": ""
               },
               "17": {
                 "name": "IoT Hub",
@@ -239,7 +244,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   23
-                ]
+                ],
+                "filteredBy": ""
               },
               "18": {
                 "name": "Azure HD Insights",
@@ -250,10 +256,8 @@ const architectureDetails = {
                     "14"
                   ]
                 },
-                "questions": [
-                  20,
-                  21
-                ]
+                "questions": [],
+                "filteredBy": ""
               },
               "19": {
                 "name": "Event Hub",
@@ -263,7 +267,8 @@ const architectureDetails = {
                     "14"
                   ]
                 },
-                "questions": []
+                "questions": [],
+                "filteredBy": ""
               }
             }
           },
@@ -288,7 +293,8 @@ const architectureDetails = {
                 "questions": [
                   15,
                   17
-                ]
+                ],
+                "filteredBy": ""
               },
               "21": {
                 "name": "Azure DataLake",
@@ -304,7 +310,8 @@ const architectureDetails = {
                 "questions": [
                   15,
                   17
-                ]
+                ],
+                "filteredBy": ""
               },
               "22": {
                 "name": "Azure CosmosDB",
@@ -317,9 +324,9 @@ const architectureDetails = {
                   ]
                 },
                 "questions": [
-                  16,
-                  20
-                ]
+                  16
+                ],
+                "filteredBy": ""
               }
             }
           },
@@ -339,10 +346,8 @@ const architectureDetails = {
                     "21"
                   ]
                 },
-                "questions": [
-                  20,
-                  21
-                ]
+                "questions": [],
+                "filteredBy": ""
               },
               "23": {
                 "name": "Azure Machine Learning",
@@ -356,7 +361,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   19
-                ]
+                ],
+                "filteredBy": ""
               },
               "24": {
                 "name": "Stream Analytics",
@@ -366,7 +372,8 @@ const architectureDetails = {
                     "20"
                   ]
                 },
-                "questions": []
+                "questions": [],
+                "filteredBy": ""
               },
               "25": {
                 "name": "Azure Data Bricks",
@@ -379,7 +386,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   19
-                ]
+                ],
+                "filteredBy": ""
               },
               "26": {
                 "name": "Azure Functions",
@@ -392,7 +400,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   19
-                ]
+                ],
+                "filteredBy": ""
               },
               "27": {
                 "name": "Azure Data Lake Analytics",
@@ -403,7 +412,8 @@ const architectureDetails = {
                     "21"
                   ]
                 },
-                "questions": []
+                "questions": [],
+                "filteredBy": ""
               }
             }
           },
@@ -425,7 +435,8 @@ const architectureDetails = {
                 "questions": [
                   20,
                   21
-                ]
+                ],
+                "filteredBy": ""
               },
               "22": {
                 "name": "Azure CosmosDB",
@@ -441,9 +452,9 @@ const architectureDetails = {
                   ]
                 },
                 "questions": [
-                  16,
                   20
-                ]
+                ],
+                "filteredBy": ""
               },
               "28": {
                 "name": "Azure SQL DB",
@@ -459,7 +470,8 @@ const architectureDetails = {
                   20,
                   21,
                   22
-                ]
+                ],
+                "filteredBy": ""
               },
               "29": {
                 "name": "Azure DW",
@@ -474,7 +486,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   22
-                ]
+                ],
+                "filteredBy": ""
               }
             }
           },
@@ -498,7 +511,8 @@ const architectureDetails = {
                   12,
                   13,
                   14
-                ]
+                ],
+                "filteredBy": ""
               },
               "31": {
                 "name": "WebApps",
@@ -513,7 +527,8 @@ const architectureDetails = {
                 "questions": [
                   12,
                   13
-                ]
+                ],
+                "filteredBy": ""
               },
               "32": {
                 "name": "Microsoft Excel",
@@ -527,7 +542,8 @@ const architectureDetails = {
                   12,
                   13,
                   14
-                ]
+                ],
+                "filteredBy": ""
               }
             }
           }
@@ -793,7 +809,6 @@ const questionEntityMapping = {
     "17": "yes"
   }
 }
-
 
 const solutionsList = {
     "1":"architecture 1"

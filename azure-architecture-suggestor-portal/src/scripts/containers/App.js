@@ -14,7 +14,7 @@ import '../../styles/App.scss';
 export default class App extends Component {
   constructor() {
     super();
-    this.defaultArchitectureId = 2;
+    this.defaultArchitectureId = 1;
     this.architecturesList = {};
     this.architectureDetails = {};
     this.questionDetails = {};
@@ -46,25 +46,25 @@ export default class App extends Component {
       getQuestionEntityMapping
     } = controllers;
 
-    // // Fetch architectures List
-    // this.architecturesList = await serviceModule.fetchData(`${url}${getArchitecturesList}`);
+    // Fetch architectures List
+    this.architecturesList = await serviceModule.fetchData(`${url}${getArchitecturesList}`);
 
-    // // Fetch architecture details for a default architecture
-    // this.architectureDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getArchitectureDetails}/${this.defaultArchitectureId}`);
+    // Fetch architecture details for a default architecture
+    this.architectureDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getArchitectureDetails}/${this.defaultArchitectureId}`);
 
-    // // Fetch question details for a default architecture
-    // this.questionDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getQuestionDetails}/${this.defaultArchitectureId}`);
+    // Fetch question details for a default architecture
+    this.questionDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getQuestionDetails}/${this.defaultArchitectureId}`);
 
-    // // Fetch question details for a default architecture
-    // this.questionEntityMapping = await serviceModule.fetchData(`${url}${getQuestionEntityMapping}`);
+    // Fetch question details for a default architecture
+    this.questionEntityMapping = await serviceModule.fetchData(`${url}${getQuestionEntityMapping}`);
 
-    this.architecturesList = solutionsList;
-    this.architectureDetails = architectureDetails;
-    this.questionDetails = questionDetails;
-    this.questionEntityMapping = questionEntityMapping;
+    // this.architecturesList = solutionsList;
+    // this.architectureDetails = architectureDetails;
+    // this.questionDetails = questionDetails;
+    // this.questionEntityMapping = questionEntityMapping;
     
     this.setState(() => ({
-        architectureId: 2
+        architectureId: 1
       }))
   }
 
@@ -72,7 +72,7 @@ export default class App extends Component {
     let selectedNode = this.selectedDropdownNode.current.value;
     // Get data for selected architecture
     this.setState(() => ({
-      architectureId: 2
+      architectureId: 1
     }))
   }
 

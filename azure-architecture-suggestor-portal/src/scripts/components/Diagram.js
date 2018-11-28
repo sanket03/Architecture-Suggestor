@@ -8,16 +8,26 @@ export default class Diagram extends Component {
     this.renderGroupBox = this.renderGroupBox.bind(this);
   }
 
-  renderGroupBox(architectureDetails) {
+  shouldRenderGroup(groupQuestionsObj, questionResponseMap) {
+    for(let questionObj of groupQuestionsObj) {
+      if(questionObj.id in questionResponseMap) {
+        return true
+      } 
+    }
+    return false;
+  }
+  
+  renderGroupBox(architectureDetails, questionDetails, questionResponseMap) {
     let element = []
     for(let group in architectureDetails) {
-      element.push(      
-        <ArchitectureLayerBox
-        key = {group}
-        groupData = {architectureDetails[group]}
-        show = {architectureDetails[group].isActive}
-        />
-      )
+      if(this.shouldRenderGroup(questionDetails[group], questionResponseMap))
+        element.push(      
+          <ArchitectureLayerBox
+          key = {group}
+          groupData = {architectureDetails[group]}
+          show = {architectureDetails[group].isActive}
+          />
+        )
     }
     return element;
   }
@@ -26,7 +36,7 @@ export default class Diagram extends Component {
     return (
       <div id = 'diagram-container'>
         <div id = 'diagram-wrapper'>
-          {this.renderGroupBox(this.props.architectureDetails)}
+          {this.renderGroupBox(this.props.architectureDetails, this.props.questionDetails, this.props.questionResponseMap)}
         </div>
       </div>
     );

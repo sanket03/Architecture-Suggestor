@@ -5,7 +5,7 @@ const prepareDataModule = require('../business_layer/prepareData')
 router.get('/GetArchitecturesList', (req,res) => {
     prepareDataModule.getArchitecturesList().then(data => {
         res.setHeader('Content-Type', 'application/json');
-        res.send(data);
+        res.send(JSON.stringify(data));
     })
 });
 

@@ -5,5 +5,5 @@ app.use(cors());
 app.options('*', cors());
 app.use('/', routes);
 
-app.listen(3003)
+app.listen(3001)
 console.log('server is running at ' + 3001)

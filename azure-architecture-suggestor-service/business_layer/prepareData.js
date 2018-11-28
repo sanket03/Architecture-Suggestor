@@ -76,7 +76,8 @@ const prepareDataModule = (()=>{
                     'name': entityName,
                     'isActive': true,
                     'parentEntities': {},
-                    'questions': []
+                    'questions': [],
+                    'filteredBy': ''
                 }
             }
 
