@@ -824,7 +824,8 @@ const questionEntityMapping = {
 }
 
 const solutionsList = {
-    "1":"architecture 1"
+    "1":"architecture 1",
+    '2':'Data Warehouse'
 }
 
 export {
