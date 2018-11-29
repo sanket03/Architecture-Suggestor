@@ -16,15 +16,15 @@
             this.groupListPointer = 1;
 
             this.groupQueue = [this.groupList[0]];
-            this.groupQueueHead = 0;
+            this.groupQueuePointer = 0;
             this.activeGroup = this.groupList[0];
             
             this.entityQueue = [];
-            this.entityQueueHead = 0;
+            this.entityQueuePointer = 0;
             this.activeEntity = '';
 
             this.questionQueue = [];
-            this.questionQueueHead = 0;
+            this.questionQueuePointer = 0;
             this.activeQuestion = '';
 
             this.questionResponseMap = {}
@@ -41,7 +41,6 @@
             let relatedGroupsList = Object.keys(groups);
 
             // If related groups are present then add to the queue
-            // Else add the next group as per architecture
             // Check if they are already present
             if(relatedGroupsList.length > 0)  {
                 relatedGroupsList.forEach((group)=> {
@@ -50,25 +49,45 @@
             }
         }
 
+        // Increment group queue pointer
+        incrementGroupQueuePointer() {
+            this.groupQueuePointer += 1;
+        }
+
+        // Set group queue pointer
+        setGroupQueuePointer(index) {
+            this.groupQueuePointer = index;
+        }
+
         // Set isActive flag for a group
+        setIsActiveFlagForGroups(groupObj) {
+            groupObj.isActive = true;
+        }
+
+        // Set active group in group queue
         setActiveGroup(architectureDetails) {
-            this.activeGroup = this.groupQueue[this.groupQueueHead]
-            architectureDetails[this.activeGroup].isActive = true;
-            this.groupQueueHead += 1;
+            this.activeGroup = this.groupQueue[this.groupQueuePointer]
+            this.setIsActiveFlagForGroups(architectureDetails[this.activeGroup])
+            this.incrementGroupQueuePointer();
+        }
+
+        // Slice group queue from start till index
+        sliceGroupQueue(index) {
+            this.groupQueue = this.groupQueue.slice(0, index + 1);
         }
 
         // Reset group queue
         resetGroupQueue(index) {
             let architectureDetails = this.props.architectureDetails;
-            this.groupQueue = this.groupQueue.slice(0, index + 1);
-            this.groupQueueHead = index;
+            this.sliceGroupQueue(index);
+            this.setGroupQueuePointer(index);
 
             // Traverse the queue to check if the parent group is present
             // As siblings need to be added in the group queue
-            for(let index = this.groupQueueHead-1; index >= 0;index--) {
+            for(let index = this.groupQueuePointer-1; index >= 0; index--) {
                 let groupId = this.groupQueue[index];
                 let relatedGroups = architectureDetails[groupId].relatedGroups;
-                if(relatedGroups.hasOwnProperty(this.groupQueue[this.groupQueueHead])) {
+                if(relatedGroups.hasOwnProperty(this.groupQueue[this.groupQueuePointer])) {
                     Object.keys(relatedGroups).forEach((group)=> {
                         (!this.groupQueue.includes(group)) && this.groupQueue.push(group);
                     })
@@ -80,22 +99,36 @@
 
         // Check if any parent entity in any of the parent groups is active
         checkForActiveParentEntities(parentEntityObj, architectureDetails) {
-            let checkForActiveParentEntitiesInOtherGroups = true;
-            let activeParentEntitypresent = false;
-            for(let group in parentEntityObj) {
-                let parentEntitiesList = parentEntityObj[group];
-                for(let parentEntity of parentEntitiesList) {
-                    if(architectureDetails[group].entities[parentEntity].isActive) {
-                        checkForActiveParentEntitiesInOtherGroups = false;
-                        activeParentEntitypresent = true;
+            if(Object.keys(parentEntityObj).length > 0) {
+                let checkForActiveParentEntitiesInOtherGroups = true;
+                let activeParentEntitypresent = false;
+                for(let group in parentEntityObj) {
+                    let parentEntitiesList = parentEntityObj[group];
+                    for(let parentEntity of parentEntitiesList) {
+                        if(architectureDetails[group].entities[parentEntity].isActive) {
+                            checkForActiveParentEntitiesInOtherGroups = false;
+                            activeParentEntitypresent = true;
+                            break;
+                        }
+                    }
+                    if(!checkForActiveParentEntitiesInOtherGroups) {
                         break;
                     }
                 }
-                if(!checkForActiveParentEntitiesInOtherGroups) {
-                    break;
-                }
+                return activeParentEntitypresent;
+            } else {
+                return true;
             }
-            return activeParentEntitypresent;
+        }
+
+        // Set isActive flag for entities
+        setIsActiveFlagForEntities(entityObj) {
+            entityObj.isActive = true;
+        }
+
+        // Reset isActive flag for entities
+        resetIsActiveFlagForEntities(entityObj) {
+            entityObj.isActive = false;
         }
 
         // Add entities to group queue
@@ -103,24 +136,25 @@
             // Add to the queue only if parent entities are present
             for(let entity in entities) {
                 let parentEntityObj = entities[entity].parentEntities;
-                if(Object.keys(parentEntityObj).length > 0) {
-                    this.checkForActiveParentEntities(parentEntityObj, this.props.architectureDetails) && this.entityQueue.push(entity);
+                if(this.checkForActiveParentEntities(parentEntityObj, this.props.architectureDetails)) {
+                    this.entityQueue.push(entity);
                 } else {
-                    this.entityQueue.push(entity);   
+                    this.resetIsActiveFlagForEntities(entities[entity]);
                 }
             }
         }
 
-        // Set isActive flag for entities
+        // Set active entity from amongst entity queue
+        // This marks the entity for which questions will be asked
         setActiveEntity() {
-            this.activeEntity = this.entityQueue[this.entityQueueHead];
-            this.entityQueueHead += 1;
+            this.activeEntity = this.entityQueue[this.entityQueuePointer];
+            this.entityQueuePointer += 1;
         }
 
         // Reset entity queue
         resetEntityQueue() {
             this.entityQueue = [];
-            this.entityQueueHead = 0;
+            this.entityQueuePointer = 0;
             this.activeEntity = '';
         }
 
@@ -135,13 +169,13 @@
 
         // Set isActive flag for a group
         setActiveQuestion() {
-            this.activeQuestion = this.questionQueue[this.questionQueueHead];
-            this.questionQueueHead = this.questionQueueHead + 1;
+            this.activeQuestion = this.questionQueue[this.questionQueuePointer];
+            this.questionQueuePointer = this.questionQueuePointer + 1;
         }
 
         // Get groups with questions to be rendered
         filterQuestionsPerGroups(activeGroup, activeQuestion, questionDetails) {
-            let traversedQuestions = this.questionQueue.slice(0, this.questionQueueHead);
+            let traversedQuestions = this.questionQueue.slice(0, this.questionQueuePointer);
             questionDetails[activeGroup].forEach((questionObj) => {
                 questionObj.isActive = traversedQuestions.includes(parseInt(questionObj.id)) 
             }, this);
@@ -150,29 +184,29 @@
         // Reset question queue
         resetQuestionQueue(index) {
             this.questionQueue = this.questionQueue.slice(0, index + 1);
-            this.questionQueueHead = index;
+            this.questionQueuePointer = index;
         }
         
         // Check whether entity queue has exhaused
         ifGroupQueueHasElements() {
-            return this.groupQueue.length > this.groupQueueHead;
+            return this.groupQueue.length > this.groupQueuePointer;
         }
 
         // Check whether entity queue has exhaused
         ifEntityQueueHasElements() {
-            return this.entityQueue.length > this.entityQueueHead;
+            return this.entityQueue.length > this.entityQueuePointer;
         }
 
         // Check whether entity queue has exhaused
         ifQuestionQueueHasElements() {
-            return this.questionQueue.length > this.questionQueueHead;
+            return this.questionQueue.length > this.questionQueuePointer;
         }
 
         // Check whether entities in current active group has non traversed questions in question queue		
         // This handles the case when filtered entity's question has already been traversed in previous pass		
         hasNonTraversedQuestions(activeEntityQuestions) {		
             for(let questionId of activeEntityQuestions) {		
-                if(!this.questionQueue.includes(questionId) || (this.questionQueue.indexOf(questionId) >= this.questionQueueHead)) {		
+                if(!this.questionQueue.includes(questionId) || (this.questionQueue.indexOf(questionId) >= this.questionQueuePointer)) {		
                     return true;		
                 }		
             }		
@@ -190,6 +224,7 @@
                     let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
                     if(this.hasNonTraversedQuestions(activeEntityQuestions)) {
                         shouldUpdateActiveGroup = false;
+                        this.resetQuestionQueueTest(this.questionQueuePointer-1)
                         this.addQuestionsToQueue(activeEntityQuestions);
                         this.setActiveQuestion();
                         this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
@@ -202,6 +237,9 @@
                 }
             }
         }
+        resetQuestionQueueTest(index) {
+            this.questionQueue = this.questionQueue.slice(0, index + 1);
+        }
 
         performActiveEntityUpdation(architectureDetails, questionDetails, filteredEntities) {
             let shouldUpdateActiveGroup = true;
@@ -210,6 +248,7 @@
                 let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
                 if(filteredEntities.includes(this.activeEntity) && this.hasNonTraversedQuestions(activeEntityQuestions)) {
                     shouldUpdateActiveGroup = false;
+                    this.resetQuestionQueueTest(this.questionQueuePointer-1)
                     this.addQuestionsToQueue(activeEntityQuestions);
                     this.setActiveQuestion();
                     this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
@@ -228,7 +267,7 @@
             let filteredEntities = [];
             let groupEntities = Object.keys(entities);
             let entitiesForQuestion = questionEntityMapping[questionId];
-            let traversedEntities = this.entityQueue.slice(0, this.entityQueueHead - 1);
+            let traversedEntities = this.entityQueue.slice(0, this.entityQueuePointer - 1);
             for(let entity in entitiesForQuestion) {
                 if(entitiesForQuestion[entity].split('|').includes(choice)) {
                     filteredEntities.push(entity);
@@ -292,7 +331,7 @@
             this.resetGroupQueue(this.groupQueue.indexOf(groupId));
             for(let group in architectureDetails) {
                 let indexInGroupQueue = this.groupQueue.indexOf(group);
-                architectureDetails[group].isActive = this.groupQueue.includes(group) && indexInGroupQueue < this.groupQueueHead;
+                architectureDetails[group].isActive = this.groupQueue.includes(group) && indexInGroupQueue < this.groupQueuePointer;
             }
         }
 
@@ -323,53 +362,23 @@
             return this.questionResponseMap[questionId].entity
         }
 
-        // Reset isActive flag to false for entities to right of current entity in queue
-        resetActiveEntitiesToRightOfEntityQueueHead(entities) {
-            this.entityQueue.forEach((entity, index) => {
-                if(index >= this.entityQueueHead) {
-                    entities[entity].isActive = false;
-                }
-            })
-        }
-
-        // Reset isActive flag for entities to the left of current active entity 
-        // If they are already filtered in previous passes
-        resetActiveEntitiesToLeftOfEntityQueueHead(group, questionEntityMapping) {
+        resetActiveEntities(group, questionEntityMapping) {
             let entities = group.entities;
+            let traversedQuestions = this.questionQueue.slice(0, this.questionQueuePointer);
             this.entityQueue.forEach((entity, index) => {
-                if(index < this.entityQueueHead-1) {
-                    let entityQuestions = this.getEntityQuestions(entities[entity]);
-                    entityQuestions.forEach((questionId) => {
-                        if(this.questionQueue.includes(questionId)) {
-                            let entityResponseChoice = questionEntityMapping[questionId][entity];
-                            let actualResponse = this.questionResponseMap[questionId].response;
-                            entities[entity].isActive = (entityResponseChoice === actualResponse)
+                // Check only if isActive flag is false
+                if(!entities[entity].isActive) {
+                    let filteredById = entities[entity].filteredBy;
+                    if(traversedQuestions.includes(parseInt(filteredById))) {
+                        if(filteredById == this.activeQuestion) {
+                            entities[entity].isActive = true;
+                            entities[entity].filteredBy = '';
                         } else {
                             entities[entity].isActive = false;
                         }
-                    })
-                }
-            })
-        }
-
-        resetActiveEntities(group, questionEntityMapping) {
-            let entities = group.entities;
-            this.entityQueue.forEach((entity, index) => {
-                if(index >= this.entityQueueHead-1) {
-                    // Check only if isActive flag is false
-                    if(!entities[entity].isActive) {
-                        let filteredById = entities[entity].filteredBy;
-                        if(this.questionQueue.includes(filteredById)) {
-                            if(filteredById == this.activeQuestion) {
-                                entities[entity].isActive = true;
-                                entities[entity].filteredBy = '';
-                            } else {
-                                entities[entity] = false;
-                            }
-                        } else {
-                            entities[entity].isActive = true;
-                            entities[entity].filteredBy = '';
-                        }
+                    } else {
+                        entities[entity].isActive = true;
+                        entities[entity].filteredBy = '';
                     }
                 }
             })
@@ -380,7 +389,7 @@
                 // Remove all the questions after the clicked question
                 // If there is a need to show the question with choices in scenario where the succeeding questions are same 
                 // Even after a previous question is clicked then check for questionId inclusion in this.questionqueue rather than traversedQuestions
-                let traversedQuestions = this.questionQueue.slice(0, this.questionQueueHead);
+                let traversedQuestions = this.questionQueue.slice(0, this.questionQueuePointer);
                 !traversedQuestions.includes(parseInt(questionId)) && (delete this.questionResponseMap[questionId]);
             }
         }
@@ -409,7 +418,7 @@
                 this.resetEntityQueue();
                 this.resetQuestionQueue(this.questionQueue.indexOf(parseInt(questionId)));
                 this.addEntitiesToQueue(architectureDetails[this.activeGroup].entities);
-                this.entityQueueHead = this.entityQueue.indexOf(this.getActiveEntityForAlreadyAnsweredQuestion(questionId));
+                this.entityQueuePointer = this.entityQueue.indexOf(this.getActiveEntityForAlreadyAnsweredQuestion(questionId));
                 this.setActiveEntity();
                 let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
                 this.addQuestionsToQueue(activeEntityQuestions);

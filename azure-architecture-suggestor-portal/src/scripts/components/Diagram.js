@@ -8,11 +8,25 @@ export default class Diagram extends Component {
     this.renderGroupBox = this.renderGroupBox.bind(this);
   }
 
+  // Checks whether the group should be rendered or not
   shouldRenderGroup(groupQuestionsObj, questionResponseMap) {
+    let allQuestionsInactive = true;
+    // Check if all the questions are inactive
     for(let questionObj of groupQuestionsObj) {
-      if(questionObj.id in questionResponseMap) {
-        return true
-      } 
+      if(questionObj.isActive) {
+        allQuestionsInactive = false;
+      }
+    }
+
+    // Check for question Ids in question Response map
+    if(allQuestionsInactive) {
+      return true;
+    } else {
+      for(let questionObj of groupQuestionsObj) {
+        if(questionObj.id in questionResponseMap) {
+          return true
+        }
+      }
     }
     return false;
   }

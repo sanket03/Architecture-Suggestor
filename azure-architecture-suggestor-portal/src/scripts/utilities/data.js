@@ -16,7 +16,8 @@ const architectureDetails = {
                 "parentEntities": {},
                 "questions": [
                   1
-                ]
+                ],
+                "filteredBy": ""
               },
               "2": {
                 "name": "entity2",
@@ -24,7 +25,8 @@ const architectureDetails = {
                 "parentEntities": {},
                 "questions": [
                   2
-                ]
+                ],
+                "filteredBy": ""
               }
             }
           },
@@ -41,7 +43,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   3
-                ]
+                ],
+                "filteredBy": ""
               },
               "4": {
                 "name": "entity4",
@@ -51,7 +54,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   4
-                ]
+                ],
+                "filteredBy": ""
               },
               "12": {
                 "name": "entity12",
@@ -59,7 +63,8 @@ const architectureDetails = {
                 "parentEntities": {
                 },
                 "questions": [
-                ]
+                ],
+                "filteredBy": ""
               },
               "13": {
                 "name": "entity13",
@@ -67,7 +72,8 @@ const architectureDetails = {
                 "parentEntities": {
                 },
                 "questions": [
-                ]
+                ],
+                "filteredBy": ""
               },
             }
           },
@@ -86,7 +92,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   5
-                ]
+                ],
+                "filteredBy": ""
               },
               "6": {
                 "name": "entity6",
@@ -96,7 +103,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   6
-                ]
+                ],
+                "filteredBy": ""
               }
             }
           },
@@ -115,7 +123,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   7
-                ]
+                ],
+                "filteredBy": ""
               },
               "8": {
                 "name": "entity8",
@@ -125,7 +134,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   8
-                ]
+                ],
+                "filteredBy": ""
               }
             }
           },
@@ -142,7 +152,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   9
-                ]
+                ],
+                "filteredBy": ""
               },
               "10": {
                 "name": "entity10",
@@ -152,7 +163,8 @@ const architectureDetails = {
                 },
                 "questions": [
                   10
-                ]
+                ],
+                "filteredBy": ""
               },
               "11": {
                 "name": "entity11",
@@ -163,7 +175,8 @@ const architectureDetails = {
                 "questions": [
                   10,
                   11
-                ]
+                ],
+                "filteredBy": ""
               }
             }
           }
