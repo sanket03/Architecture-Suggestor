@@ -1,0 +1,65 @@
+[1mdiff --git a/azure-architecture-suggestor-portal/src/scripts/containers/App.js b/azure-architecture-suggestor-portal/src/scripts/containers/App.js[m
+[1mindex 9035d20..cff2bf0 100644[m
+[1m--- a/azure-architecture-suggestor-portal/src/scripts/containers/App.js[m
+[1m+++ b/azure-architecture-suggestor-portal/src/scripts/containers/App.js[m
+[36m@@ -14,7 +14,7 @@[m [mimport '../../styles/App.scss';[m
+ export default class App extends Component {[m
+   constructor() {[m
+     super();[m
+[31m-    this.defaultArchitectureId = 1;[m
+[32m+[m[32m    this.defaultArchitectureId = 2;[m
+     this.architecturesList = {};[m
+     this.architectureDetails = {};[m
+     this.questionDetails = {};[m
+[36m@@ -46,25 +46,25 @@[m [mexport default class App extends Component {[m
+       getQuestionEntityMapping[m
+     } = controllers;[m
+ [m
+[31m-    // // Fetch architectures List[m
+[31m-    // this.architecturesList = await serviceModule.fetchData(`${url}${getArchitecturesList}`);[m
+[32m+[m[32m    // Fetch architectures List[m
+[32m+[m[32m    this.architecturesList = await serviceModule.fetchData(`${url}${getArchitecturesList}`);[m
+ [m
+[31m-    // // Fetch architecture details for a default architecture[m
+[31m-    // this.architectureDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getArchitectureDetails}/${this.defaultArchitectureId}`);[m
+[32m+[m[32m    // Fetch architecture details for a default architecture[m
+[32m+[m[32m    this.architectureDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getArchitectureDetails}/${this.defaultArchitectureId}`);[m
+ [m
+[31m-    // // Fetch question details for a default architecture[m
+[31m-    // this.questionDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getQuestionDetails}/${this.defaultArchitectureId}`);[m
+[32m+[m[32m    // Fetch question details for a default architecture[m
+[32m+[m[32m    this.questionDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getQuestionDetails}/${this.defaultArchitectureId}`);[m
+ [m
+[31m-    // // Fetch question details for a default architecture[m
+[31m-    // this.questionEntityMapping = await serviceModule.fetchData(`${url}${getQuestionEntityMapping}`);[m
+[32m+[m[32m    // Fetch question details for a default architecture[m
+[32m+[m[32m    this.questionEntityMapping = await serviceModule.fetchData(`${url}${getQuestionEntityMapping}`);[m
+ [m
+[31m-    this.architecturesList = solutionsList;[m
+[31m-    this.architectureDetails = architectureDetails;[m
+[31m-    this.questionDetails = questionDetails;[m
+[31m-    this.questionEntityMapping = questionEntityMapping;[m
+[32m+[m[32m    // this.architecturesList = solutionsList;[m
+[32m+[m[32m    // this.architectureDetails = architectureDetails;[m
+[32m+[m[32m    // this.questionDetails = questionDetails;[m
+[32m+[m[32m    // this.questionEntityMapping = questionEntityMapping;[m
+     [m
+     this.setState(() => ({[m
+[31m-        architectureId:1[m
+[32m+[m[32m        architectureId:2[m
+       }))[m
+   }[m
+ [m
+[1mdiff --git a/azure-architecture-suggestor-portal/src/scripts/containers/Workspace.js b/azure-architecture-suggestor-portal/src/scripts/containers/Workspace.js[m
+[1mindex 16a8cf8..6e4e50a 100644[m
+[1m--- a/azure-architecture-suggestor-portal/src/scripts/containers/Workspace.js[m
+[1m+++ b/azure-architecture-suggestor-portal/src/scripts/containers/Workspace.js[m
+[36m@@ -77,7 +77,7 @@[m
+             this.incrementGroupQueuePointer();[m
+         }[m
+ [m
+[31m-        // Slice group queue from start till index[m
+[32m+[m[32m        // Slice queue from start till index[m
+         sliceQueue(queue, index) {[m
+             return queue.slice(0, index);[m
+         }[m

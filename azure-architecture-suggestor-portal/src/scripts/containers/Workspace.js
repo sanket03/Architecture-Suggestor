@@ -77,7 +77,7 @@
             this.incrementGroupQueuePointer();
         }
 
-        // Slice group queue from start till index
+        // Slice queue from start till index
         sliceQueue(queue, index) {
             return queue.slice(0, index);
         }
