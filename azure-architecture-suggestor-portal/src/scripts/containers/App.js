@@ -72,7 +72,7 @@ export default class App extends Component {
     let selectedNode = this.selectedDropdownNode.current.value;
     // Get data for selected architecture
     this.setState(() => ({
-      architectureId: parseInt(selectedNode)
+      architectureId: selectedNode
     }))
   }
 
