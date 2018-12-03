@@ -6,8 +6,8 @@ const architectureDetails = {
             "name": "group 1",
             "isActive": false,
             "relatedGroups": {
-              "2": "con1",
-              "3": "con2"
+              "3": "con1",
+              "2": "con2"
             },
             "entities": {
               "1": {

@@ -1,18 +1,16 @@
 import React from 'react';
+import '../../styles/SvgRectComponent.scss';
 
 const SvgRectComponent = (props) =>  {
     let {
         height,
         width,
-        x,
-        y
     } = props
     return (
-        <rect
-            x = {x}
-            y = {y}
+
+        <rect               
             height = {height}
-            width = {width}
+            width = {width}           
         />
     );
 }
