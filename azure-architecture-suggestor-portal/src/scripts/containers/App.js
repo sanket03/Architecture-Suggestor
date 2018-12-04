@@ -14,7 +14,7 @@ import '../../styles/App.scss';
 export default class App extends Component {
   constructor() {
     super();
-    this.defaultArchitectureId = 2;
+    this.defaultArchitectureId = 1;
     this.architecturesList = {};
     this.architectureDetails = {};
     this.questionDetails = {};
@@ -64,7 +64,7 @@ export default class App extends Component {
     this.questionEntityMapping = questionEntityMapping;
     
     this.setState(() => ({
-        architectureId:2
+        architectureId:1
       }))
   }
 

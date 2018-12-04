@@ -3,7 +3,9 @@ import * as d3 from 'd3';
 import SvgRectComponent from './SvgRectComponent';
 import SvgTextComponent from './SvgTextComponent';
 import SvgImageComponent from './SvgImageComponent';
+import SvgPathComponent from './SvgPathComponent';
 import icon from '../../images/azure.png';
+import { link } from 'fs';
 
 const Diagram = (props) => {
 
@@ -44,6 +46,31 @@ const Diagram = (props) => {
     return false;
   }
 
+  // Draw link between groups
+  const drawLink = (pathDAttr) => {
+    return (
+      <SvgPathComponent 
+        d = {pathDAttr}
+      />
+    )
+  }
+
+  // Render links between groups
+  const renderLinks = (groupId, dimensionsObj) => {
+    let groupBoxDimensions = svgRectModule.getDimensions(groupId);
+    let linkElements= [];
+    if(groupBoxDimensions.hasOwnProperty('parentGroups')) {
+      let parentGroups = groupBoxDimensions.parentGroups;
+      parentGroups.forEach((parentGroupId, index) => {
+        let parentGroupBoxDimensions = svgRectModule.getDimensions(parentGroupId);
+        let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, parentGroupBoxDimensions);
+        let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
+        linkElements.push(drawLink(pathDAttr))
+      }) 
+    }
+    return linkElements;
+  }
+  
   // Render entity image as svg component
   const renderEntityImage = (url, groupBoxWidth, yCoord) => {
     let imageAttr = svgImageModule.setImageAttributes(url.icon, groupBoxWidth, yCoord);
@@ -77,10 +104,9 @@ const Diagram = (props) => {
     let imageElement = '';
     let textElement = '';
     let entityElement = [];
-    let groupBoxElementOffset = 10;
     let imageHeight = svgImageModule.defaultImageHeight;
     let textHeight = svgTextModule.defaultTextHeight;
-    let yCoord = groupBoxElementOffset; 
+    let yCoord = svgRectModule.defaultGroupOffset; 
     for(let entityObj in entitiesObj) {
       if(entitiesObj[entityObj].isActive) {
         let imageUrl = entityObj.url;
@@ -89,7 +115,7 @@ const Diagram = (props) => {
         yCoord += imageHeight;
         textElement = renderEntityText(entitiesObj[entityObj].name, groupBoxWidth, yCoord);
         yCoord += textHeight;
-        yCoord += groupBoxElementOffset;
+        yCoord += svgRectModule.defaultGroupOffset;
         entityElement.push(textElement);
       }
     }
@@ -103,30 +129,38 @@ const Diagram = (props) => {
     for(let groupId in architectureDetails) {
       let groupDataObj = architectureDetails[groupId];
       let rectAttr = svgRectModule.setRectAttributes(groupId, groupDataObj.entities);
-      element.push(
-        <svg  
-          key = {groupId}
-          className = {shouldRenderGroup(questionDetails[groupId], questionResponseMap) && groupDataObj.isActive ? 'show' : 'hide'}
-          height = {addUnitsInPx(rectAttr.height)}
-          width = {addUnitsInPx(rectAttr.width)}
-          x = {addUnitsInPx(rectAttr.x)}
-          y = {addUnitsInPx(rectAttr.y)}
-        >      
-          <SvgRectComponent
-            height = '100%'
-            width = '100%'
-          >
-          </SvgRectComponent>
-            {renderEntities(groupDataObj.entities, rectAttr.width, rectAttr.height)}      
-        </svg>
-      )
-      let relatedGroups = groupDataObj.relatedGroups;
-      let relatedGroupCounter = 0;
-      for(let relatedGroupId in relatedGroups) {
-        let groupEntities = architectureDetails[relatedGroupId].entities;
-          svgRectModule.setCoordinatesForRelatedGroups(groupId, relatedGroupId, relatedGroupCounter, groupEntities);
-          relatedGroupCounter +=1;
+      let showElements = shouldRenderGroup(questionDetails[groupId], questionResponseMap) && groupDataObj.isActive
+      if(showElements){
+        element.push(
+          <>
+            <svg  
+              key = {groupId}
+              className = {showElements ? 'show' : 'hide'}
+              height = {addUnitsInPx(rectAttr.height)}
+              width = {addUnitsInPx(rectAttr.width)}
+              x = {addUnitsInPx(rectAttr.x)}
+              y = {addUnitsInPx(rectAttr.y)}
+            >      
+              <SvgRectComponent
+                height = '100%'
+                width = '100%'
+              >
+              </SvgRectComponent>
+              {renderEntities(groupDataObj.entities, rectAttr.width, rectAttr.height)}
+            </svg>
+            {renderLinks(groupId)}
+          </>
+        )
+        let relatedGroups = groupDataObj.relatedGroups;
+        let relatedGroupCounter = 0;
+        for(let relatedGroupId in relatedGroups) {
+          let groupEntities = architectureDetails[relatedGroupId].entities;
+            svgRectModule.setCoordinatesForRelatedGroups(groupId, relatedGroupId, relatedGroupCounter, groupEntities);
+            svgRectModule.pupulateParentGroupList(groupId, relatedGroupId);
+            relatedGroupCounter +=1;
+        }
       }
+
     }
     return element;
   }
@@ -144,7 +178,7 @@ export default Diagram;
 
 
 const svgRectModule = (() => {
-  const defaultRectWidth = 100;
+  const defaultRectWidth = 150;
   const defaultRectHeight = 65;
   const defaultGroupOffset = 10;
   let dimensions = {};
@@ -209,6 +243,11 @@ const svgRectModule = (() => {
     return dimensions[groupId].height;
   }
 
+  // Get dimensions for a particular group
+  const getDimensions = (groupId) => {
+    return dimensions[groupId];
+  }
+
   // Set X coordinate for a group box in dimensions object
   const setXCoordinate = (groupId, x) => {
     dimensions[groupId].x = x;
@@ -229,15 +268,58 @@ const svgRectModule = (() => {
     dimensions[groupId].width = rectWidth;
   }
 
-  // Calculate x,y,height for group box and set them in dimensions object
+  // Set left edge midpoint for groupBox
+  const setLeftEdgeMid = (groupId) => {
+    let groupBoxDimensions = dimensions[groupId]
+    let {x, y, height, width} = groupBoxDimensions;
+    groupBoxDimensions.leftEdgeMid = {
+      'x': x,
+      'y': y + height/2
+    };
+  }
+
+  // Set right edge midpoint for groupBox
+  const setRightEdgeMid = (groupId) => {
+    let groupBoxDimensions = dimensions[groupId]
+    let {x, y, height, width} = groupBoxDimensions;
+    groupBoxDimensions.rightEdgeMid = {
+      'x': x + width,
+      'y': y + height/2
+    };
+  }
+
+  // Set top edge midpoint for groupBox
+  const setTopEdgeMid = (groupId) => {
+    let groupBoxDimensions = dimensions[groupId]
+    let {x, y, height, width} = groupBoxDimensions;
+    groupBoxDimensions.topEdgeMid = {
+      'x': x + width/2,
+      'y': y
+    };
+  }
+
+  // Set bottom edge midpoint for groupBox
+  const setBottomEdgeMid = (groupId) => {
+    let groupBoxDimensions = dimensions[groupId]
+    let {x, y, height, width} = groupBoxDimensions;
+    groupBoxDimensions.bottomEdgeMid = {
+      'x': x + width/2,
+      'y': y + height 
+    }
+  }
+
+  // Calculate x,y,height and width for group box and set them in dimensions object
   const setRectAttributes = (groupId, entitiesObj) => {
     createEntryInDimensionsObj(groupId);
     let rect = Object.create(rectPrototype);
     rect.calcRectHeight(groupId, entitiesObj);
     rect.calcRectXcoord(groupId);
     rect.calcRectYcoord(groupId);
-    rect.calcRectWidth(groupId, defaultRectWidth)
-    console.log('dimensions', dimensions[groupId])
+    rect.calcRectWidth(groupId, defaultRectWidth);
+    setLeftEdgeMid(groupId);
+    setRightEdgeMid(groupId);
+    setBottomEdgeMid(groupId);
+    setTopEdgeMid(groupId);
     return rect;
   }
 
@@ -294,10 +376,21 @@ const svgRectModule = (() => {
     dimensions = {}
   }
 
+  // Populate parent group list for related groups
+  const pupulateParentGroupList = (groupId, relatedGroupId) => {
+    if(!dimensions[relatedGroupId].hasOwnProperty('parentGroups')) {
+      dimensions[relatedGroupId].parentGroups = [];
+    } 
+    dimensions[relatedGroupId].parentGroups.push(groupId)
+  }
+
   return {
+    getDimensions,
     setRectAttributes,
+    defaultGroupOffset,
     initializeDimensionsObject,
-    setCoordinatesForRelatedGroups
+    setCoordinatesForRelatedGroups,
+    pupulateParentGroupList
   }
 
 })()
@@ -362,5 +455,37 @@ const svgTextModule = (() => {
   return {
     defaultTextHeight,
     setTextAttributes
+  }
+})()
+
+const svgPathModule = (() => {
+  
+  // Calculate path for drawing lines
+  const calcPath = (groupBoxDimensions, parentGroupBoxDimensions) => {
+    let pathCoordinates = [];
+    if(groupBoxDimensions.leftEdgeMid.y === parentGroupBoxDimensions.rightEdgeMid.y) {
+      pathCoordinates.push(parentGroupBoxDimensions.rightEdgeMid, groupBoxDimensions.leftEdgeMid)
+    } 
+    else if(groupBoxDimensions.y > parentGroupBoxDimensions.y) {
+      pathCoordinates.push(parentGroupBoxDimensions.bottomEdgeMid, groupBoxDimensions.topEdgeMid)
+    }
+    else if(groupBoxDimensions.y <  parentGroupBoxDimensions.y) {
+      pathCoordinates.push(parentGroupBoxDimensions.topEdgeMid, groupBoxDimensions.bottomEdgeMid)
+    }
+    console.log(pathCoordinates);
+    return pathCoordinates;
+  }
+
+  const getPathDAttr = (pathCoordinates) => {
+    let lineAccessor =  d3.line()
+                          .x(function(d) { return d.x; })
+                          .y(function(d) { return d.y; })
+                          .curve(d3.curveLinear);
+    return lineAccessor(pathCoordinates);
+  }
+
+  return {
+    calcPath,
+    getPathDAttr
   }
 })()
