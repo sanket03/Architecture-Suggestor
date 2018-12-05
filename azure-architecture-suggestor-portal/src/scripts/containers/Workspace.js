@@ -436,6 +436,12 @@
             return filteredEntities;
         }
 
+        // Initialize Root Node
+        initializeRootNode(activeGroup) {
+            this.rootNode = activeGroup;
+            console.log(this.rootNode)
+        }
+
         // Handler for option select
         onOptionSelectHandler(event) {
             let {
@@ -512,6 +518,7 @@
             this.addQuestionsToQueue(architectureDetails[activeGroup].entities[this.activeEntity].questions);
             this.setActiveQuestion();
             this.filterQuestionsPerGroups(activeGroup, this.activeQuestion, questionDetails);
+            this.initializeRootNode(activeGroup);
         }
 
         render() {
@@ -528,6 +535,7 @@
                         questionDetails = {this.props.questionDetails}
                         questionResponseMap = {this.questionResponseMap}
                         loadCount = {this.loadCount}
+                        rootNode = {this.rootNode}
                     />  
                 </div>
             )
