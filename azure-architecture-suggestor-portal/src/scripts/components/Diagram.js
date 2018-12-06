@@ -9,8 +9,11 @@ import svgRectModule from '../utilities/svgRectModule';
 import svgImageModule from '../utilities/svgImageModule';
 import svgTextModule from '../utilities/svgTextModule';
 import svgPathModule from '../utilities/svgPathModule';
+import { node } from 'prop-types';
 
 const Diagram = (props) => {
+
+  let treeBreadthList = {}; 
 
   let {
     architectureDetails,
@@ -19,9 +22,52 @@ const Diagram = (props) => {
     rootNode
   } = props;
 
-  const calcTreeHeight = ((relatedGroupList) => {
-    console.log(architectureDetails[rootNode])
-  })(architectureDetails[rootNode])
+
+    // Checks whether the group should be rendered or not
+    const shouldRenderGroup = (groupQuestionsObj, questionResponseMap) => {
+      let allQuestionsInactive = true;
+      // Check if all the questions are inactive
+      for(let questionObj of groupQuestionsObj) {
+        if(questionObj.isActive) {
+          allQuestionsInactive = false;
+        }
+      }
+  
+      // Check for question Ids in question Response map
+      if(allQuestionsInactive) {
+        return true;
+      } else {
+        for(let questionObj of groupQuestionsObj) {
+          if(questionObj.id in questionResponseMap) {
+            return true
+          }
+        }
+      }
+      return false;
+    }
+  
+  const calcTreeBreadth = (parentGroupId, relatedGroupsObj) => {
+    let treeLevelBreadth = 0;
+    let nodeCount = 0;
+    for(let groupId in relatedGroupsObj) {
+      if(shouldRenderGroup(questionDetails[groupId], questionResponseMap) & architectureDetails[groupId].isActive) {
+        let groupHeight = svgRectModule.calcRelatedGroupHeight(architectureDetails[groupId].entities)
+        let relatedGroups = architectureDetails[groupId].relatedGroups;
+        treeLevelBreadth = treeLevelBreadth + (calcTreeBreadth(groupId, relatedGroups) > 0 & groupHeight > 10 ? calcTreeBreadth(groupId, relatedGroups)  : groupHeight);
+        nodeCount = nodeCount + 1;
+      }
+    }
+ 
+    if(nodeCount > 0) {    
+      treeLevelBreadth = treeLevelBreadth + (nodeCount-1)*50;
+    }
+    treeBreadthList[parentGroupId] = treeLevelBreadth;
+    return treeLevelBreadth;
+  }
+
+  treeBreadthList[rootNode] = calcTreeBreadth(rootNode, architectureDetails[rootNode].relatedGroups);
+
+  console.log(treeBreadthList);
 
   const hasActiveEntities = (entities) => {
     for(let entityObj of entities) {
@@ -35,29 +81,6 @@ const Diagram = (props) => {
   
   const addUnitsInPx = (value) => {
     return `${value}px`;
-  }
-
-  // Checks whether the group should be rendered or not
-  const shouldRenderGroup = (groupQuestionsObj, questionResponseMap) => {
-    let allQuestionsInactive = true;
-    // Check if all the questions are inactive
-    for(let questionObj of groupQuestionsObj) {
-      if(questionObj.isActive) {
-        allQuestionsInactive = false;
-      }
-    }
-
-    // Check for question Ids in question Response map
-    if(allQuestionsInactive) {
-      return true;
-    } else {
-      for(let questionObj of groupQuestionsObj) {
-        if(questionObj.id in questionResponseMap) {
-          return true
-        }
-      }
-    }
-    return false;
   }
 
   // Draw link between groups

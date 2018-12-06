@@ -214,7 +214,8 @@ const svgRectModule = (() => {
       defaultGroupOffset,
       initializeDimensionsObject,
       setCoordinatesForRelatedGroups,
-      pupulateParentGroupList
+      pupulateParentGroupList,
+      calcRelatedGroupHeight
     }
   
   })()
