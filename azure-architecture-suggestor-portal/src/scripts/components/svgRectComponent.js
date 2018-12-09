@@ -10,7 +10,7 @@ const SvgRectComponent = (props) =>  {
 
         <rect               
             height = {height}
-            width = {width}           
+            width = {width}   
         />
     );
 }

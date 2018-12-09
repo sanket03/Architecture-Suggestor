@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-
 import SvgRectComponent from './SvgRectComponent';
 import SvgTextComponent from './SvgTextComponent';
 import SvgImageComponent from './SvgImageComponent';
@@ -9,7 +8,6 @@ import svgRectModule from '../utilities/svgRectModule';
 import svgImageModule from '../utilities/svgImageModule';
 import svgTextModule from '../utilities/svgTextModule';
 import svgPathModule from '../utilities/svgPathModule';
-import { node } from 'prop-types';
 
 const Diagram = (props) => {
 
@@ -53,7 +51,8 @@ const Diagram = (props) => {
       if(shouldRenderGroup(questionDetails[groupId], questionResponseMap) & architectureDetails[groupId].isActive) {
         let groupHeight = svgRectModule.calcRelatedGroupHeight(architectureDetails[groupId].entities)
         let relatedGroups = architectureDetails[groupId].relatedGroups;
-        treeLevelBreadth = treeLevelBreadth + (calcTreeBreadth(groupId, relatedGroups) > 0 & groupHeight > 10 ? calcTreeBreadth(groupId, relatedGroups)  : groupHeight);
+        let treeBreadthAtNextLevel = calcTreeBreadth(groupId, relatedGroups)
+        treeLevelBreadth = treeLevelBreadth +  (treeBreadthAtNextLevel > 0 && svgRectModule.defaultGroupOffset > 10 ? treeBreadthAtNextLevel : groupHeight);
         nodeCount = nodeCount + 1;
       }
     }

@@ -4,11 +4,12 @@ import * as d3 from 'd3';
 const svgRectModule = (() => {
     const defaultRectWidth = 150;
     const defaultRectHeight = 65;
+    const defaultRectGap = 50;
     const defaultGroupOffset = 10;
     let dimensions = {};
     let rectPrototype = {
       'height': 0,
-      'width': defaultRectWidth,
+      'width': 0,
       'x': 0,
       'y': 0,
       calcRectHeight(groupId, entitiesObj) {
@@ -18,33 +19,7 @@ const svgRectModule = (() => {
         }
         this.height = defaultRectHeight*activeEntityCount + defaultGroupOffset;
         setHeight(groupId, this.height);
-      },
-      calcRectXcoord(groupId) {
-        if(dimensions[groupId].hasOwnProperty('x')) {
-            this.x =  dimensions[groupId].x;
-        } else {
-            setXCoordinate(groupId, 10);
-            this.x = 10;
-        }
-      },
-      calcRectYcoord(groupId) {
-        if(dimensions[groupId].hasOwnProperty('y')) {
-            this.y = dimensions[groupId].y;
-        } else {
-          let svgHeight = calcSvgHeight();
-          let yCoord = (svgHeight - this.height)/2;
-          setYCoordinate(groupId, yCoord);
-          this.y = yCoord;
-        }
-      },
-      calcRectWidth(groupId, rectWidth) {
-        setWidth(groupId, rectWidth);
       }
-    }
-  
-    const calcSvgHeight = () => {
-        let svgHeight = d3.select('svg').node().getBoundingClientRect().height;
-        return svgHeight;
     }
   
     // Create entry for a group in dimensions object
@@ -133,67 +108,22 @@ const svgRectModule = (() => {
     }
   
     // Calculate x,y,height and width for group box and set them in dimensions object
-    const setRectAttributes = (groupId, entitiesObj) => {
-      createEntryInDimensionsObj(groupId);
+    const setRectAttributes = (groupNode) => {
       let rect = Object.create(rectPrototype);
-      rect.calcRectHeight(groupId, entitiesObj);
-      rect.calcRectXcoord(groupId);
-      rect.calcRectYcoord(groupId);
-      rect.calcRectWidth(groupId, defaultRectWidth);
+      let groupId = groupNode.data.id;
+      let groupNodeDepth = groupNode.depth;
+      rect.height = groupNode.xSize;
+      rect.width = groupNode.ySize;
+      rect.x = groupNode.y + defaultRectGap*groupNodeDepth;
+      rect.y = groupNode.x - groupNode.xSize/2;
+      createEntryInDimensionsObj(groupId);   
+      setHeight(groupId, rect.height);
+      setWidth(groupId, rect.width);
+      setXCoordinate(groupId, rect.x);
+      setYCoordinate(groupId, rect.y);
       setLeftEdgeMid(groupId);
       setRightEdgeMid(groupId);
-      setBottomEdgeMid(groupId);
-      setTopEdgeMid(groupId);
       return rect;
-    }
-  
-    // Calculate height for related group box
-    const calcRelatedGroupHeight = (entitiesObj) => {
-      let activeEntityCount = 0;
-      for(let entityObj in entitiesObj) {
-        activeEntityCount = entitiesObj[entityObj].isActive ? activeEntityCount + 1 : activeEntityCount
-      }
-      return defaultRectHeight*activeEntityCount + defaultGroupOffset;
-    }
-  
-    // Calculate x coordinate for related groups
-    const calcRectXcoordForRelatedGroups = (groupId, rectWidth, connectorLength, index) => {
-      switch(index) {
-        case 0:
-          return getXCoordinate(groupId) + rectWidth + connectorLength;
-        case 1:
-          return getXCoordinate(groupId);
-        case 2:
-          return getXCoordinate(groupId);
-      }
-    }
-  
-    // Calculate y coordinate for related groups
-    const calcRectYcoordForRelatedGroups = (groupId, relatedGroupheight, rectWidth, connectorLength, index) => {
-      switch(index) {
-        case 0:
-          if(getHeight(groupId) > relatedGroupheight) {
-            return getYCoordinate(groupId) + (Math.abs(getHeight(groupId) - relatedGroupheight))/2;
-          } else {
-            return getYCoordinate(groupId) - (Math.abs(getHeight(groupId) - relatedGroupheight))/2;
-          }
-        case 1:
-          return getYCoordinate(groupId) - connectorLength - relatedGroupheight;
-        case 2:
-          return getYCoordinate(groupId) + getHeight(groupId) + connectorLength + relatedGroupheight;
-      }
-    }
-  
-    // Calculate x,y,height for related group box and set them in dimensions object
-    const setCoordinatesForRelatedGroups = (groupId, relatedGroupId, index, entitiesObj) => {
-      let x, y;
-      let relatedGroupheight = calcRelatedGroupHeight(entitiesObj);
-      createEntryInDimensionsObj(relatedGroupId);
-      x = calcRectXcoordForRelatedGroups(groupId, defaultRectWidth, 50, index);
-      y = calcRectYcoordForRelatedGroups(groupId, relatedGroupheight, defaultRectWidth, 50, index);
-      setXCoordinate(relatedGroupId, x);
-      setYCoordinate(relatedGroupId, y);
-      setHeight(relatedGroupId, relatedGroupheight);
     }
   
     const initializeDimensionsObject = () => {
@@ -212,10 +142,11 @@ const svgRectModule = (() => {
       getDimensions,
       setRectAttributes,
       defaultGroupOffset,
+      defaultRectWidth,
+      defaultRectGap,
+      defaultRectHeight,
       initializeDimensionsObject,
-      setCoordinatesForRelatedGroups,
-      pupulateParentGroupList,
-      calcRelatedGroupHeight
+      pupulateParentGroupList
     }
   
   })()

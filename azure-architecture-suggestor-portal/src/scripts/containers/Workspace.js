@@ -1,6 +1,6 @@
     import React, {Component} from 'react';
     import Questions from '../components/Questions';
-    import Diagram from '../components/Diagram';
+    import Diagram from '../components/Diagram_New';
 
     import '../../styles/Workspace.scss';
 
@@ -531,7 +531,7 @@
                         questionResponseMap = {this.questionResponseMap}
                     />
                     <Diagram
-                        architectureDetails = {this.props.architectureDetails}
+                        architectureDetails = {JSON.parse(JSON.stringify(this.props.architectureDetails))}
                         questionDetails = {this.props.questionDetails}
                         questionResponseMap = {this.questionResponseMap}
                         loadCount = {this.loadCount}

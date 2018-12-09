@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^3.2.2",
     "d3": "^5.7.0",
+    "d3-flextree": "^2.1.1",
     "node-sass": "^4.9.4",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
