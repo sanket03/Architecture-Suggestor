@@ -65,9 +65,7 @@ const Diagram = (props) => {
   }
 
   treeBreadthList[rootNode] = calcTreeBreadth(rootNode, architectureDetails[rootNode].relatedGroups);
-
-  console.log(treeBreadthList);
-
+  
   const hasActiveEntities = (entities) => {
     for(let entityObj of entities) {
       if(entityObj.isActive) {
@@ -202,7 +200,7 @@ const Diagram = (props) => {
   }
 
     return (
-      <div id = 'diagram-container'>
+      <div id = 'architecture-container'>
         <svg id = 'diagram-wrapper'>
           {props.loadCount > 1 && renderGroupBox(architectureDetails, questionDetails, questionResponseMap)}
         </svg>

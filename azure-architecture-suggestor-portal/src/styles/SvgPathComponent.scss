@@ -2,4 +2,8 @@ path {
     stroke: grey;
     stroke-width: 2;
     fill: none;
+
+    .hide {
+        display: none;
+    }
 }

@@ -1,0 +1,9 @@
+@import './common.scss';
+
+#toggle-workspace {
+    @include position($type: fixed, $bottom: 0, $right: 0);
+    @include margin($all: 15px);
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}

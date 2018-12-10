@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Header from '../components/Header';
 import ArchitecturesList from '../components/ArchitecturesList'
 import Workspace from './Workspace';
+import ToggleWorkspace from './ToggleWorkspace';
 import appModule from '../utilities/config';
 import serviceModule from '../utilities/serviceCalls';
 import {    architectureDetails,
@@ -91,13 +92,14 @@ export default class App extends Component {
                                               />
                                               <Workspace 
                                                 architectureDetails = {this.architectureDetails[this.state.architectureId].groups} 
-                                                questionDetails = {this.questionDetails[this.state.architectureId].groups}
-                                                questionEntityMapping = {this.questionEntityMapping}
+                                                questionDetails = {JSON.parse(JSON.stringify(this.questionDetails[this.state.architectureId].groups))}
+                                                questionEntityMapping = {JSON.parse(JSON.stringify(this.questionEntityMapping))}
                                               />
                                             </>
                                             )
                                           : ''
         }
+        <ToggleWorkspace />
       </>
     );
   }

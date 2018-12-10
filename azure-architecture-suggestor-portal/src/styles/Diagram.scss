@@ -1,11 +1,17 @@
-#diagram-container {
-    grid-area: diagram;
-    background-color: #fff;
-    border-radius: 10px;
-    position: relative;
 
-    #diagram-wrapper {
-        width: 100%;
-        height: 100%;
+#architecture-container {
+    height: auto;
+    margin: 50px 0 0 0;
+    #diagram-container {
+        grid-area: diagram;
+        background-color: #fff;
+        border-radius: 10px;
+        position: relative;
+        height: 100vh;
+    
+        #diagram-wrapper {
+            width: 100%;
+            height: 100%;
+        }
     }
 }
