@@ -5,7 +5,6 @@ import SvgRectComponent from './SvgRectComponent';
 import SvgTextComponent from './SvgTextComponent';
 import SvgImageComponent from './SvgImageComponent';
 import SvgPathComponent from './SvgPathComponent';
-import ExportDiagram from '../components/ExportDiagram';
 
 import svgRectModule from '../utilities/svgRectModule';
 import svgImageModule from '../utilities/svgImageModule';
@@ -234,8 +233,8 @@ const Diagram = (props) => {
     return (
       <div id = 'architecture-container'>
         <div id = 'diagram-container'>
-            <div id = 'diagram-header'>              
-                <ExportDiagram />
+            <div id = 'diagram-header'>
+                <h3>Architecture Diagram</h3>
             </div>
             <svg id = 'diagram-wrapper'>
                 {props.loadCount > 1 && renderDiagram(treeDataObj, architectureDetails)}

@@ -20,16 +20,16 @@ const ArchitecturesList = (props) => {
   }
 
   return (
-    <div id = 'architectures-select-box'>
-      <label htmlFor = 'architecture-solutions'>Solutions</label> <br/>
-      <select 
-        id = 'architecture-solutions'
-        onChange = {onchangeHandler}
-        ref = {selectRef}
-      >
-        {renderArchitecturesList(architecturesList)}
-      </select>
-    </div>
+      <div id = 'architectures-select-box'>
+        <label htmlFor = 'architecture-solutions'>Solutions</label> <br/>
+          <select 
+            id = 'architecture-solutions'
+            onChange = {onchangeHandler}
+            ref = {selectRef}
+          >
+            {renderArchitecturesList(architecturesList)}
+          </select>
+      </div>
   );
 }
 

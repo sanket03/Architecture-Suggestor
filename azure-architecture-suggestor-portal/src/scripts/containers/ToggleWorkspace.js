@@ -9,14 +9,27 @@ export default class App extends Component {
     this.state = {
         workspace: 'Architecture'
     }
+
+    this.onScrollHandler = this.onScrollHandler.bind(this);
     this.toggleWorkspace = this.toggleWorkspace.bind(this);
+    window.addEventListener('scroll', this.onScrollHandler);
   }
 
-  toggleWorkspace() {
-      let workspace = this.state.workspace.toLowerCase() === 'architecture' ? 'Questions' : 'Architecture'
+  onScrollHandler() {
+      let windowHeight = window.innerHeight;
+      let docHeight = document.body.scrollHeight;
+      let scrollTop = window.pageYOffset;
+      let scrollLength = docHeight - windowHeight;
+      let pctScrolled = Math.floor(scrollTop/scrollLength * 100);
+      let workspace = pctScrolled >= 50 ? 'Questions' : 'Architecture';
       this.setState(() => ({
         workspace
       }));
+  }
+
+
+  toggleWorkspace() {
+      this.onScrollHandler()
   }
 
   render() {

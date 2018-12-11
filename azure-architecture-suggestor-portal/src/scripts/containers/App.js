@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import ArchitecturesList from '../components/ArchitecturesList'
+import Utilities from '../components/utilities';
 import Workspace from './Workspace';
+import ExportDiagram from '../components/ExportDiagram';
 import ToggleWorkspace from './ToggleWorkspace';
 import appModule from '../utilities/config';
 import serviceModule from '../utilities/serviceCalls';
-import {    architectureDetails,
+
+import {    
+  architectureDetails,
   solutionsList,
   questionEntityMapping,
   questionDetails} from '../utilities/data';
@@ -85,15 +89,19 @@ export default class App extends Component {
           this.state.architectureId !== 0 ?                                            
                                             (
                                             <>
-                                              <ArchitecturesList
-                                                architecturesList = {this.architecturesList}
-                                                onchangeHandler = {this.selectArchitecture}
-                                                selectRef = {this.selectedDropdownNode}
-                                              />
+                                              <Utilities>
+                                                <ArchitecturesList
+                                                  architecturesList = {this.architecturesList}
+                                                  onchangeHandler = {this.selectArchitecture}
+                                                  selectRef = {this.selectedDropdownNode}
+                                                />
+                                                <ExportDiagram />
+                                              </Utilities>
                                               <Workspace 
-                                                architectureDetails = {this.architectureDetails[this.state.architectureId].groups} 
+                                                architectureDetails = {JSON.parse(JSON.stringify(this.architectureDetails[this.state.architectureId].groups))} 
                                                 questionDetails = {JSON.parse(JSON.stringify(this.questionDetails[this.state.architectureId].groups))}
                                                 questionEntityMapping = {JSON.parse(JSON.stringify(this.questionEntityMapping))}
+                                                isInitialized = {false}
                                               />
                                             </>
                                             )

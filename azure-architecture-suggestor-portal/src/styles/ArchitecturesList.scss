@@ -1,19 +1,25 @@
 @import 'common';
 
-#architectures-select-box {
+#utilities {
     @include dimension(80%);
     @include margin(15px, auto, 15px, auto);
 
-    label {
-        @include font($font-size: 1em, $font-weight: 700);
-        @include margin($all: 0);
-        cursor: pointer;
+    #architectures-select-box {
+        display: inline-block;
+        
+        label {
+            @include font($font-size: 1em, $font-weight: 700);
+            @include margin($all: 0);
+            cursor: pointer;
+        }
+    
+        select {
+            @include minmaxDimension($min-width: 200px);
+            @include padding($all: 10px);
+            @include margin(10px, 0, 10px, 0);
+            @include font($font-size: 1em);
+            cursor: pointer;
+        }
     }
 
-    select {
-        @include minmaxDimension($min-width: 200px);
-        @include padding($all: 10px);
-        @include margin(10px, 0, 10px, 0);
-        @include font($font-size: 1em);
-    }
 }

@@ -1270,8 +1270,7 @@ const questionEntityMapping = {
 }
 
 const solutionsList = {
-    // "1":"architecture 1",
-    // '2':'Data Warehouse',
+    "1":"architecture 1",
     '3':'Data Warehouse'
 }
 

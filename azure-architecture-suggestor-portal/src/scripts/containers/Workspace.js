@@ -9,27 +9,10 @@
         constructor(props) {
             super(props);
             this.state = {
-                render: true
+                render: true,
             }
 
-            this.groupList = Object.keys(this.props.architectureDetails);
-            this.groupListPointer = 1;
-
-            this.groupQueue = [this.groupList[0]];
-            this.groupQueuePointer = 0;
-            this.activeGroup = this.groupList[0];
-            
-            this.entityQueue = [];
-            this.entityQueuePointer = 0;
-            this.activeEntity = '';
-
-            this.questionQueue = [];
-            this.questionQueuePointer = 0;
-            this.activeQuestion = '';
-
-            this.questionResponseMap = {}
-
-            this.loadCount = 0;
+            this.isInitialized = this.props.isInitialized;
 
             // Binding context to methods
             this.filterQuestionsPerGroups = this.filterQuestionsPerGroups.bind(this);
@@ -499,16 +482,38 @@
                 this.performActiveEntityUpdation(architectureDetails, questionDetails, filteredEntities);
             }
 
+            this.isInitialized = true;
             this.setState(() => ({
                 render: true
             }));    
         }
 
-        componentWillMount() {
+        // Initialize all the queues
+        initializeComponent() {
             let {
                 architectureDetails,
                 questionDetails
             } = this.props;
+
+            // Initialize group queue
+            this.groupList = Object.keys(architectureDetails);
+            this.groupQueue = [this.groupList[0]];
+            this.groupQueuePointer = 0;
+            this.activeGroup = this.groupList[0];
+            
+            // Initialize entity queue
+            this.entityQueue = [];
+            this.entityQueuePointer = 0;
+            this.activeEntity = '';
+
+            // Initialize question queue
+            this.questionQueue = [];
+            this.questionQueuePointer = 0;
+            this.activeQuestion = '';
+
+            this.questionResponseMap = {}
+
+            this.loadCount = 0;
 
             let activeGroup = this.activeGroup;
             this.addGroupsToQueue(architectureDetails[activeGroup].relatedGroups);
@@ -522,6 +527,7 @@
         }
 
         render() {
+            !this.isInitialized && this.initializeComponent();
             this.loadCount += 1;
             return (
                 <div id = 'workspace'>
@@ -539,5 +545,9 @@
                     />  
                 </div>
             )
+        }
+
+        componentDidUpdate() {
+            this.isInitialized = false;
         }
     }
