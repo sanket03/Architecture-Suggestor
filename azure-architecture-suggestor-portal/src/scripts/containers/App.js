@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import ArchitecturesList from '../components/ArchitecturesList'
-import Utilities from '../components/utilities';
+import Utilities from '../components/Utilities';
 import Workspace from './Workspace';
 import ExportDiagram from '../components/ExportDiagram';
 import ToggleWorkspace from './ToggleWorkspace';

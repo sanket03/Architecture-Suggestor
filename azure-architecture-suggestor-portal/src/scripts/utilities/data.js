@@ -1,6 +1,6 @@
 const architectureDetails = {
-    '1' : {
-        "name": "architecture 1",
+    '3' : {
+        "name": "Dummy architecture",
         "groups": {
           "1": {
             "name": "group 1",
@@ -562,7 +562,7 @@ const architectureDetails = {
           }
         }
       },
-      '3':{
+      '1':{
         "name": "Big Data Solution",
         "groups": {
           "1": {
@@ -959,7 +959,7 @@ const architectureDetails = {
 }
 
 const questionDetails = {
-    '1': {
+    '3': {
         "groups": {
           "1": [
             {
@@ -1127,7 +1127,7 @@ const questionDetails = {
           ]
         }
       },
-      '3':{
+      '1':{
         "groups": {
           "1": [
             {
@@ -1270,8 +1270,8 @@ const questionEntityMapping = {
 }
 
 const solutionsList = {
-    "1":"architecture 1",
-    '3':'Data Warehouse'
+    "3":"Dummy Architecture",
+    '1':'Data Warehouse'
 }
 
 export {

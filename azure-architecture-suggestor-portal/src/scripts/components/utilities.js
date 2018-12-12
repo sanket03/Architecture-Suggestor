@@ -1,6 +1,6 @@
 import React from 'react';
 
-const utilities = (props) => {
+const Utilities = (props) => {
     return (
         <div id = 'utilities'>
             {props.children}
@@ -8,4 +8,4 @@ const utilities = (props) => {
     )
 }
 
-export default utilities;
+export default Utilities;
