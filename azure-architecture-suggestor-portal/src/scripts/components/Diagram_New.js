@@ -35,20 +35,67 @@ const Diagram = (props) => {
         return calcActiveEntityCount(entitiesObj) * 65;
     }
 
+    // Checks whether the group should be rendered or not
+    const shouldRenderGroup = (architectureGroupObj, groupQuestionsObj, questionResponseMap) => {
+
+        // Check if group is active
+        let isActiveGroup = architectureGroupObj.isActive;
+
+        // Check if all the entities are inactive
+        let hasActiveEntities = false;
+        let entitiesObj = architectureGroupObj.entities;
+        for(let entityId in entitiesObj) {
+            if(entitiesObj[entityId].isActive) {
+                hasActiveEntities = true;
+                break;
+            }
+        }
+    
+        if(hasActiveEntities && isActiveGroup) {
+            // Check if all the questions are inactive
+            let allQuestionsInactive = true;
+            for(let questionObj of groupQuestionsObj) {
+                if(questionObj.isActive) {
+                allQuestionsInactive = false;
+                }
+            }
+            // Check for question Ids in question Response map
+            if(allQuestionsInactive) {
+                return true;
+            } else {
+                for(let questionObj of groupQuestionsObj) {
+                    if(questionObj.id in questionResponseMap) {
+                        return true
+                    }
+                }
+            }
+            return false;
+        } else {
+            return false;
+        }
+    }
+
     // Create object for d3 tree
     const prepareDataForTreeLayout = (node) => {
         let groupData = architectureDetails[node];
-        let nodeObj = {
-            id: node, 
-            size: []
+        if(shouldRenderGroup(architectureDetails[node], questionDetails[node], questionResponseMap)) {
+            let nodeObj = {
+                id: node, 
+                size: []
+            }
+            let childernArray = [];
+           nodeObj.size.push(calcNodeHeight(groupData.entities), 150);
+            for(let relatedGroupId in groupData.relatedGroups) {
+                let relatedGroupNode = prepareDataForTreeLayout(relatedGroupId);
+                relatedGroupNode && childernArray.push(relatedGroupNode);
+            }
+            nodeObj.children = childernArray;      
+            return nodeObj;
+        } else {
+            for(let relatedGroupId in groupData.relatedGroups) {
+                return prepareDataForTreeLayout(relatedGroupId)
+            }
         }
-        let childernArray = [];
-       nodeObj.size.push(calcNodeHeight(groupData.entities), 150);
-        for(let relatedGroupId in groupData.relatedGroups) {
-            childernArray.push(prepareDataForTreeLayout(relatedGroupId));
-        }
-        nodeObj.children = childernArray;      
-        return nodeObj;
     }
 
     const treeDataObj = prepareDataForTreeLayout(rootNode);
@@ -96,10 +143,12 @@ const Diagram = (props) => {
             let groupBoxDimensions = svgRectModule.getDimensions(groupId);    
             for(let relatedGroupId in relatedGroupsObj) {
                 let relatedGroupBoxDimensions = svgRectModule.getDimensions(relatedGroupId);
-                let show = shouldRenderGroup(questionDetails[relatedGroupId], questionResponseMap) && architectureDetails[relatedGroupId].isActive;
-                let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
-                let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
-                linkElements.push(drawLink(pathDAttr, show))
+                let show = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
+                if(show) {
+                    let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
+                    let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
+                    linkElements.push(drawLink(pathDAttr, show))
+                }
             }
         });
         return linkElements;
@@ -155,29 +204,6 @@ const Diagram = (props) => {
         }
         return entityElement;
     }
-
-    // Checks whether the group should be rendered or not
-    const shouldRenderGroup = (groupQuestionsObj, questionResponseMap) => {
-        let allQuestionsInactive = true;
-        // Check if all the questions are inactive
-        for(let questionObj of groupQuestionsObj) {
-          if(questionObj.isActive) {
-            allQuestionsInactive = false;
-          }
-        }
-    
-        // Check for question Ids in question Response map
-        if(allQuestionsInactive) {
-          return true;
-        } else {
-          for(let questionObj of groupQuestionsObj) {
-            if(questionObj.id in questionResponseMap) {
-              return true
-            }
-          }
-        }
-        return false;
-    }
     
     // Render svg rectangles for groups
     const renderGroups = (tree, architectureDetails, questionDetails, questionResponseMap) => {
@@ -191,7 +217,7 @@ const Diagram = (props) => {
                 <svg 
                     x = {rectInstance.x} 
                     y = {rectInstance.y}
-                    className = {shouldRenderGroup(questionDetails[groupId], questionResponseMap) && groupObject.isActive ? 'show' : 'hide'}
+                    className = {shouldRenderGroup(groupObject, questionDetails[groupId], questionResponseMap) ? 'show' : 'hide'}
                 >
                     <SvgRectComponent 
                         height = {rectInstance.height} 

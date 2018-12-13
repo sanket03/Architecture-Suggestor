@@ -119,7 +119,7 @@ const architectureDetails = {
                 "name": "entity7",
                 "isActive": true,
                 "parentEntities": {
-                    "3": ["5"]   
+                    "1": ["1"]   
                 },
                 "questions": [
                   7
