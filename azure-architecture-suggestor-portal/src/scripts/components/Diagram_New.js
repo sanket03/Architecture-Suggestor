@@ -75,30 +75,30 @@ const Diagram = (props) => {
         }
     }
 
+
     // Create object for d3 tree
-    const prepareDataForTreeLayout = (node) => {
+    const prepareDataForTreeLayout = (node, parentChildrenArray) => {
         let groupData = architectureDetails[node];
+        let nodeObj = {
+            id: node, 
+            size: [],
+            children: []
+        }
         if(shouldRenderGroup(architectureDetails[node], questionDetails[node], questionResponseMap)) {
-            let nodeObj = {
-                id: node, 
-                size: []
-            }
-            let childernArray = [];
-           nodeObj.size.push(calcNodeHeight(groupData.entities), 150);
+            nodeObj.size.push(calcNodeHeight(groupData.entities), 150);
+            parentChildrenArray && parentChildrenArray.push(nodeObj);
             for(let relatedGroupId in groupData.relatedGroups) {
-                let relatedGroupNode = prepareDataForTreeLayout(relatedGroupId);
-                relatedGroupNode && childernArray.push(relatedGroupNode);
-            }
-            nodeObj.children = childernArray;      
-            return nodeObj;
+                prepareDataForTreeLayout(relatedGroupId, nodeObj.children);
+            }   
         } else {
             for(let relatedGroupId in groupData.relatedGroups) {
-                return prepareDataForTreeLayout(relatedGroupId)
+                prepareDataForTreeLayout(relatedGroupId, parentChildrenArray);
             }
         }
+        return nodeObj;
     }
 
-    const treeDataObj = prepareDataForTreeLayout(rootNode);
+    const treeDataObj = prepareDataForTreeLayout(rootNode, null);
 
     // Truncate values to decimal places
     const truncateToTwoDecimal = (value) => {
@@ -138,16 +138,39 @@ const Diagram = (props) => {
         let linkElements= [];
         tree.descendants().forEach((node) => {
             let groupId = node.data.id;
+            let childNodes = node.data.children;
             let groupObject = architectureDetails[groupId]
             let relatedGroupsObj = groupObject.relatedGroups;
-            let groupBoxDimensions = svgRectModule.getDimensions(groupId);    
-            for(let relatedGroupId in relatedGroupsObj) {
-                let relatedGroupBoxDimensions = svgRectModule.getDimensions(relatedGroupId);
-                let show = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
+            let groupBoxDimensions = svgRectModule.getDimensions(groupId);
+            let traversedRelatedNodes = new Set();
+
+            // Create path for all the child nodes
+            // There can be cases when all the related groups are not child nodes
+            // Therefore loop through all the related groups as well
+            // If they were not part of children array, then create path for them
+            childNodes.forEach((childNode) => {
+                let childNodeId = childNode.id;
+                let childNodeBoxDimensions = svgRectModule.getDimensions(childNodeId);
+                let show = shouldRenderGroup(architectureDetails[childNodeId], questionDetails[childNodeId], questionResponseMap);
                 if(show) {
-                    let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
+                    let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, childNodeBoxDimensions);
                     let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
                     linkElements.push(drawLink(pathDAttr, show))
+                }
+                traversedRelatedNodes.add(childNodeId);
+            });
+
+            // To do: Write logic creating custom path
+            for(let relatedGroupId in relatedGroupsObj) {
+                if(!traversedRelatedNodes.has(relatedGroupId)) {
+                    let relatedGroupBoxDimensions = svgRectModule.getDimensions(relatedGroupId);
+                    let show = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
+                    if(show) {
+                        let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
+                        let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
+                        linkElements.push(drawLink(pathDAttr, show))
+                    }
+                    traversedRelatedNodes.add(relatedGroupId);
                 }
             }
         });
