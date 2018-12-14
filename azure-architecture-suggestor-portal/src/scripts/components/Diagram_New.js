@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {flextree} from 'd3-flextree';
 
+import SvgMarkerComponent from './SvgMarkerComponent';
 import SvgRectComponent from './SvgRectComponent';
 import SvgTextComponent from './SvgTextComponent';
 import SvgImageComponent from './SvgImageComponent';
@@ -124,11 +125,10 @@ const Diagram = (props) => {
     }
 
     // Draw link between groups
-    const drawLink = (pathDAttr, show) => {
+    const drawLink = (pathDAttr) => {
         return (
         <SvgPathComponent 
             d = {pathDAttr}
-            show = {show}
         />
         )
     }
@@ -151,12 +151,9 @@ const Diagram = (props) => {
             childNodes.forEach((childNode) => {
                 let childNodeId = childNode.id;
                 let childNodeBoxDimensions = svgRectModule.getDimensions(childNodeId);
-                let show = shouldRenderGroup(architectureDetails[childNodeId], questionDetails[childNodeId], questionResponseMap);
-                if(show) {
-                    let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, childNodeBoxDimensions);
-                    let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
-                    linkElements.push(drawLink(pathDAttr, show))
-                }
+                let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, childNodeBoxDimensions);
+                let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
+                linkElements.push(drawLink(pathDAttr))
                 traversedRelatedNodes.add(childNodeId);
             });
 
@@ -164,11 +161,11 @@ const Diagram = (props) => {
             for(let relatedGroupId in relatedGroupsObj) {
                 if(!traversedRelatedNodes.has(relatedGroupId)) {
                     let relatedGroupBoxDimensions = svgRectModule.getDimensions(relatedGroupId);
-                    let show = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
-                    if(show) {
+                    let showLink = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
+                    if(showLink) {
                         let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
                         let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
-                        linkElements.push(drawLink(pathDAttr, show))
+                        linkElements.push(drawLink(pathDAttr))
                     }
                     traversedRelatedNodes.add(relatedGroupId);
                 }
@@ -240,7 +237,6 @@ const Diagram = (props) => {
                 <svg 
                     x = {rectInstance.x} 
                     y = {rectInstance.y}
-                    className = {shouldRenderGroup(groupObject, questionDetails[groupId], questionResponseMap) ? 'show' : 'hide'}
                 >
                     <SvgRectComponent 
                         height = {rectInstance.height} 
@@ -275,6 +271,7 @@ const Diagram = (props) => {
             <g  transform = {`translate(10 ${diagramSize[1]/2})`}>
                 {groupsElement}
                 {linksElement}
+                <SvgMarkerComponent />
             </g>
         )
     }

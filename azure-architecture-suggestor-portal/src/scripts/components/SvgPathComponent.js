@@ -3,14 +3,12 @@ import '../../styles/SvgPathComponent.scss';
 
 const SvgPathComponent = (props) =>  {
     let {
-        d,
-        show
+        d
     } = props
     return (
 
         <path               
             d = {d}
-            className = {show ? 'show' : 'hide'}
         />
     );
 }
