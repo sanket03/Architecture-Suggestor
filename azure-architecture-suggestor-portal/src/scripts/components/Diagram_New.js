@@ -55,8 +55,8 @@ const Diagram = (props) => {
         if(hasActiveEntities && isActiveGroup) {
             // Check if all the questions are inactive
             let allQuestionsInactive = true;
-            for(let questionObj of groupQuestionsObj) {
-                if(questionObj.isActive) {
+            for(let questionId in groupQuestionsObj) {
+                if(groupQuestionsObj[questionId].isActive) {
                 allQuestionsInactive = false;
                 }
             }
@@ -64,8 +64,8 @@ const Diagram = (props) => {
             if(allQuestionsInactive) {
                 return true;
             } else {
-                for(let questionObj of groupQuestionsObj) {
-                    if(questionObj.id in questionResponseMap) {
+                for(let questionId in groupQuestionsObj) {
+                    if(questionId in questionResponseMap) {
                         return true
                     }
                 }

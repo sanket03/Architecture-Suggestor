@@ -66,23 +66,30 @@
         }
 
         // Reset group queue
+        // Slice the group queue till the index of group for selected question
+        // For each group id in queue, repopulate the queue by adding the related groups for all entities
         resetGroupQueue(index) {
             let architectureDetails = this.props.architectureDetails;
             this.groupQueue = this.sliceQueue(this.groupQueue, index + 1);
+            let traversedGroupList = this.groupQueue;
+            this.groupQueue = [traversedGroupList[0]];
+            traversedGroupList.forEach((groupId)=>{
+                this.addGroupsToQueue(architectureDetails[groupId].relatedGroups)
+            })
             this.setGroupQueuePointer(index);
 
-            // Traverse the queue to check if the parent group is present
-            // As siblings need to be added in the group queue
-            for(let index = this.groupQueuePointer-1; index >= 0; index--) {
-                let groupId = this.groupQueue[index];
-                let relatedGroups = architectureDetails[groupId].relatedGroups;
-                if(relatedGroups.hasOwnProperty(this.groupQueue[this.groupQueuePointer])) {
-                    Object.keys(relatedGroups).forEach((group)=> {
-                        (!this.groupQueue.includes(group)) && this.groupQueue.push(group);
-                    })
-                }
-                break;
-            }
+            // // Traverse the queue to check if the parent group is present
+            // // As siblings need to be added in the group queue
+            // for(let index = this.groupQueuePointer-1; index >= 0; index--) {
+            //     let groupId = this.groupQueue[index];
+            //     let relatedGroups = architectureDetails[groupId].relatedGroups;
+            //     if(relatedGroups.hasOwnProperty(this.groupQueue[this.groupQueuePointer])) {
+            //         Object.keys(relatedGroups).forEach((group)=> {
+            //             (!this.groupQueue.includes(group)) && this.groupQueue.push(group);
+            //         })
+            //     }
+            //     break;
+            // }
             this.setActiveGroup(this.props.architectureDetails)
         }
 
@@ -202,9 +209,11 @@
         // Get groups with questions to be rendered
         filterQuestionsPerGroups(activeGroup, activeQuestion, questionDetails) {
             let traversedQuestions = this.sliceQueue(this.questionQueue, this.questionQueuePointer);
-            questionDetails[activeGroup].forEach((questionObj) => {
-                traversedQuestions.includes(parseInt(questionObj.id)) ? this.setIsActiveFlagForQuestions(questionObj) : this.resetIsActiveFlagForQuestions(questionObj);
-            }, this);
+            let groupQuestionsObj = questionDetails[activeGroup]
+            Object.keys(groupQuestionsObj)
+                .forEach((questionId) => {
+                    traversedQuestions.includes(parseInt(questionId)) ? this.setIsActiveFlagForQuestions(groupQuestionsObj[questionId]) : this.resetIsActiveFlagForQuestions(groupQuestionsObj[questionId]);
+                }, this);
         }
         
         setFilteredByFlag(entityObj, questionId) {
@@ -279,8 +288,8 @@
         resetActiveQuestionsForInactiveGroups(questionDetails, architectureDetails) {
             Object.keys(questionDetails).forEach((group) => {
                 if(!architectureDetails[group].isActive) {
-                    questionDetails[group].forEach((question) => {
-                        this.resetIsActiveFlagForQuestions(question);
+                    Object.keys(questionDetails[group]).forEach((questionId) => {
+                        this.resetIsActiveFlagForQuestions(questionDetails[group][questionId]);
                     });
                 }
             });
@@ -535,6 +544,7 @@
                         questionsObj = {this.props.questionDetails}
                         onOptionSelectHandler = {this.onOptionSelectHandler}
                         questionResponseMap = {this.questionResponseMap}
+                        questionQueue = {this.questionQueue}
                     />
                     <Diagram
                         architectureDetails = {JSON.parse(JSON.stringify(this.props.architectureDetails))}

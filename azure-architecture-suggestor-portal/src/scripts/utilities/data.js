@@ -33,7 +33,7 @@ const architectureDetails = {
           "2": {
             "name": "group 2",
             "isActive": false,
-            "relatedGroups": {},
+            "relatedGroups": {"5": null},
             "entities": {
               "3": {
                 "name": "entity3",
@@ -112,13 +112,13 @@ const architectureDetails = {
             "name": "group 4",
             "isActive": false,
             "relatedGroups": {
-              "5": null
             },
             "entities": {
               "7": {
                 "name": "entity7",
                 "isActive": true,
                 "parentEntities": {
+                    "3": ["5"],
                     "1": ["1"]   
                 },
                 "questions": [
@@ -148,7 +148,7 @@ const architectureDetails = {
                 "name": "entity9",
                 "isActive": true,
                 "parentEntities": {
-                    "4": ["7"]   
+                    "1": ["1"]
                 },
                 "questions": [
                   9
@@ -961,82 +961,75 @@ const architectureDetails = {
 const questionDetails = {
     '3': {
         "groups": {
-          "1": [
+          "1": { "1" :
             {
-              "id": "1",
               "question": "Do you need entity1 in your architecture solution?",
               "choices": "yes|no",
               "isActive": false
-            },
+            }, "2":
             {
-              "id": "2",
+
               "question": "Do you need entity2 in your architecture solution?",
               "choices": "yes|no",
               "isActive": false
             }
-          ],
-          "2": [
+          },
+          "2": { "3":
             {
-              "id": "3",
               "question": "Do you need entity3 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
             },
+            "4" :
             {
               "id": "4",
               "question": "Do you need entity4 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
             }
-          ],
-          "3": [
+          },
+          "3": { "5" :
             {
-              "id": "5",
               "question": "Do you need entity5 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
-            },
+            }, "6":
             {
-              "id": "6",
               "question": "Do you need entity6 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
             }
-          ],
-          "4": [
+          },
+          "4": {"7":
             {
-              "id": "7",
               "question": "Do you need entity7 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
             },
+            "8":
             {
-              "id": "8",
               "question": "Do you need entity8 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
-            }
-          ],
-          "5": [
+            }},
+          "5": { "9":
             {
-              "id": "9",
               "question": "Do you need entity9 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
-            },
+            }, "10":
             {
-              "id": "10",
               "question": "Do you need entity10 or  entity 11 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
             },
-            {
-              "id": "11",
+            "11":
+            { 
               "question": "Do you need entity11 in your architecture solution ?",
               "choices": "yes|no",
               "isActive": false
             }
-          ]
+          }
         }
       },
       '2':{
@@ -1129,54 +1122,59 @@ const questionDetails = {
       },
       '1':{
         "groups": {
-          "1": [
-            {
-              "id": "18",
+          "1": {
+            "18":
+          {
               "question": "What kind of data you are processing?",
               "choices": "realtime|nonrealtime",
               "isActive": false
-            }
-          ],
-          "2": [
+            }},
+          "2": {"23":
             {
-              "id": "23",
               "question": "Do you want to use Two-way Communication ?",
               "choices": "yes|no",
               "isActive": false
             }
-          ],
-          "3": [
+          },
+          "3": {
+            "15":
             {
               "id": "15",
               "question": "Do you need file storage that is optimized for parallel analytics workloads and high throughput/IOPS",
               "choices": "yes|no",
               "isActive": false
             }
-          ],
-          "4": [
+          },
+          "4": {
+            "19":
+          
             {
               "id": "19",
               "question": "Do you want to use Machine Learning in your project?",
               "choices": "yes|no",
               "isActive": false
             }
-          ],
-          "5": [
+          },
+          "5": {
+            "20":
+          
             {
               "id": "20",
               "question": "Do you want to use Row Level security?",
               "choices": "yes|no",
               "isActive": false
             }
-          ],
-          "6": [
+          },
+          "6": {
+            "12":
+          
             {
               "id": "12",
               "question": "Do you wish to design reports using built in visuals with minimal coding?",
               "choices": "yes|no",
               "isActive": false
             }
-          ]
+          }
         }
       }
 }

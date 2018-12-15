@@ -2,26 +2,27 @@ import React from 'react';
 const QuestionChoice = (props) => {
     let {
         onOptionSelectHandler,
-        questionObj,
+        questionId,
         questionCount,
         index,
         isChecked
     } = props;
 
+    let questionOptionKey = `${questionId}${index+1}`
     return (
         <div 
         className = 'option'
-        key = {questionObj.id + index}
+        key = {questionOptionKey}
       >
         <input 
           type = 'radio'
-          id = {questionObj.id + index}
+          id = {questionOptionKey}
           name = {questionCount}
           onChange = {onOptionSelectHandler}
           checked = {isChecked}
         />
         <label 
-          htmlFor={questionObj.id + index}
+          htmlFor={questionOptionKey}
           className='pointer'
         >
             {props.children}
