@@ -19,6 +19,11 @@
             this.onOptionSelectHandler = this.onOptionSelectHandler.bind(this);
         }
 
+        // Increment load Count
+        incrementLoadCount() {
+            this.loadCount += 1;
+        }
+
         // Add related groups to group queue
         addGroupsToQueue(groups) {
             let relatedGroupsList = Object.keys(groups);
@@ -66,30 +71,8 @@
         }
 
         // Reset group queue
-        // Slice the group queue till the index of group for selected question
-        // For each group id in queue, repopulate the queue by adding the related groups for all entities
         resetGroupQueue(index) {
-            let architectureDetails = this.props.architectureDetails;
-            this.groupQueue = this.sliceQueue(this.groupQueue, index + 1);
-            let traversedGroupList = this.groupQueue;
-            this.groupQueue = [traversedGroupList[0]];
-            traversedGroupList.forEach((groupId)=>{
-                this.addGroupsToQueue(architectureDetails[groupId].relatedGroups)
-            })
             this.setGroupQueuePointer(index);
-
-            // // Traverse the queue to check if the parent group is present
-            // // As siblings need to be added in the group queue
-            // for(let index = this.groupQueuePointer-1; index >= 0; index--) {
-            //     let groupId = this.groupQueue[index];
-            //     let relatedGroups = architectureDetails[groupId].relatedGroups;
-            //     if(relatedGroups.hasOwnProperty(this.groupQueue[this.groupQueuePointer])) {
-            //         Object.keys(relatedGroups).forEach((group)=> {
-            //             (!this.groupQueue.includes(group)) && this.groupQueue.push(group);
-            //         })
-            //     }
-            //     break;
-            // }
             this.setActiveGroup(this.props.architectureDetails)
         }
 
@@ -434,6 +417,12 @@
             console.log(this.rootNode)
         }
 
+        // Scroll to bottom of the container
+        scrollToBottom(selector) {
+            let x = selector.scrollHeight;
+            selector.scrollTop = x;
+        }
+
         // Handler for option select
         onOptionSelectHandler(event) {
             let {
@@ -452,11 +441,11 @@
                 this.resetActiveEntitiesForInactiveGroups(architectureDetails);
                 this.resetActiveQuestionsForInactiveGroups(questionDetails, architectureDetails);
                 this.resetEntityQueue();
-                this.resetQuestionQueue(this.questionQueue.indexOf(parseInt(questionId)));
                 this.addEntitiesToQueue(architectureDetails[this.activeGroup].entities);
                 this.setEntityQueuePointer(this.entityQueue.indexOf(this.getActiveEntityForAlreadyAnsweredQuestion(questionId)));
                 this.setActiveEntity();
                 let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
+                this.resetQuestionQueue(this.questionQueue.indexOf(parseInt(questionId)));
                 this.addQuestionsToQueue(activeEntityQuestions);
                 this.setActiveQuestion();
                 this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
@@ -520,8 +509,11 @@
             this.questionQueuePointer = 0;
             this.activeQuestion = '';
 
+            // Initialize question respons map
+            // This holds mapping between the question and the entity for which this question was asked
             this.questionResponseMap = {}
 
+            // Initialize component load/render counter
             this.loadCount = 0;
 
             let activeGroup = this.activeGroup;
@@ -537,14 +529,15 @@
 
         render() {
             !this.isInitialized && this.initializeComponent();
-            this.loadCount += 1;
+            this.incrementLoadCount();
             return (
                 <div id = 'workspace'>
                     <Questions 
                         questionsObj = {this.props.questionDetails}
                         onOptionSelectHandler = {this.onOptionSelectHandler}
                         questionResponseMap = {this.questionResponseMap}
-                        questionQueue = {this.questionQueue}
+                        questionQueue = {this.sliceQueue(this.questionQueue, this.questionQueuePointer)}
+                        loadCount = {this.loadCount}
                     />
                     <Diagram
                         architectureDetails = {JSON.parse(JSON.stringify(this.props.architectureDetails))}

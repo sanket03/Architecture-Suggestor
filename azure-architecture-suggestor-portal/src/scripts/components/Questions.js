@@ -1,7 +1,13 @@
 import React from 'react';
+import * as Scroll from 'react-scroll';
 import QuestionComponent from './QuestionComponent';
 import QuestionChoice from './QuestionChoice';
 const Questions = (props) => {
+
+  // Scroll to bottom of the page as soon as the component is rendered
+  const scrollToBottom = (() => {
+    props.loadCount > 1 && Scroll.animateScroll.scrollToBottom({containerId: 'questions-container'});
+  })();
 
   // Render active questions
   const renderQuestions = ({ questionQueue, questionsObj, onOptionSelectHandler, questionResponseMap }) => {
@@ -52,7 +58,10 @@ const Questions = (props) => {
   }
 
   return (
-    <div id='questions-container'>
+    <div 
+      id='questions-container'
+      ref = {props.questionContainerRef}
+    >
       {renderQuestions(props)}
     </div>
   );

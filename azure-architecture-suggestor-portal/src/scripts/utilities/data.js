@@ -1,961 +1,963 @@
 const architectureDetails = {
-    '3' : {
-        "name": "Dummy architecture",
-        "groups": {
-          "1": {
-            "name": "group 1",
-            "isActive": false,
-            "relatedGroups": {
-              "3": "con1",
-              "2": "con2"
+  '3' : {
+      "name": "Dummy architecture",
+      "groups": {
+        "1": {
+          "name": "group 1",
+          "isActive": false,
+          "relatedGroups": {
+            "3": "con1",
+            "2": "con2"
+          },
+          "entities": {
+            "1": {
+              "name": "entity1",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                1
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "1": {
-                "name": "entity1",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  1
-                ],
-                "filteredBy": ""
-              },
-              "2": {
-                "name": "entity2",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  2
-                ],
-                "filteredBy": ""
-              }
-            }
-          },
-          "2": {
-            "name": "group 2",
-            "isActive": false,
-            "relatedGroups": {"5": null},
-            "entities": {
-              "3": {
-                "name": "entity3",
-                "isActive": true,
-                "parentEntities": {
-                    "1": ["1"] 
-                },
-                "questions": [
-                  3
-                ],
-                "filteredBy": ""
-              },
-              "4": {
-                "name": "entity4",
-                "isActive": true,
-                "parentEntities": {
-                    "1": ["2"]   
-                },
-                "questions": [
-                  4
-                ],
-                "filteredBy": ""
-              },
-              "12": {
-                "name": "entity12",
-                "isActive": true,
-                "parentEntities": {
-                },
-                "questions": [
-                ],
-                "filteredBy": ""
-              },
-              "13": {
-                "name": "entity13",
-                "isActive": true,
-                "parentEntities": {
-                },
-                "questions": [
-                ],
-                "filteredBy": ""
-              },
-            }
-          },
-          "3": {
-            "name": "group 3",
-            "isActive": false,
-            "relatedGroups": {
-              "4": null
-            },
-            "entities": {
-              "5": {
-                "name": "entity5",
-                "isActive": true,
-                "parentEntities": {
-                    "1": ["1"]
-                },
-                "questions": [
-                  5
-                ],
-                "filteredBy": ""
-              },
-              "6": {
-                "name": "entity6",
-                "isActive": true,
-                "parentEntities": {
-                    "1": ["2"]   
-                },
-                "questions": [
-                  6
-                ],
-                "filteredBy": ""
-              }
-            }
-          },
-          "4": {
-            "name": "group 4",
-            "isActive": false,
-            "relatedGroups": {
-            },
-            "entities": {
-              "7": {
-                "name": "entity7",
-                "isActive": true,
-                "parentEntities": {
-                    "3": ["5"],
-                    "1": ["1"]   
-                },
-                "questions": [
-                  7
-                ],
-                "filteredBy": ""
-              },
-              "8": {
-                "name": "entity8",
-                "isActive": true,
-                "parentEntities": {
-                    "3": ["5","6"]   
-                },
-                "questions": [
-                  8
-                ],
-                "filteredBy": ""
-              }
-            }
-          },
-          "5": {
-            "name": "group 5",
-            "isActive": false,
-            "relatedGroups": {},
-            "entities": {
-              "9": {
-                "name": "entity9",
-                "isActive": true,
-                "parentEntities": {
-                    "1": ["1"]
-                },
-                "questions": [
-                  9
-                ],
-                "filteredBy": ""
-              },
-              "10": {
-                "name": "entity10",
-                "isActive": true,
-                "parentEntities": {
-                    "4": ["8"]   
-                },
-                "questions": [
-                  10
-                ],
-                "filteredBy": ""
-              },
-              "11": {
-                "name": "entity11",
-                "isActive": true,
-                "parentEntities": {
-                    "4": ["7","8"]   
-                },
-                "questions": [
-                  10,
-                  11
-                ],
-                "filteredBy": ""
-              }
+            "2": {
+              "name": "entity2",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                2
+              ],
+              "filteredBy": ""
             }
           }
-        }
-      },
-      '2':{
-        "name": "Big Data Solution",
-        "groups": {
-          "1": {
-            "name": "Datasources",
-            "isActive": false,
-            "relatedGroups": {
-              "2": null
+        },
+        "2": {
+          "name": "group 2",
+          "isActive": false,
+          "relatedGroups": {"5": null},
+          "entities": {
+            "3": {
+              "name": "entity3",
+              "isActive": true,
+              "parentEntities": {
+                  "1": ["1"] 
+              },
+              "questions": [
+                3
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "12": {
-                "name": "Logs & Files",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  18
-                ],
-                "filteredBy": ""
+            "4": {
+              "name": "entity4",
+              "isActive": true,
+              "parentEntities": {
+                  "1": ["2"]   
               },
-              "13": {
-                "name": "Sensors & IoT",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  18
-                ],
-                "filteredBy": ""
-              },
-              "14": {
-                "name": "Events & Streams",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  18
-                ],
-                "filteredBy": ""
-              },
-              "15": {
-                "name": "Business Apps(Structured Data)",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [],
-                "filteredBy": ""
-              }
-            }
-          },
-          "2": {
-            "name": "Ingestion",
-            "isActive": false,
-            "relatedGroups": {
-              "3": null
+              "questions": [
+                4
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "16": {
-                "name": "Azure Data Factory",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "12",
-                    "15"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": ""
+            "12": {
+              "name": "entity12",
+              "isActive": true,
+              "parentEntities": {
+                "1":["1","2"]
               },
-              "17": {
-                "name": "IoT Hub",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "13"
-                  ]
-                },
-                "questions": [
-                  23
-                ],
-                "filteredBy": ""
-              },
-              "18": {
-                "name": "Azure HD Insights",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "13",
-                    "14"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": ""
-              },
-              "19": {
-                "name": "Event Hub",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "14"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": ""
-              }
-            }
-          },
-          "3": {
-            "name": "Data Store",
-            "isActive": false,
-            "relatedGroups": {
-              "4": null
+              "questions": [
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "20": {
-                "name": "Azure Blob Storage",
-                "isActive": true,
-                "parentEntities": {
-                  "2": [
-                    "16",
-                    "17",
-                    "18",
-                    "19"
-                  ]
-                },
-                "questions": [
-                  15,
-                  17
-                ],
-                "filteredBy": ""
+            "13": {
+              "name": "entity13",
+              "isActive": true,
+              "parentEntities": {
+                "1":["1","2"]
               },
-              "21": {
-                "name": "Azure DataLake",
-                "isActive": true,
-                "parentEntities": {
-                  "2": [
-                    "16",
-                    "17",
-                    "18",
-                    "19"
-                  ]
-                },
-                "questions": [
-                  15,
-                  17
-                ],
-                "filteredBy": ""
-              },
-              "22": {
-                "name": "Azure CosmosDB",
-                "isActive": true,
-                "parentEntities": {
-                  "2": [
-                    "17",
-                    "18",
-                    "19"
-                  ]
-                },
-                "questions": [
-                  16
-                ],
-                "filteredBy": ""
-              }
-            }
-          },
-          "4": {
-            "name": "Train and Prepare",
-            "isActive": false,
-            "relatedGroups": {
-              "5": null
+              "questions": [
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "18": {
-                "name": "Azure HD Insights",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": ""
-              },
-              "23": {
-                "name": "Azure Machine Learning",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21",
-                    "22"
-                  ]
-                },
-                "questions": [
-                  19
-                ],
-                "filteredBy": ""
-              },
-              "24": {
-                "name": "Stream Analytics",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": ""
-              },
-              "25": {
-                "name": "Azure Data Bricks",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21"
-                  ]
-                },
-                "questions": [
-                  19
-                ],
-                "filteredBy": ""
-              },
-              "26": {
-                "name": "Azure Functions",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "22"
-                  ]
-                },
-                "questions": [
-                  19
-                ],
-                "filteredBy": ""
-              },
-              "27": {
-                "name": "Azure Data Lake Analytics",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": ""
-              }
-            }
+          }
+        },
+        "3": {
+          "name": "group 3",
+          "isActive": false,
+          "relatedGroups": {
+            "4": null
           },
-          "5": {
-            "name": "Modeling",
-            "isActive": false,
-            "relatedGroups": {
-              "6": null
+          "entities": {
+            "5": {
+              "name": "entity5",
+              "isActive": true,
+              "parentEntities": {
+                  "1": ["1"]
+              },
+              "questions": [
+                5
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "18": {
-                "name": "Azure HD Insights",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "18"
-                  ]
-                },
-                "questions": [
-                  20,
-                  21
-                ],
-                "filteredBy": ""
+            "6": {
+              "name": "entity6",
+              "isActive": true,
+              "parentEntities": {
+                  "1": ["2"]   
               },
-              "22": {
-                "name": "Azure CosmosDB",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "18",
-                    "23",
-                    "24",
-                    "25",
-                    "26",
-                    "27"
-                  ]
-                },
-                "questions": [
-                  20
-                ],
-                "filteredBy": ""
-              },
-              "28": {
-                "name": "Azure SQL DB",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "24",
-                    "18",
-                    "25"
-                  ]
-                },
-                "questions": [
-                  20,
-                  21,
-                  22
-                ],
-                "filteredBy": ""
-              },
-              "29": {
-                "name": "Azure DW",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "24",
-                    "18",
-                    "25",
-                    "26"
-                  ]
-                },
-                "questions": [
-                  22
-                ],
-                "filteredBy": ""
-              }
-            }
-          },
-          "6": {
-            "name": "Publish and Report",
-            "isActive": false,
-            "relatedGroups": {},
-            "entities": {
-              "30": {
-                "name": "PowerBI",
-                "isActive": true,
-                "parentEntities": {
-                  "5": [
-                    "28",
-                    "29",
-                    "22",
-                    "18"
-                  ]
-                },
-                "questions": [
-                  12,
-                  13,
-                  14
-                ],
-                "filteredBy": ""
-              },
-              "31": {
-                "name": "WebApps",
-                "isActive": true,
-                "parentEntities": {
-                  "5": [
-                    "28",
-                    "29",
-                    "22"
-                  ]
-                },
-                "questions": [
-                  12,
-                  13
-                ],
-                "filteredBy": ""
-              },
-              "32": {
-                "name": "Microsoft Excel",
-                "isActive": true,
-                "parentEntities": {
-                  "5": [
-                    "29"
-                  ]
-                },
-                "questions": [
-                  12,
-                  13,
-                  14
-                ],
-                "filteredBy": ""
-              }
+              "questions": [
+                6
+              ],
+              "filteredBy": ""
             }
           }
-        }
-      },
-      '1':{
-        "name": "Big Data Solution",
-        "groups": {
-          "1": {
-            "name": "Datasources",
-            "isActive": false,
-            "relatedGroups": {
-              "2": null
-            },
-            "entities": {
-              "12": {
-                "name": "Logs & Files.PNG",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  18
-                ],
-                "filteredBy": "",
-                "url": 'Logs & Files.PNG'
-              },
-              "13": {
-                "name": "Sensors & IoT",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  18
-                ],
-                "filteredBy": "",
-                "url": "Sensors & IoT.PNG"
-              },
-              "14": {
-                "name": "Events & Streams",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [
-                  18
-                ],
-                "filteredBy": "",
-                "url": "Stream Analytics"
-              },
-              "15": {
-                "name": "Business Apps(Structured Data)",
-                "isActive": true,
-                "parentEntities": {},
-                "questions": [],
-                "filteredBy": "WebApps"
-              }
-            }
+        },
+        "4": {
+          "name": "group 4",
+          "isActive": false,
+          "relatedGroups": {
           },
-          "2": {
-            "name": "Ingestion",
-            "isActive": false,
-            "relatedGroups": {
-              "3": null
+          "entities": {
+            "7": {
+              "name": "entity7",
+              "isActive": true,
+              "parentEntities": {
+                  "3": ["5"],
+                  "1": ["1"]   
+              },
+              "questions": [
+                7
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "16": {
-                "name": "Azure Data Factory",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "12",
-                    "15"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": "",
-                "url": "Azure Data Factory"
+            "8": {
+              "name": "entity8",
+              "isActive": true,
+              "parentEntities": {
+                  "3": ["5","6"]   
               },
-              "17": {
-                "name": "IoT Hub",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "13"
-                  ]
-                },
-                "questions": [
-                  23
-                ],
-                "filteredBy": "",
-                "url": "IoT Hub.png"
-              },
-              "18": {
-                "name": "Azure HD Insights",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "13",
-                    "14"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": "",
-                "url": "Azure HD Insights.png"
-              },
-              "19": {
-                "name": "Event Hub",
-                "isActive": true,
-                "parentEntities": {
-                  "1": [
-                    "14"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": "",
-                "url": "Event Hub"
-              }
+              "questions": [
+                8
+              ],
+              "filteredBy": ""
             }
-          },
-          "3": {
-            "name": "Data Store",
-            "isActive": false,
-            "relatedGroups": {
-              "4": null
+          }
+        },
+        "5": {
+          "name": "group 5",
+          "isActive": false,
+          "relatedGroups": {},
+          "entities": {
+            "9": {
+              "name": "entity9",
+              "isActive": true,
+              "parentEntities": {
+                  "1": ["1"]
+              },
+              "questions": [
+                9
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "20": {
-                "name": "Azure Blob Storage",
-                "isActive": true,
-                "parentEntities": {
-                  "2": [
-                    "16",
-                    "17",
-                    "18",
-                    "19"
-                  ]
-                },
-                "questions": [
-                  15
-                ],
-                "filteredBy": "",
-                "url": "Azure Blob Storage"
+            "10": {
+              "name": "entity10",
+              "isActive": true,
+              "parentEntities": {
+                "2":"3"
               },
-              "21": {
-                "name": "Azure DataLake",
-                "isActive": true,
-                "parentEntities": {
-                  "2": [
-                    "16",
-                    "17",
-                    "18",
-                    "19"
-                  ]
-                },
-                "questions": [
-                  15
-                ],
-                "filteredBy": "",
-                "url": "Azure Data Lake Analytics.png"
-              },
-              "22": {
-                "name": "Azure CosmosDB",
-                "isActive": true,
-                "parentEntities": {
-                  "2": [
-                    "16",
-                    "17",
-                    "18",
-                    "19"
-                  ]
-                },
-                "questions": [
-                ],
-                "filteredBy": "",
-                "url": "Azure CosmosDB"
-              }
-            }
-          },
-          "4": {
-            "name": "Train and Prepare",
-            "isActive": false,
-            "relatedGroups": {
-              "5": null
+              "questions": [
+                10
+              ],
+              "filteredBy": ""
             },
-            "entities": {
-              "18": {
-                "name": "Azure HD Insights",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21",
-                    "22"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": "",
-                "url": "Azure HD Insights.png"
+            "11": {
+              "name": "entity11",
+              "isActive": true,
+              "parentEntities": {  
+                "2":"3"
               },
-              "23": {
-                "name": "Azure Machine Learning",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21",
-                    "22"
-                  ]
-                },
-                "questions": [
-                  19
-                ],
-                "filteredBy": "",
-                "url": "Azure Machine Learning"
-              },
-              "24": {
-                "name": "Stream Analytics",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": "",
-                "url": "Stream Analytics"
-              },
-              "25": {
-                "name": "Azure Data Bricks",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21"
-                  ]
-                },
-                "questions": [
-                  19
-                ],
-                "filteredBy": "",
-                "url": "Azure Data Bricks.png"
-              },
-              "26": {
-                "name": "Azure Functions",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "22"
-                  ]
-                },
-                "questions": [
-                  19
-                ],
-                "filteredBy": "",
-                "url": "Azure Functions.png"
-              },
-              "27": {
-                "name": "Azure Data Lake Analytics",
-                "isActive": true,
-                "parentEntities": {
-                  "3": [
-                    "20",
-                    "21"
-                  ]
-                },
-                "questions": [],
-                "filteredBy": "",
-                "url": "Azure Data Lake Analytics.png"
-              }
-            }
-          },
-          "5": {
-            "name": "Modeling",
-            "isActive": false,
-            "relatedGroups": {
-              "6": null
-            },
-            "entities": {
-              "18": {
-                "name": "Azure HD Insights",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "18"
-                  ]
-                },
-                "questions": [
-                  20
-                ],
-                "filteredBy": "",
-                "url": "Azure HD Insights.png"
-              },
-              "22": {
-                "name": "Azure CosmosDB",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "18",
-                    "23",
-                    "24",
-                    "25",
-                    "26",
-                    "27"
-                  ]
-                },
-                "questions": [
-                  20
-                ],
-                "filteredBy": "",
-                "url": "Azure CosmosDB"
-              },
-              "28": {
-                "name": "Azure SQL DB",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "23",
-                    "24",
-                    "18",
-                    "25"
-                  ]
-                },
-                "questions": [
-                  20
-                ],
-                "filteredBy": "",
-                "url": "Azure SQL DB"
-              },
-              "29": {
-                "name": "Azure DW",
-                "isActive": true,
-                "parentEntities": {
-                  "4": [
-                    "24",
-                    "18",
-                    "25",
-                    "26"
-                  ]
-                },
-                "questions": [
-                ],
-                "filteredBy": "",
-                "url": "Azure DW"
-              }
-            }
-          },
-          "6": {
-            "name": "Publish and Report",
-            "isActive": false,
-            "relatedGroups": {},
-            "entities": {
-              "30": {
-                "name": "PowerBI",
-                "isActive": true,
-                "parentEntities": {
-                  "5": [
-                    "28",
-                    "29",
-                    "22",
-                    "18"
-                  ]
-                },
-                "questions": [
-                  12
-                ],
-                "filteredBy": "",
-                "url": "PowerBI.jpg"
-              },
-              "31": {
-                "name": "WebApps",
-                "isActive": true,
-                "parentEntities": {
-                  "5": [
-                    "28",
-                    "29",
-                    "22"
-                  ]
-                },
-                "questions": [
-                  12
-                ],
-                "filteredBy": "",
-                "url": "WebApps"
-              },
-              "32": {
-                "name": "Microsoft Excel",
-                "isActive": true,
-                "parentEntities": {
-                  "5": [
-                    "29"
-                  ]
-                },
-                "questions": [
-                  12
-                ],
-                "filteredBy": "",
-                "url": "Microsoft Excel"
-              }
+              "questions": [
+                10,
+                11
+              ],
+              "filteredBy": ""
             }
           }
         }
       }
+    },
+    '2':{
+      "name": "Big Data Solution",
+      "groups": {
+        "1": {
+          "name": "Datasources",
+          "isActive": false,
+          "relatedGroups": {
+            "2": null
+          },
+          "entities": {
+            "12": {
+              "name": "Logs & Files",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                18
+              ],
+              "filteredBy": ""
+            },
+            "13": {
+              "name": "Sensors & IoT",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                18
+              ],
+              "filteredBy": ""
+            },
+            "14": {
+              "name": "Events & Streams",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                18
+              ],
+              "filteredBy": ""
+            },
+            "15": {
+              "name": "Business Apps(Structured Data)",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [],
+              "filteredBy": ""
+            }
+          }
+        },
+        "2": {
+          "name": "Ingestion",
+          "isActive": false,
+          "relatedGroups": {
+            "3": null
+          },
+          "entities": {
+            "16": {
+              "name": "Azure Data Factory",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "12",
+                  "15"
+                ]
+              },
+              "questions": [],
+              "filteredBy": ""
+            },
+            "17": {
+              "name": "IoT Hub",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "13"
+                ]
+              },
+              "questions": [
+                23
+              ],
+              "filteredBy": ""
+            },
+            "18": {
+              "name": "Azure HD Insights",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "13",
+                  "14"
+                ]
+              },
+              "questions": [],
+              "filteredBy": ""
+            },
+            "19": {
+              "name": "Event Hub",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "14"
+                ]
+              },
+              "questions": [],
+              "filteredBy": ""
+            }
+          }
+        },
+        "3": {
+          "name": "Data Store",
+          "isActive": false,
+          "relatedGroups": {
+            "4": null
+          },
+          "entities": {
+            "20": {
+              "name": "Azure Blob Storage",
+              "isActive": true,
+              "parentEntities": {
+                "2": [
+                  "16",
+                  "17",
+                  "18",
+                  "19"
+                ]
+              },
+              "questions": [
+                15,
+                17
+              ],
+              "filteredBy": ""
+            },
+            "21": {
+              "name": "Azure DataLake",
+              "isActive": true,
+              "parentEntities": {
+                "2": [
+                  "16",
+                  "17",
+                  "18",
+                  "19"
+                ]
+              },
+              "questions": [
+                15,
+                17
+              ],
+              "filteredBy": ""
+            },
+            "22": {
+              "name": "Azure CosmosDB",
+              "isActive": true,
+              "parentEntities": {
+                "2": [
+                  "17",
+                  "18",
+                  "19"
+                ]
+              },
+              "questions": [
+                16
+              ],
+              "filteredBy": ""
+            }
+          }
+        },
+        "4": {
+          "name": "Train and Prepare",
+          "isActive": false,
+          "relatedGroups": {
+            "5": null
+          },
+          "entities": {
+            "18": {
+              "name": "Azure HD Insights",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21"
+                ]
+              },
+              "questions": [],
+              "filteredBy": ""
+            },
+            "23": {
+              "name": "Azure Machine Learning",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21",
+                  "22"
+                ]
+              },
+              "questions": [
+                19
+              ],
+              "filteredBy": ""
+            },
+            "24": {
+              "name": "Stream Analytics",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20"
+                ]
+              },
+              "questions": [],
+              "filteredBy": ""
+            },
+            "25": {
+              "name": "Azure Data Bricks",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21"
+                ]
+              },
+              "questions": [
+                19
+              ],
+              "filteredBy": ""
+            },
+            "26": {
+              "name": "Azure Functions",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "22"
+                ]
+              },
+              "questions": [
+                19
+              ],
+              "filteredBy": ""
+            },
+            "27": {
+              "name": "Azure Data Lake Analytics",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21"
+                ]
+              },
+              "questions": [],
+              "filteredBy": ""
+            }
+          }
+        },
+        "5": {
+          "name": "Modeling",
+          "isActive": false,
+          "relatedGroups": {
+            "6": null
+          },
+          "entities": {
+            "18": {
+              "name": "Azure HD Insights",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "18"
+                ]
+              },
+              "questions": [
+                20,
+                21
+              ],
+              "filteredBy": ""
+            },
+            "22": {
+              "name": "Azure CosmosDB",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "18",
+                  "23",
+                  "24",
+                  "25",
+                  "26",
+                  "27"
+                ]
+              },
+              "questions": [
+                20
+              ],
+              "filteredBy": ""
+            },
+            "28": {
+              "name": "Azure SQL DB",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "24",
+                  "18",
+                  "25"
+                ]
+              },
+              "questions": [
+                20,
+                21,
+                22
+              ],
+              "filteredBy": ""
+            },
+            "29": {
+              "name": "Azure DW",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "24",
+                  "18",
+                  "25",
+                  "26"
+                ]
+              },
+              "questions": [
+                22
+              ],
+              "filteredBy": ""
+            }
+          }
+        },
+        "6": {
+          "name": "Publish and Report",
+          "isActive": false,
+          "relatedGroups": {},
+          "entities": {
+            "30": {
+              "name": "PowerBI",
+              "isActive": true,
+              "parentEntities": {
+                "5": [
+                  "28",
+                  "29",
+                  "22",
+                  "18"
+                ]
+              },
+              "questions": [
+                12,
+                13,
+                14
+              ],
+              "filteredBy": ""
+            },
+            "31": {
+              "name": "WebApps",
+              "isActive": true,
+              "parentEntities": {
+                "5": [
+                  "28",
+                  "29",
+                  "22"
+                ]
+              },
+              "questions": [
+                12,
+                13
+              ],
+              "filteredBy": ""
+            },
+            "32": {
+              "name": "Microsoft Excel",
+              "isActive": true,
+              "parentEntities": {
+                "5": [
+                  "29"
+                ]
+              },
+              "questions": [
+                12,
+                13,
+                14
+              ],
+              "filteredBy": ""
+            }
+          }
+        }
+      }
+    },
+    '1':{
+      "name": "Big Data Solution",
+      "groups": {
+        "1": {
+          "name": "Datasources",
+          "isActive": false,
+          "relatedGroups": {
+            "2": null
+          },
+          "entities": {
+            "12": {
+              "name": "Logs & Files.PNG",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                18
+              ],
+              "filteredBy": "",
+              "url": 'Logs & Files.PNG'
+            },
+            "13": {
+              "name": "Sensors & IoT",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                18
+              ],
+              "filteredBy": "",
+              "url": "Sensors & IoT.PNG"
+            },
+            "14": {
+              "name": "Events & Streams",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [
+                18
+              ],
+              "filteredBy": "",
+              "url": "Stream Analytics"
+            },
+            "15": {
+              "name": "Business Apps(Structured Data)",
+              "isActive": true,
+              "parentEntities": {},
+              "questions": [],
+              "filteredBy": "WebApps"
+            }
+          }
+        },
+        "2": {
+          "name": "Ingestion",
+          "isActive": false,
+          "relatedGroups": {
+            "3": null
+          },
+          "entities": {
+            "16": {
+              "name": "Azure Data Factory",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "12",
+                  "15"
+                ]
+              },
+              "questions": [],
+              "filteredBy": "",
+              "url": "Azure Data Factory"
+            },
+            "17": {
+              "name": "IoT Hub",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "13"
+                ]
+              },
+              "questions": [
+                23
+              ],
+              "filteredBy": "",
+              "url": "IoT Hub.png"
+            },
+            "18": {
+              "name": "Azure HD Insights",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "13",
+                  "14"
+                ]
+              },
+              "questions": [],
+              "filteredBy": "",
+              "url": "Azure HD Insights.png"
+            },
+            "19": {
+              "name": "Event Hub",
+              "isActive": true,
+              "parentEntities": {
+                "1": [
+                  "14"
+                ]
+              },
+              "questions": [],
+              "filteredBy": "",
+              "url": "Event Hub"
+            }
+          }
+        },
+        "3": {
+          "name": "Data Store",
+          "isActive": false,
+          "relatedGroups": {
+            "4": null
+          },
+          "entities": {
+            "20": {
+              "name": "Azure Blob Storage",
+              "isActive": true,
+              "parentEntities": {
+                "2": [
+                  "16",
+                  "17",
+                  "18",
+                  "19"
+                ]
+              },
+              "questions": [
+                15
+              ],
+              "filteredBy": "",
+              "url": "Azure Blob Storage"
+            },
+            "21": {
+              "name": "Azure DataLake",
+              "isActive": true,
+              "parentEntities": {
+                "2": [
+                  "16",
+                  "17",
+                  "18",
+                  "19"
+                ]
+              },
+              "questions": [
+                15
+              ],
+              "filteredBy": "",
+              "url": "Azure Data Lake Analytics.png"
+            },
+            "22": {
+              "name": "Azure CosmosDB",
+              "isActive": true,
+              "parentEntities": {
+                "2": [
+                  "16",
+                  "17",
+                  "18",
+                  "19"
+                ]
+              },
+              "questions": [
+              ],
+              "filteredBy": "",
+              "url": "Azure CosmosDB"
+            }
+          }
+        },
+        "4": {
+          "name": "Train and Prepare",
+          "isActive": false,
+          "relatedGroups": {
+            "5": null
+          },
+          "entities": {
+            "18": {
+              "name": "Azure HD Insights",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21",
+                  "22"
+                ]
+              },
+              "questions": [],
+              "filteredBy": "",
+              "url": "Azure HD Insights.png"
+            },
+            "23": {
+              "name": "Azure Machine Learning",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21",
+                  "22"
+                ]
+              },
+              "questions": [
+                19
+              ],
+              "filteredBy": "",
+              "url": "Azure Machine Learning"
+            },
+            "24": {
+              "name": "Stream Analytics",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20"
+                ]
+              },
+              "questions": [],
+              "filteredBy": "",
+              "url": "Stream Analytics"
+            },
+            "25": {
+              "name": "Azure Data Bricks",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21"
+                ]
+              },
+              "questions": [
+                19
+              ],
+              "filteredBy": "",
+              "url": "Azure Data Bricks.png"
+            },
+            "26": {
+              "name": "Azure Functions",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "22"
+                ]
+              },
+              "questions": [
+                19
+              ],
+              "filteredBy": "",
+              "url": "Azure Functions.png"
+            },
+            "27": {
+              "name": "Azure Data Lake Analytics",
+              "isActive": true,
+              "parentEntities": {
+                "3": [
+                  "20",
+                  "21"
+                ]
+              },
+              "questions": [],
+              "filteredBy": "",
+              "url": "Azure Data Lake Analytics.png"
+            }
+          }
+        },
+        "5": {
+          "name": "Modeling",
+          "isActive": false,
+          "relatedGroups": {
+            "6": null
+          },
+          "entities": {
+            "18": {
+              "name": "Azure HD Insights",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "18"
+                ]
+              },
+              "questions": [
+                20
+              ],
+              "filteredBy": "",
+              "url": "Azure HD Insights.png"
+            },
+            "22": {
+              "name": "Azure CosmosDB",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "18",
+                  "23",
+                  "24",
+                  "25",
+                  "26",
+                  "27"
+                ]
+              },
+              "questions": [
+                20
+              ],
+              "filteredBy": "",
+              "url": "Azure CosmosDB"
+            },
+            "28": {
+              "name": "Azure SQL DB",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "23",
+                  "24",
+                  "18",
+                  "25"
+                ]
+              },
+              "questions": [
+                20
+              ],
+              "filteredBy": "",
+              "url": "Azure SQL DB"
+            },
+            "29": {
+              "name": "Azure DW",
+              "isActive": true,
+              "parentEntities": {
+                "4": [
+                  "24",
+                  "18",
+                  "25",
+                  "26"
+                ]
+              },
+              "questions": [
+              ],
+              "filteredBy": "",
+              "url": "Azure DW"
+            }
+          }
+        },
+        "6": {
+          "name": "Publish and Report",
+          "isActive": false,
+          "relatedGroups": {},
+          "entities": {
+            "30": {
+              "name": "PowerBI",
+              "isActive": true,
+              "parentEntities": {
+                "5": [
+                  "28",
+                  "29",
+                  "22",
+                  "18"
+                ]
+              },
+              "questions": [
+                12
+              ],
+              "filteredBy": "",
+              "url": "PowerBI.jpg"
+            },
+            "31": {
+              "name": "WebApps",
+              "isActive": true,
+              "parentEntities": {
+                "5": [
+                  "28",
+                  "29",
+                  "22"
+                ]
+              },
+              "questions": [
+                12
+              ],
+              "filteredBy": "",
+              "url": "WebApps"
+            },
+            "32": {
+              "name": "Microsoft Excel",
+              "isActive": true,
+              "parentEntities": {
+                "5": [
+                  "29"
+                ]
+              },
+              "questions": [
+                12
+              ],
+              "filteredBy": "",
+              "url": "Microsoft Excel"
+            }
+          }
+        }
+      }
+    }
 }
 
 const questionDetails = {
