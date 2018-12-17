@@ -19,7 +19,7 @@ import '../../styles/App.scss';
 export default class App extends Component {
   constructor() {
     super();
-    this.defaultArchitectureId = 1;
+    this.defaultArchitectureId = 10;
     this.architecturesList = {};
     this.architectureDetails = {};
     this.questionDetails = {};
@@ -69,7 +69,7 @@ export default class App extends Component {
     this.questionEntityMapping = questionEntityMapping;
     
     this.setState(() => ({
-        architectureId:1
+        architectureId:10
       }))
   }
 

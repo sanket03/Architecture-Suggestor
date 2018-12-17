@@ -150,6 +150,7 @@
         // Add questions to the queue
         addQuestionsToQueue(questions) {
             questions.forEach((question) => {
+                question = question.toString();
                 if(!(this.questionQueue.includes(question))) {
                     this.questionQueue.push(question);
                 }
@@ -195,10 +196,11 @@
             let groupQuestionsObj = questionDetails[activeGroup]
             Object.keys(groupQuestionsObj)
                 .forEach((questionId) => {
-                    traversedQuestions.includes(parseInt(questionId)) ? this.setIsActiveFlagForQuestions(groupQuestionsObj[questionId]) : this.resetIsActiveFlagForQuestions(groupQuestionsObj[questionId]);
+                    traversedQuestions.includes(questionId) ? this.setIsActiveFlagForQuestions(groupQuestionsObj[questionId]) : this.resetIsActiveFlagForQuestions(groupQuestionsObj[questionId]);
                 }, this);
         }
         
+
         setFilteredByFlag(entityObj, questionId) {
             entityObj.filteredBy = questionId;
         }
@@ -223,12 +225,29 @@
             return this.questionResponseMap.hasOwnProperty(questionId);
         }
 
+        // Check whether the entity is traversed/ if questions are traversed for that entity
+        isEntityAlreadyTraversed(entity) {
+            let {
+                architectureDetails,
+                questionDetails,
+                questionEntityMapping
+            } = this.props;
+
+            let entityQuestions = architectureDetails[this.activeGroup].entities[entity].questions;
+            for(let questionId of entityQuestions) {
+                if(this.isQuestionAlreadyAnswered(questionId)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // Set question response map
         setQuestionResponseMap(questionId, entity, choice) {
             this.questionResponseMap[questionId] = {
                 'entity': entity,
                 'response': choice
-            };    
+            };  
         }
 
         // Reset question response map
@@ -238,7 +257,7 @@
                 // If there is a need to show the question with choices in scenario where the succeeding questions are same 
                 // Even after a previous question is clicked then check for questionId inclusion in this.questionqueue rather than traversedQuestions
                 let traversedQuestions = this.questionQueue.slice(0, this.questionQueuePointer);
-                !traversedQuestions.includes(parseInt(questionId)) && (delete this.questionResponseMap[questionId]);
+                !traversedQuestions.includes(questionId) && (delete this.questionResponseMap[questionId]);
             }
         }
 
@@ -283,9 +302,10 @@
             let traversedQuestions = this.questionQueue.slice(0, this.questionQueuePointer);
             this.entityQueue.forEach((entity, index) => {
                 // Check only if isActive flag is false
-                if(!entities[entity].isActive) {
-                    let filteredById = entities[entity].filteredBy;
-                    if(traversedQuestions.includes(parseInt(filteredById))) {
+                let filteredById = entities[entity].filteredBy;
+                if(!entities[entity].isActive && filteredById.length) {
+                   
+                    if(traversedQuestions.includes(filteredById)) {
                         if(filteredById == this.activeQuestion) {
                             this.setIsActiveFlagForEntities(entities[entity]);
                             this.setFilteredByFlag(entities[entity], '');
@@ -310,16 +330,17 @@
             return entity.questions;
         }
 
-        // Check whether entities in current active group has non traversed questions in question queue		
-        // This handles the case when filtered entity's question has already been traversed in previous pass		
-        hasNonTraversedQuestions(activeEntityQuestions) {		
-            for(let questionId of activeEntityQuestions) {		
-                if(!this.questionQueue.includes(questionId) || (this.questionQueue.indexOf(questionId) >= this.questionQueuePointer)) {		
-                    return true;		
-                }		
-            }		
-            return false;		
-        }			
+        // Check whether entities in current active group has non traversed questions in question queue
+        // This handles the case when filtered entity's question has already been traversed in previous pass	
+        hasNonTraversedQuestions(activeEntityQuestions) {
+            for(let questionId of activeEntityQuestions) {
+                questionId = questionId.toString();
+                if(!this.questionQueue.includes(questionId) || (this.questionQueue.indexOf(questionId) >= this.questionQueuePointer)) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
         // This marks the entry of new group to be considered for questions
         performActiveGroupUpdation(architectureDetails, questionDetails) {
@@ -353,7 +374,7 @@
             while(this.ifEntityQueueHasElements()) {
                 this.setActiveEntity(architectureDetails[this.activeGroup].entities);
                 let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
-                if(filteredEntities.includes(this.activeEntity) && this.hasNonTraversedQuestions(activeEntityQuestions)) {
+                if((filteredEntities.includes(this.activeEntity) || !this.isEntityAlreadyTraversed(this.activeEntity)) && this.hasNonTraversedQuestions(activeEntityQuestions)) {
                     shouldUpdateActiveGroup = false;
                     this.questionQueue = this.sliceQueue(this.questionQueue, this.questionQueuePointer);
                     this.addQuestionsToQueue(activeEntityQuestions);
@@ -374,40 +395,54 @@
             let filteredEntities = [];
             let groupEntities = Object.keys(entities);
             let entitiesForQuestion = questionEntityMapping[questionId];
-            let traversedEntities = this.sliceQueue(this.entityQueue, this.entityQueuePointer - 1);
             for(let entity in entitiesForQuestion) {
                 if(entitiesForQuestion[entity].split('|').includes(choice)) {
                     filteredEntities.push(entity);
                 }
             }
 
-            // If no entities match the current choice, then remove those entities from filtered list
-            if(filteredEntities.length === 0) {
-                filteredEntities = groupEntities.filter((entity) => {
-                    return Object.keys(entitiesForQuestion).indexOf(entity) === -1;
-                })
-            }
-
             // Remove entities which were already filtered in previous pass
             // Also remove those which are not present in entity queue 
-            // As their parent entities were inactive 
-
+            // As their parent entities were inactive
             filteredEntities = filteredEntities.filter((entity) => {
                 if(this.entityQueue.includes(entity)) {
-                    return entities[entity].isActive;
+                    if(entities[entity].isActive) {
+                        return true
+                    } else {
+                        return !(this.isEntityAlreadyTraversed(entity) && entities[entity].filteredBy.length)
+                    }
                 } else {
                     return false;
                 }
             })
 
-
             // Set isActive true for filtered entities in architectureDetails object
-            for(let entity in entities) {
-                filteredEntities.includes(entity) ? this.setIsActiveFlagForEntities(entities[entity]) : this.resetIsActiveFlagForEntities(entities[entity]);
-                if(!entities[entity].isActive && !entities[entity].filteredBy.length) {
+            for(let entity in entities) {       
+                if(filteredEntities.includes(entity)) {
+                    this.setIsActiveFlagForEntities(entities[entity])
+                } else {
+                    if(entity in entitiesForQuestion) {
+                        this.resetIsActiveFlagForEntities(entities[entity]);
+                    } else {
+                        if(entities[entity].isActive) {
+                            if(this.isEntityAlreadyTraversed(entity)) {
+                                this.setIsActiveFlagForEntities(entities[entity])
+                            } else {
+                                this.resetIsActiveFlagForEntities(entities[entity]);
+                            }
+                        } else {
+                            this.resetIsActiveFlagForEntities(entities[entity]);
+                        }
+                    }
+                }
+
+                // Set isFiltered flag for inactive entities and which are not filtered previously(which are filtered by this question)
+                if(!entities[entity].isActive && this.isEntityAlreadyTraversed(entity) && !entities[entity].filteredBy.length) {
                     this.setFilteredByFlag(entities[entity], questionId);
                 }
+
             }
+
             return filteredEntities;
         }
 
@@ -445,7 +480,7 @@
                 this.setEntityQueuePointer(this.entityQueue.indexOf(this.getActiveEntityForAlreadyAnsweredQuestion(questionId)));
                 this.setActiveEntity();
                 let activeEntityQuestions = architectureDetails[this.activeGroup].entities[this.activeEntity].questions;
-                this.resetQuestionQueue(this.questionQueue.indexOf(parseInt(questionId)));
+                this.resetQuestionQueue(this.questionQueue.indexOf(questionId));
                 this.addQuestionsToQueue(activeEntityQuestions);
                 this.setActiveQuestion();
                 this.filterQuestionsPerGroups(this.activeGroup, this.activeQuestion, questionDetails);
@@ -468,7 +503,6 @@
             // If yes, then repeat from addQuestionsToQueue and break the loop
             // If no, then continue the loop until entity queue has exhausted
             // Change the active group if end of entity queue
-
             if(filteredEntities.includes(this.activeEntity)) {
                 if(this.ifQuestionQueueHasElements()) {
                     this.setActiveQuestion();
