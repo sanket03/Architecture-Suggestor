@@ -21,9 +21,6 @@ const Diagram = (props) => {
         rootNode
     } = props;
 
-    let rect
-    
-
     // Returns active entity count for a group
     const calcActiveEntityCount = (entitiesObj) => {
         let count = 0;
@@ -236,7 +233,8 @@ const Diagram = (props) => {
             let groupObject = architectureDetails[groupId]
             let entitiesObj = groupObject.entities;
             groupsElement.push(
-                <svg 
+                <svg
+                    viewBox = {`0 0 ${rectInstance.width} ${rectInstance.height}`}
                     x = {rectInstance.x} 
                     y = {rectInstance.y}
                     height = {rectInstance.height} 
@@ -287,7 +285,10 @@ const Diagram = (props) => {
             <div id = 'diagram-header'>
                 <h3>Architecture Diagram</h3>
             </div>
-            <svg id = 'diagram-wrapper'>
+            <svg 
+                id = 'diagram-wrapper'
+                viewBox = {props.loadCount > 1 ? `0 0 ${calcDiagramSize()[0]} ${calcDiagramSize()[1]}` : ''}
+            >
                 {props.loadCount > 1 && renderDiagram(treeDataObj, architectureDetails)}
             </svg>
         </div>
