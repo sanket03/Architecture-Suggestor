@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import svgRectModule from './svgRectModule';
 const svgPathModule = (() => {
   
     // Calculate path for drawing lines

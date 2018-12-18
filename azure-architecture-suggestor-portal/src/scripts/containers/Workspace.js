@@ -468,7 +468,7 @@
             // Get the groupId, questionId and choice for the selected question
             let groupId = event.target.closest('.question').getAttribute('data-group');
             let questionId = event.target.closest('.question').getAttribute('data-id');
-            let choice = event.target.nextElementSibling.innerHTML;
+            let choice = event.target.nextElementSibling.innerText;
 
             if(this.isQuestionAlreadyAnswered(questionId)) {
                 this.resetActiveGroups(groupId, architectureDetails);

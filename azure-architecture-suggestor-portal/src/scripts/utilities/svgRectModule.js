@@ -6,6 +6,7 @@ const svgRectModule = (() => {
     const defaultRectHeight = 65;
     const defaultRectGap = 50;
     const defaultGroupOffset = 10;
+    const strokeWidth = 2;
     let dimensions = {};
     let rectPrototype = {
       'height': 0,
@@ -140,6 +141,7 @@ const svgRectModule = (() => {
   
     return {
       getDimensions,
+      strokeWidth,
       setRectAttributes,
       defaultGroupOffset,
       defaultRectWidth,

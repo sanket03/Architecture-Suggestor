@@ -20,6 +20,8 @@ const Diagram = (props) => {
         questionResponseMap,
         rootNode
     } = props;
+
+    let rect
     
 
     // Returns active entity count for a group
@@ -237,6 +239,8 @@ const Diagram = (props) => {
                 <svg 
                     x = {rectInstance.x} 
                     y = {rectInstance.y}
+                    height = {rectInstance.height} 
+                    width = {rectInstance.width}
                 >
                     <SvgRectComponent 
                         height = {rectInstance.height} 

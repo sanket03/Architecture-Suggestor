@@ -10,7 +10,7 @@ const architectureDetails = {
           },
           "entities": {
             "101": {
-              "name": "Source 1",
+              "name": "Logs & Files",
               "isActive": true,
               "parentEntities": {},
               "questions": [
@@ -19,7 +19,7 @@ const architectureDetails = {
               "filteredBy": ""
             },
             "102": {
-              "name": "Source 2",
+              "name": "Events & Streams",
               "isActive": true,
               "parentEntities": {},
               "questions": [
@@ -61,11 +61,10 @@ const architectureDetails = {
               "name": "IoT Hub",
               "isActive": true,
               "parentEntities": {
-                "2": ["103"],
-                "1": ["101", "102"]
+                "1": ["102"]
               },
               "questions": [
-                "1003",
+                "1004"
               ],
               "filteredBy": "",
               "url": 'Azure IoT Hub.png'
@@ -74,11 +73,9 @@ const architectureDetails = {
               "name": "Event Hub",
               "isActive": true,
               "parentEntities": {
-                "2": ["103"],
-                "1": ["101", "102"]
+                "1": ["102"]
               },
               "questions": [
-                "1003",
                 "1004",
                 "1005"
               ],
@@ -89,11 +86,9 @@ const architectureDetails = {
               "name": "Blob Storage",
               "isActive": true,
               "parentEntities": {
-                "2": ["103"],
-                "1": ["101", "102"]
+                "1": ["102"]
               },
               "questions": [
-                "1003",
                 "1004",
                 "1005"
               ],
@@ -104,11 +99,11 @@ const architectureDetails = {
               "name": "Azure Data factory",
               "isActive": true,
               "parentEntities": {
-                "2": ["103"],
-                "1": ["101", "102"]
+
+                "1": ["101"]
               },
               "questions": [
-                "1003"
+ 
               ],
               "filteredBy": "",
               "url": "Azure Data Factory.png"
@@ -342,7 +337,7 @@ const questionDetails = {
           "1": {
             '1001': {
               "question": "What is the source for your system?",
-              "choices": "Source1|Source2",
+              "choices": "Logs & Files|Events & Streams",
               "isActive": false
             }
           },
@@ -372,7 +367,7 @@ const questionDetails = {
           },
           "4":{
             "1006": {
-              "question": "Is your data unstructured?",
+              "question": "Do you have unstructured data?",
               "choices": "Yes|No",
               "isActive": false
             },
@@ -405,8 +400,8 @@ const questionDetails = {
 
 const questionEntityMapping = {
   "1001": {
-    "101": "Source1",
-    "102": "Source2"
+    "101": "Logs & Files",
+    "102": "Events & Streams"
   },
   "1002": {
     "103": "Yes"
