@@ -9,7 +9,7 @@ const SvgImageComponent = (props) =>  {
         translateX,
         url
     } = props
-    url = url ? url : 'azure.png';
+    url = url ? url : 'Microsoft Azure.png';
     return (
 
         <image               
@@ -18,7 +18,7 @@ const SvgImageComponent = (props) =>  {
             x = {x}
             y = {y}
             transform = {`translate(${translateX}, ${0})`}
-            xlinkHref = {require(`../../images/${url}`)}
+            xlinkHref = {require(`../../images/azure_icons_png/${url}`)}
         />
     );
 }

@@ -331,7 +331,7 @@
         }
 
         // Check whether entities in current active group has non traversed questions in question queue
-        // This handles the case when filtered entity's question has already been traversed in previous pass	
+        // This handles the case when filtered entity's question has already been traversed in previous pass
         hasNonTraversedQuestions(activeEntityQuestions) {
             for(let questionId of activeEntityQuestions) {
                 questionId = questionId.toString();
@@ -383,7 +383,6 @@
                     break;
                 }
             }
-
             if(shouldUpdateActiveGroup) {
                 this.resetEntityQueue();
                 this.performActiveGroupUpdation(architectureDetails, questionDetails);

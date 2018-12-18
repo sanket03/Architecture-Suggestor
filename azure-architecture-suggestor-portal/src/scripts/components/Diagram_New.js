@@ -240,7 +240,8 @@ const Diagram = (props) => {
                 >
                     <SvgRectComponent 
                         height = {rectInstance.height} 
-                        width = {rectInstance.width} 
+                        width = {rectInstance.width}
+                        addStroke = {calcActiveEntityCount(entitiesObj) > 1}
                     />
                     {renderEntities(entitiesObj, rectInstance.width, rectInstance.height)}
                 </svg>

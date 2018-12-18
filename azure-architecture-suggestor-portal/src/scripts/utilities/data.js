@@ -45,7 +45,8 @@ const architectureDetails = {
               "questions": [
                 "1002"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Application Gateway.png"
             }
           }
         },
@@ -67,7 +68,7 @@ const architectureDetails = {
                 "1003",
               ],
               "filteredBy": "",
-              "url": 'IoT Hub.png'
+              "url": 'Azure IoT Hub.png'
             },
             "105": {
               "name": "Event Hub",
@@ -82,7 +83,7 @@ const architectureDetails = {
                 "1005"
               ],
               "filteredBy": "",
-              "url": "Event Hub"
+              "url": "Azure Event Hubs.png"
             },
             "106": {
               "name": "Blob Storage",
@@ -97,7 +98,7 @@ const architectureDetails = {
                 "1005"
               ],
               "filteredBy": "",
-              "url": "Azure Blob Storage"
+              "url": "Azure Storage - Blob.png"
             },
             "107": {
               "name": "Azure Data factory",
@@ -110,7 +111,7 @@ const architectureDetails = {
                 "1003"
               ],
               "filteredBy": "",
-              "url": "Azure Data Factory"
+              "url": "Azure Data Factory.png"
             }
           }
         },
@@ -130,7 +131,8 @@ const architectureDetails = {
               },
               "questions": [
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Stream Analytics.png"
             }
           }
         },
@@ -151,7 +153,8 @@ const architectureDetails = {
               "questions": [
                 "1006",
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Storage - Blob.png"
             },
             "108": {
               "name": "SQL DB",
@@ -164,7 +167,8 @@ const architectureDetails = {
                 "1006",
                 "1007"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure SQL Database (generic).png"
             },
             "109": {
               "name": "SQL DataWarehouse",
@@ -177,7 +181,8 @@ const architectureDetails = {
                 "1006",
                 "1007"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "URL": "Azure SQL DataWarehouse.png"
             },
             "110": {
               "name": "Data Lake Store",
@@ -190,7 +195,8 @@ const architectureDetails = {
                 "1006",
                 "1007"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Data Lake Store.png"
             },
             "111": {
               "name": "Cosmos DB",
@@ -202,7 +208,8 @@ const architectureDetails = {
               "questions": [
                 "1006"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "cosmosDB.png"
             },
             "112": {
               "name": "Azure Data Bricks",
@@ -214,7 +221,8 @@ const architectureDetails = {
               "questions": [
                 "1008"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Data Bricks.png"
             },
             "113": {
               "name": "Cognitive Services",
@@ -226,7 +234,8 @@ const architectureDetails = {
               "questions": [
                 "1009"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Cognitive Services.png"
             }
           }
         },
@@ -245,7 +254,8 @@ const architectureDetails = {
               },
               "questions": [
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Data Lake Analytics.png"
             } 
           }
         },
@@ -265,7 +275,8 @@ const architectureDetails = {
               "questions": [
                 "1010"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Analysis Service.png"
             },
             "117": {
               "name": "Data Warehouse",
@@ -276,7 +287,8 @@ const architectureDetails = {
               "questions": [
                 "1010"
               ],
-              "filteredBy": ""
+              "filteredBy": "",
+              "url": "Azure Data Warehouse.png"
             }
           }
       },
@@ -296,7 +308,8 @@ const architectureDetails = {
             },
             "questions": [
             ],
-            "filteredBy": ""
+            "filteredBy": "",
+            "url": "Power BI Embedded.png"
           }
       }
     },
@@ -314,7 +327,8 @@ const architectureDetails = {
           },
           "questions": [
           ],
-          "filteredBy": ""
+          "filteredBy": "",
+          "url": "Power BI Embedded.png"
         }
     }
   }
