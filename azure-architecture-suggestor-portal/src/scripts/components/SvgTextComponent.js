@@ -6,7 +6,8 @@ const SvgTextComponent = (props) =>  {
         x,
         y,
         height,
-        text
+        text,
+        fontSize
     } = props
     return (
 
@@ -14,6 +15,7 @@ const SvgTextComponent = (props) =>  {
             x = {x}
             y = {y}       
             height = {height}
+            font-size = {fontSize}
         >{text}</text>
     );
 }

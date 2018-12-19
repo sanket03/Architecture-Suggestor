@@ -1,28 +1,18 @@
-
-
-import * as d3 from 'd3';
 const svgRectModule = (() => {
     const defaultRectWidth = 150;
     const defaultRectHeight = 65;
     const defaultRectGap = 50;
-    const defaultGroupOffset = 10;
+    const defaultGroupOffsetPercentage = 6/100;
     const strokeWidth = 2;
+    const defaultRectHeightPercentage = 43/100;
     let dimensions = {};
     let rectPrototype = {
       'height': 0,
       'width': 0,
       'x': 0,
-      'y': 0,
-      calcRectHeight(groupId, entitiesObj) {
-        let activeEntityCount = 0;
-        for(let entityObj in entitiesObj) {
-          activeEntityCount = entitiesObj[entityObj].isActive ? activeEntityCount + 1 : activeEntityCount
-        }
-        this.height = defaultRectHeight*activeEntityCount + defaultGroupOffset;
-        setHeight(groupId, this.height);
-      }
+      'y': 0
     }
-  
+
     // Create entry for a group in dimensions object
     const createEntryInDimensionsObj = (groupId) => {
       dimensions[groupId] = !dimensions.hasOwnProperty(groupId) ? {} : dimensions[groupId];
@@ -143,10 +133,11 @@ const svgRectModule = (() => {
       getDimensions,
       strokeWidth,
       setRectAttributes,
-      defaultGroupOffset,
       defaultRectWidth,
       defaultRectGap,
       defaultRectHeight,
+      defaultRectHeightPercentage,
+      defaultGroupOffsetPercentage,
       initializeDimensionsObject,
       pupulateParentGroupList
     }

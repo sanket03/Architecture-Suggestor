@@ -1,6 +1,6 @@
     import React, {Component} from 'react';
     import Questions from '../components/Questions';
-    import Diagram from '../components/Diagram_New';
+    import Diagram from '../components/Diagram';
 
     import '../../styles/Workspace.scss';
 

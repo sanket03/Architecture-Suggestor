@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import {flextree} from 'd3-flextree';
+
+import SvgMarkerComponent from './SvgMarkerComponent';
 import SvgRectComponent from './SvgRectComponent';
 import SvgTextComponent from './SvgTextComponent';
 import SvgImageComponent from './SvgImageComponent';
@@ -11,199 +14,309 @@ import svgPathModule from '../utilities/svgPathModule';
 
 const Diagram = (props) => {
 
-  let treeBreadthList = {}; 
+    let {
+        architectureDetails,
+        questionDetails,
+        questionResponseMap,
+        rootNode,
+        loadCount
+    } = props;
 
-  let {
-    architectureDetails,
-    questionDetails,
-    questionResponseMap,
-    rootNode
-  } = props;
+    // Calculate height for a html element
+    const calcElementHeight = (selector) => {
+        return selector.getBoundingClientRect().height;
+    }
 
+    // Calculate width for a html element
+    const calcElementWidth = (selector) => {
+        return selector.getBoundingClientRect().width;
+    }
+
+    // Truncate values to decimal places
+    const truncateToTwoDecimal = (value) => {
+        return parseInt(value*100)/100;
+    }
+
+    // Calculate svg diagram size
+    const calcDiagramSize = () => {
+        let diagramSelector = document.getElementById('diagram-wrapper');
+        let diagramHeight = truncateToTwoDecimal(calcElementHeight(diagramSelector));
+        let diagramWidth  = truncateToTwoDecimal(calcElementWidth(diagramSelector));
+        return [diagramWidth, diagramHeight]
+    }
+
+    let diagramSize = loadCount > 1 ? calcDiagramSize() : [];
+
+    // Returns active entity count for a group
+    const calcActiveEntityCount = (entitiesObj) => {
+        let count = 0;
+        for(let entity in entitiesObj) {
+            count += (entitiesObj[entity].isActive ? 1: 0); 
+        }
+        return count;
+    }
+
+    // Calculate group height depending on the count of active entities
+    const calcNodeHeight = (entitiesObj, nodeWidth) => {
+        return calcActiveEntityCount(entitiesObj) * nodeWidth * svgRectModule.defaultRectHeightPercentage;
+    }
 
     // Checks whether the group should be rendered or not
-    const shouldRenderGroup = (groupQuestionsObj, questionResponseMap) => {
-      let allQuestionsInactive = true;
-      // Check if all the questions are inactive
-      for(let questionObj of groupQuestionsObj) {
-        if(questionObj.isActive) {
-          allQuestionsInactive = false;
+    const shouldRenderGroup = (architectureGroupObj, groupQuestionsObj, questionResponseMap) => {
+        // Check if group is active
+        let isActiveGroup = architectureGroupObj.isActive;
+
+        // Check if all the entities are inactive
+        let hasActiveEntities = false;
+        let entitiesObj = architectureGroupObj.entities;
+        for(let entityId in entitiesObj) {
+            if(entitiesObj[entityId].isActive) {
+                hasActiveEntities = true;
+                break;
+            }
         }
-      }
-  
-      // Check for question Ids in question Response map
-      if(allQuestionsInactive) {
-        return true;
-      } else {
-        for(let questionObj of groupQuestionsObj) {
-          if(questionObj.id in questionResponseMap) {
-            return true
-          }
+    
+        if(hasActiveEntities && isActiveGroup) {
+            // Check if all the questions are inactive
+            let allQuestionsInactive = true;
+            for(let questionId in groupQuestionsObj) {
+                if(groupQuestionsObj[questionId].isActive) {
+                allQuestionsInactive = false;
+                }
+            }
+            // Check for question Ids in question Response map
+            if(allQuestionsInactive) {
+                return true;
+            } else {
+                for(let questionId in groupQuestionsObj) {
+                    if(questionId in questionResponseMap) {
+                        return true
+                    }
+                }
+            }
+            return false;
+        } else {
+            return false;
         }
-      }
-      return false;
     }
-  
-  const calcTreeBreadth = (parentGroupId, relatedGroupsObj) => {
-    let treeLevelBreadth = 0;
-    let nodeCount = 0;
-    for(let groupId in relatedGroupsObj) {
-      if(shouldRenderGroup(questionDetails[groupId], questionResponseMap) & architectureDetails[groupId].isActive) {
-        let groupHeight = svgRectModule.calcRelatedGroupHeight(architectureDetails[groupId].entities)
-        let relatedGroups = architectureDetails[groupId].relatedGroups;
-        let treeBreadthAtNextLevel = calcTreeBreadth(groupId, relatedGroups)
-        treeLevelBreadth = treeLevelBreadth +  (treeBreadthAtNextLevel > 0 && svgRectModule.defaultGroupOffset > 10 ? treeBreadthAtNextLevel : groupHeight);
-        nodeCount = nodeCount + 1;
-      }
+
+
+    // Create object for d3 tree
+    const prepareDataForTreeLayout = (node, parentChildrenArray) => {
+        let groupData = architectureDetails[node];
+        let nodeHeight = 0;
+        let childNodesHeight = [0];
+        let nodeObj = {
+            id: node,
+            entities: groupData.entities,
+            size: [],
+            children: []
+        };
+
+        if(shouldRenderGroup(architectureDetails[node], questionDetails[node], questionResponseMap)) {
+            //nodeObj.size.push(calcNodeHeight(groupData.entities), 150);
+            parentChildrenArray && parentChildrenArray.push(nodeObj);
+            for(let relatedGroupId in groupData.relatedGroups) {
+                childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, nodeObj.children).nodeHeight);
+            }
+        } else {
+            for(let relatedGroupId in groupData.relatedGroups) {
+                childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, parentChildrenArray).nodeHeight);
+            }
+            nodeHeight = -1;
+        }
+
+        nodeHeight = Math.max(...childNodesHeight) + nodeHeight + 1;
+        return {nodeObj, nodeHeight};
     }
- 
-    if(nodeCount > 0) {    
-      treeLevelBreadth = treeLevelBreadth + (nodeCount-1)*50;
-    }
-    treeBreadthList[parentGroupId] = treeLevelBreadth;
-    return treeLevelBreadth;
-  }
 
-  treeBreadthList[rootNode] = calcTreeBreadth(rootNode, architectureDetails[rootNode].relatedGroups);
-  
-  const hasActiveEntities = (entities) => {
-    for(let entityObj of entities) {
-      if(entityObj.isActive) {
-        return true;
-      }
-    }
-    return false;
-  }
+    const treeDataObj = prepareDataForTreeLayout(rootNode, null);
 
-  
-  const addUnitsInPx = (value) => {
-    return `${value}px`;
-  }
-
-  // Draw link between groups
-  const drawLink = (pathDAttr) => {
-    return (
-      <SvgPathComponent 
-        d = {pathDAttr}
-      />
-    )
-  }
-
-  // Render links between groups
-  const renderLinks = (groupId, dimensionsObj) => {
-    let groupBoxDimensions = svgRectModule.getDimensions(groupId);
-    let linkElements= [];
-    if(groupBoxDimensions.hasOwnProperty('parentGroups')) {
-      let parentGroups = groupBoxDimensions.parentGroups;
-      parentGroups.forEach((parentGroupId, index) => {
-        let parentGroupBoxDimensions = svgRectModule.getDimensions(parentGroupId);
-        let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, parentGroupBoxDimensions);
-        let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
-        linkElements.push(drawLink(pathDAttr))
-      }) 
-    }
-    return linkElements;
-  }
-  
-  // Render entity image as svg component
-  const renderEntityImage = (url, groupBoxWidth, yCoord) => {
-    let imageAttr = svgImageModule.setImageAttributes(url, groupBoxWidth, yCoord);
-    return (
-      <SvgImageComponent 
-        x = {addUnitsInPx(imageAttr.x)}
-        y = {addUnitsInPx(imageAttr.y)}
-        height = {addUnitsInPx(imageAttr.height)}
-        width = {addUnitsInPx(imageAttr.width)}
-        translateX = {imageAttr.translateX}
-        url = {imageAttr.url}
-      />
-    )
-  }
-
-  // Render entity text as svg component
-  const renderEntityText = (entityName, groupBoxWidth, yCoord) => {
-    let textAttr = svgTextModule.setTextAttributes(groupBoxWidth, yCoord)
-    return (
-      <SvgTextComponent
-            x = {addUnitsInPx(textAttr.x)}
-            y = {addUnitsInPx(textAttr.y)}
-            height = {addUnitsInPx(textAttr.height)}
-            text = {entityName}
-      />
-    )
-  }
-
-  // Render Entities for a group
-  const renderEntities = (entitiesObj, groupBoxWidth, groupBoxHeight) => {
-    let imageElement = '';
-    let textElement = '';
-    let entityElement = [];
-    let imageHeight = svgImageModule.defaultImageHeight;
-    let textHeight = svgTextModule.defaultTextHeight;
-    let yCoord = svgRectModule.defaultGroupOffset; 
-    for(let entityObj in entitiesObj) {
-      if(entitiesObj[entityObj].isActive) {
-        let imageUrl = entitiesObj[entityObj].url;
-        imageElement = renderEntityImage(imageUrl,  groupBoxWidth, yCoord);
-        entityElement.push(imageElement)
-        yCoord += imageHeight;
-        textElement = renderEntityText(entitiesObj[entityObj].name, groupBoxWidth, yCoord);
-        yCoord += textHeight;
-        yCoord += svgRectModule.defaultGroupOffset;
-        entityElement.push(textElement);
-      }
-    }
-    return entityElement;
-  }
-
-  // Render group box
-  const renderGroupBox = (architectureDetails, questionDetails, questionResponseMap) => {
-    let element = [];
-    svgRectModule.initializeDimensionsObject();
-    for(let groupId in architectureDetails) {
-      let groupDataObj = architectureDetails[groupId];
-      let rectAttr = svgRectModule.setRectAttributes(groupId, groupDataObj.entities);
-      let showElements = shouldRenderGroup(questionDetails[groupId], questionResponseMap) && groupDataObj.isActive
-      if(showElements){
-        element.push(
-          <>
-            <svg  
-              key = {groupId}
-              className = {showElements ? 'show' : 'hide'}
-              height = {addUnitsInPx(rectAttr.height)}
-              width = {addUnitsInPx(rectAttr.width)}
-              x = {addUnitsInPx(rectAttr.x)}
-              y = {addUnitsInPx(rectAttr.y)}
-            >      
-              <SvgRectComponent
-                height = '100%'
-                width = '100%'
-              >
-              </SvgRectComponent>
-              {renderEntities(groupDataObj.entities, rectAttr.width, rectAttr.height)}
-            </svg>
-            {renderLinks(groupId)}
-          </>
+    // Draw link between groups
+    const drawLink = (pathDAttr) => {
+        return (
+        <SvgPathComponent 
+            d = {pathDAttr}
+        />
         )
-        let relatedGroups = groupDataObj.relatedGroups;
-        let relatedGroupCounter = 0;
-        for(let relatedGroupId in relatedGroups) {
-          let groupEntities = architectureDetails[relatedGroupId].entities;
-            svgRectModule.setCoordinatesForRelatedGroups(groupId, relatedGroupId, relatedGroupCounter, groupEntities);
-            svgRectModule.pupulateParentGroupList(groupId, relatedGroupId);
-            relatedGroupCounter +=1;
-        }
-      }
-
     }
-    return element;
-  }
 
+    // Render links between groups
+    const renderLinks = (tree, architectureDetails, questionDetails, questionResponseMap) => {
+        let linkElements= [];
+        tree.descendants().forEach((node) => {
+            let groupId = node.data.id;
+            let childNodes = node.data.children;
+            let groupObject = architectureDetails[groupId]
+            let relatedGroupsObj = groupObject.relatedGroups;
+            let groupBoxDimensions = svgRectModule.getDimensions(groupId);
+            let traversedRelatedNodes = new Set();
+
+            // Create path for all the child nodes
+            // There can be cases when all the related groups are not child nodes
+            // Therefore loop through all the related groups as well
+            // If they were not part of children array, then create path for them
+            childNodes.forEach((childNode) => {
+                let childNodeId = childNode.id;
+                let childNodeBoxDimensions = svgRectModule.getDimensions(childNodeId);
+                let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, childNodeBoxDimensions);
+                let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
+                linkElements.push(drawLink(pathDAttr))
+                traversedRelatedNodes.add(childNodeId);
+            });
+
+            // To do: Write logic creating custom path
+            for(let relatedGroupId in relatedGroupsObj) {
+                if(!traversedRelatedNodes.has(relatedGroupId)) {
+                    let relatedGroupBoxDimensions = svgRectModule.getDimensions(relatedGroupId);
+                    let showLink = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
+                    if(showLink) {
+                        let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
+                        let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
+                        linkElements.push(drawLink(pathDAttr))
+                    }
+                    traversedRelatedNodes.add(relatedGroupId);
+                }
+            }
+        });
+        return linkElements;
+    }
+    
+    // Render entity image as svg component
+    const renderEntityImage = (url, groupBoxWidth, yCoord) => {
+        let imageAttr = svgImageModule.setImageAttributes(url, groupBoxWidth, yCoord);
+        return (
+        <SvgImageComponent 
+            x = {imageAttr.x}
+            y = {imageAttr.y}
+            height = {imageAttr.height}
+            width = {imageAttr.width}
+            translateX = {imageAttr.translateX}
+            url = {imageAttr.url}
+        />
+        )
+    }
+
+    // Render entity text as svg component
+    const renderEntityText = (entityName, groupBoxWidth, yCoord) => {
+        let textAttr = svgTextModule.setTextAttributes(groupBoxWidth, yCoord)
+        return (
+        <SvgTextComponent
+                x = {textAttr.x}
+                y = {textAttr.y}
+                height = {textAttr.height}
+                fontSize = {textAttr.fontSize}
+                text = {entityName}             
+        />
+        )
+    }
+
+    // Render Entities for a group
+    const renderEntities = (entitiesObj, groupBoxWidth, groupBoxHeight) => {
+        let imageElement = '';
+        let textElement = '';
+        let entityElement = [];
+        let imageHeight = svgImageModule.calcImageHeight(groupBoxWidth);
+        let textHeight = svgTextModule.calcTextHeight(groupBoxWidth);
+        let yCoord = truncateToTwoDecimal(svgRectModule.defaultGroupOffsetPercentage*groupBoxWidth);
+        for(let entityObj in entitiesObj) {
+            if(entitiesObj[entityObj].isActive) {
+                let imageUrl = entitiesObj[entityObj].url;
+                imageElement = renderEntityImage(imageUrl,  groupBoxWidth, yCoord);
+                entityElement.push(imageElement)
+                yCoord += imageHeight;
+                textElement = renderEntityText(entitiesObj[entityObj].name, groupBoxWidth, yCoord);
+                yCoord += textHeight;
+                yCoord += truncateToTwoDecimal(svgRectModule.defaultGroupOffsetPercentage*groupBoxWidth);
+                entityElement.push(textElement);
+            }
+        }
+        return entityElement;
+    }
+    
+    // Render svg rectangles for groups
+    const renderGroups = (tree, architectureDetails, questionDetails, questionResponseMap) => {
+        let groupsElement = [];
+        tree.descendants().forEach((node) => {
+            let rectInstance = svgRectModule.setRectAttributes(node);
+            let groupId = node.data.id;
+            let groupObject = architectureDetails[groupId]
+            let entitiesObj = groupObject.entities;
+            groupsElement.push(
+                <svg
+                    viewBox = {`0 0 ${rectInstance.width} ${rectInstance.height}`}
+                    x = {rectInstance.x} 
+                    y = {rectInstance.y}
+                    height = {rectInstance.height} 
+                    width = {rectInstance.width}
+                >
+                    <SvgRectComponent 
+                        height = {rectInstance.height} 
+                        width = {rectInstance.width}
+                        addStroke = {calcActiveEntityCount(entitiesObj) > 1}
+                    />
+                    {renderEntities(entitiesObj, rectInstance.width, rectInstance.height)}
+                </svg>
+            )
+        });
+        return groupsElement;
+    }
+
+    // Render architecture diagram
+    const renderDiagram = (treeDataObj, architectureDetails) => {
+
+        let treeHeight = treeDataObj.nodeHeight;
+        let diagramWidth = diagramSize[0];
+        let rectGapOffset = treeHeight*svgRectModule.defaultRectGap;
+        let nodeWidth;
+        
+        if((treeHeight*svgRectModule.defaultRectWidth + rectGapOffset) < diagramWidth) {
+            nodeWidth = svgRectModule.defaultRectWidth;
+        } else {
+            nodeWidth = (diagramWidth - rectGapOffset)/treeHeight
+        }
+        console.log(nodeWidth)
+
+        // Initialize tree layout with calculated size
+        let layout = flextree(
+            {
+                nodeSize: node => [calcNodeHeight(node.data.entities, nodeWidth), nodeWidth],
+                spacing: 50
+            }
+        );
+
+        // Assign data to hierarchy
+        let tree = layout.hierarchy(treeDataObj.nodeObj);
+
+        // Map nodedata to tree layout
+        layout(tree);
+
+        // // Get rendering elements for groups
+        let groupsElement = renderGroups(tree, architectureDetails, questionDetails, questionResponseMap);
+        let linksElement = renderLinks(tree, architectureDetails, questionDetails, questionResponseMap);
+
+        return (
+            <g  transform = {`translate(10 ${diagramSize[1]/2})`}>
+                {groupsElement}
+                {linksElement}
+                <SvgMarkerComponent />
+            </g>
+        )
+    }
+    
     return (
       <div id = 'architecture-container'>
-        <svg id = 'diagram-wrapper'>
-          {props.loadCount > 1 && renderGroupBox(architectureDetails, questionDetails, questionResponseMap)}
-        </svg>
+        <div id = 'diagram-container'>
+            <div id = 'diagram-header'>
+                <h3>Architecture Diagram</h3>
+            </div>
+            <svg 
+                id = 'diagram-wrapper'
+                viewBox = {loadCount > 1 ? `0 0 ${diagramSize[0]} ${diagramSize[1]}` : ''}
+            >
+                {loadCount > 1 && renderDiagram(treeDataObj, architectureDetails)}
+            </svg>
+        </div>
       </div>
     );
 }
