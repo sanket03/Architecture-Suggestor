@@ -338,60 +338,70 @@ const questionDetails = {
             '1001': {
               "question": "What is the source for your system?",
               "choices": "Logs & Files|Events & Streams",
-              "isActive": false
+              "isActive": false,
+              "multiple": true
             }
           },
           "2": {
             '1002': {
                 "question": "Are any of the Data sources are On-Premise?",
                 "choices": "Yes|No",
-                "isActive": false
+                "isActive": false,
+                "multiple": false
               }
             },
           "3": {
             "1003": {
               "question": "Do you want to process data real time with latency less than one minute?",
               "choices": "Yes|No",
-              "isActive": false
+              "isActive": false,
+              "multiple": false
             },
             "1004": {
               "question": "Are you using any IOT devices?",
               "choices": "Yes|No",
-              "isActive": false
+              "isActive": false,
+              "multiple": false
             },
             "1005": {
               "question": "Is your data unstructured?",
               "choices": "Yes|No",
-              "isActive": false   
+              "isActive": false,
+              "multiple": false   
             }
           },
           "4":{
             "1006": {
               "question": "Do you have unstructured data?",
               "choices": "Yes|No",
-              "isActive": false
+              "isActive": false,
+              "multiple": false
             },
             "1007": {
               "question": "What is the data size you are storing?",
               "choices": "Up to 250 GB|More than 250 GB|Up to 1 TB",
-              "isActive": false
+              "isActive": false,
+              "multiple": false
             },
             "1008": {
               "question": "Are you using data for large scale processing or Analytics?",
               "choices": "Yes|No",
-              "isActive": false
+              "isActive": false,
+              "multiple": false
             },
             "1009": {
               "question": "Are you planning to use pre-build models for processing of the data?",
               "choices": "Yes|No",
-              "isActive": false
+              "isActive": false,
+              "multiple": false
             }
           },
           "6": {
             "1010": {
               "question": "Do we want to store data for downstream purpose?",
               "choices": "Yes|No",
-              "isActive": false
+              "isActive": false,
+              "multiple": false
             }
           }
           }

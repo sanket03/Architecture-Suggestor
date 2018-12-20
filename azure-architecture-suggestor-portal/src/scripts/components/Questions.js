@@ -22,39 +22,45 @@ const Questions = (props) => {
         }
       }
       questionCount = questionCount + 1;
-      let isAnswered = questionResponseMap.hasOwnProperty(questionId)
-      let selectedChoice = isAnswered ? questionResponseMap[questionId].response : '';
+      let isAnswered = questionResponseMap.hasOwnProperty(questionId);
+      let isMultiple = questionObj.multiple
+      let selectedChoices = isAnswered ? questionResponseMap[questionId].response : new Set();
       return (
         <QuestionComponent
-          key={questionId}
-          index={questionId}
-          questionObj={questionObj}
-          group={group}
-          questionCount={questionCount}
+          key = {questionId}
+          index = {questionId}
+          questionObj = {questionObj}
+          group = {group}
+          questionCount = {questionCount}
+          isMultiple = {isMultiple}
         >
-          {renderChoices(questionId, questionObj, questionCount, selectedChoice, onOptionSelectHandler)}
+          {renderChoices(questionId, questionObj, questionCount, selectedChoices, isMultiple, onOptionSelectHandler)}
         </QuestionComponent>
       )
     })
   }
 
   // Render respective choices for a
-  const renderChoices = (questionId, questionObj, questionCount, selectedChoice, onOptionSelectHandler) => {
-    return questionObj['choices'].split('|').map((choice, index) => {
-      let isChecked = selectedChoice === choice ? true : false;
-      return (
-        <QuestionChoice
-          onOptionSelectHandler={onOptionSelectHandler}
-          questionId={questionId}
-          questionCount={questionCount}
-          index={index}
-          key={index}
-          isChecked={isChecked}
-        >
-          {choice}
-        </QuestionChoice>
-      )
-    })
+  const renderChoices = (questionId, questionObj, questionCount, selectedChoices, isMultiple, onOptionSelectHandler) => {
+    return (
+      questionObj['choices'].split('|')
+                            .map((choice, index) => {
+                              let isChecked = selectedChoices.has(choice);
+                              return (
+                                <QuestionChoice
+                                  onOptionSelectHandler = {onOptionSelectHandler}
+                                  questionId = {questionId}
+                                  questionCount = {questionCount}
+                                  index = {index}
+                                  key = {index}
+                                  isMultiple = {isMultiple}
+                                  isChecked = {isChecked}
+                                >
+                                  {choice}
+                                </QuestionChoice>
+                              )
+                            })
+    )
   }
 
   return (

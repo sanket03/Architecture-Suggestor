@@ -11,12 +11,14 @@ const SvgTextComponent = (props) =>  {
     } = props
     return (
 
-        <text               
+        <text
             x = {x}
-            y = {y}       
+            y = {y} 
             height = {height}
-            font-size = {fontSize}
-        >{text}</text>
+            fontSize = {fontSize}
+        >
+            {text}
+        </text>
     );
 }
 

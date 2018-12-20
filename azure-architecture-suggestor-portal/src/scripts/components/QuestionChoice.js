@@ -5,7 +5,8 @@ const QuestionChoice = (props) => {
         questionId,
         questionCount,
         index,
-        isChecked
+        isChecked,
+        isMultiple
     } = props;
 
     let questionOptionKey = `${questionId}${index+1}`
@@ -15,7 +16,7 @@ const QuestionChoice = (props) => {
         key = {questionOptionKey}
       >
         <input 
-          type = 'radio'
+          type = {isMultiple ? 'checkbox' : 'radio'}
           id = {questionOptionKey}
           name = {questionCount}
           onChange = {onOptionSelectHandler}

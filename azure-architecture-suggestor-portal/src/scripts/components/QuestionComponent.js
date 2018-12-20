@@ -4,7 +4,8 @@ const QuestionComponent = (props) => {
         questionObj,
         index,
         group,
-        questionCount
+        questionCount,
+        isMultiple
     } = props;
 
     return (
@@ -12,6 +13,7 @@ const QuestionComponent = (props) => {
         className = 'question'
         data-id = {index}
         data-group = {group}
+        data-multiple = {isMultiple}
       >
         <span>{questionCount}.</span>
         <span className = 'question-title'>

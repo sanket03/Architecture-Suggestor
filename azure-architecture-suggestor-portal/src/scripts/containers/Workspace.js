@@ -394,10 +394,11 @@
             let filteredEntities = [];
             let groupEntities = Object.keys(entities);
             let entitiesForQuestion = questionEntityMapping[questionId];
+
             for(let entity in entitiesForQuestion) {
-                if(entitiesForQuestion[entity].split('|').includes(choice)) {
-                    filteredEntities.push(entity);
-                }
+                entitiesForQuestion[entity].split('|').forEach((option) => {
+                    choice.has(option) && filteredEntities.push(entity);
+                })
             }
 
             // Remove entities which were already filtered in previous pass
@@ -424,7 +425,7 @@
                         this.resetIsActiveFlagForEntities(entities[entity]);
                     } else {
                         if(entities[entity].isActive) {
-                            if(this.isEntityAlreadyTraversed(entity)) {
+                            if(this.isEntityAlreadyTraversed(entity) || entities[entity].questions.length === 0) {
                                 this.setIsActiveFlagForEntities(entities[entity])
                             } else {
                                 this.resetIsActiveFlagForEntities(entities[entity]);
@@ -439,7 +440,6 @@
                 if(!entities[entity].isActive && this.isEntityAlreadyTraversed(entity) && !entities[entity].filteredBy.length) {
                     this.setFilteredByFlag(entities[entity], questionId);
                 }
-
             }
 
             return filteredEntities;
@@ -466,9 +466,18 @@
             } = this.props;
 
             // Get the groupId, questionId and choice for the selected question
-            let groupId = event.target.closest('.question').getAttribute('data-group');
-            let questionId = event.target.closest('.question').getAttribute('data-id');
-            let choice = event.target.nextElementSibling.innerText;
+            let $questionElement = event.target.closest('.question');
+            let groupId = $questionElement.getAttribute('data-group');
+            let questionId = $questionElement.getAttribute('data-id');
+            let isMultiple = $questionElement.getAttribute('data-multiple');
+            let choice = new Set();
+            if(isMultiple) {
+                $questionElement.querySelectorAll('.option').forEach((option) => {
+                    option.querySelector('input').checked && choice.add(option.innerText);
+                })
+            } else {
+                choice.add(event.target.nextElementSibling.innerText)
+            }
 
             if(this.isQuestionAlreadyAnswered(questionId)) {
                 this.resetActiveGroups(groupId, architectureDetails);
