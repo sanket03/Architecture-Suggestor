@@ -114,7 +114,6 @@ const Diagram = (props) => {
         };
 
         if(shouldRenderGroup(architectureDetails[node], questionDetails[node], questionResponseMap)) {
-            //nodeObj.size.push(calcNodeHeight(groupData.entities), 150);
             parentChildrenArray && parentChildrenArray.push(nodeObj);
             for(let relatedGroupId in groupData.relatedGroups) {
                 childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, nodeObj.children).nodeHeight);
@@ -235,10 +234,10 @@ const Diagram = (props) => {
     }
     
     // Render svg rectangles for groups
-    const renderGroups = (tree, architectureDetails, questionDetails, questionResponseMap) => {
+    const renderGroups = (tree, architectureDetails, questionDetails, questionResponseMap, diagramWidth) => {
         let groupsElement = [];
         tree.descendants().forEach((node) => {
-            let rectInstance = svgRectModule.setRectAttributes(node);
+            let rectInstance = svgRectModule.setRectAttributes(node, diagramWidth);
             let groupId = node.data.id;
             let groupObject = architectureDetails[groupId]
             let entitiesObj = groupObject.entities;
@@ -264,18 +263,17 @@ const Diagram = (props) => {
 
     // Render architecture diagram
     const renderDiagram = (treeDataObj, architectureDetails) => {
-
+        let nodeWidth;
         let treeHeight = treeDataObj.nodeHeight;
         let diagramWidth = diagramSize[0];
-        let rectGapOffset = treeHeight*svgRectModule.defaultRectGap;
-        let nodeWidth;
-        
+        let rectGap = svgRectModule.calcRectGap(diagramWidth)
+        let rectGapOffset = treeHeight*rectGap;
+    
         if((treeHeight*svgRectModule.defaultRectWidth + rectGapOffset) < diagramWidth) {
             nodeWidth = svgRectModule.defaultRectWidth;
         } else {
             nodeWidth = (diagramWidth - rectGapOffset)/treeHeight
         }
-        console.log(nodeWidth)
 
         // Initialize tree layout with calculated size
         let layout = flextree(
@@ -292,14 +290,14 @@ const Diagram = (props) => {
         layout(tree);
 
         // // Get rendering elements for groups
-        let groupsElement = renderGroups(tree, architectureDetails, questionDetails, questionResponseMap);
+        let groupsElement = renderGroups(tree, architectureDetails, questionDetails, questionResponseMap, diagramWidth);
         let linksElement = renderLinks(tree, architectureDetails, questionDetails, questionResponseMap);
 
         return (
             <g  transform = {`translate(10 ${diagramSize[1]/2})`}>
                 {groupsElement}
                 {linksElement}
-                <SvgMarkerComponent />
+                <SvgMarkerComponent arrowMarkerDimension = {rectGap*svgPathModule.arrowMarkerPercentage}/>
             </g>
         )
     }
