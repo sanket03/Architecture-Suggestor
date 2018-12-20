@@ -45,22 +45,6 @@ const Diagram = (props) => {
         return [diagramWidth, diagramHeight]
     }
 
-    let diagramSize = loadCount > 1 ? calcDiagramSize() : [];
-
-    // Returns active entity count for a group
-    const calcActiveEntityCount = (entitiesObj) => {
-        let count = 0;
-        for(let entity in entitiesObj) {
-            count += (entitiesObj[entity].isActive ? 1: 0); 
-        }
-        return count;
-    }
-
-    // Calculate group height depending on the count of active entities
-    const calcNodeHeight = (entitiesObj, nodeWidth) => {
-        return calcActiveEntityCount(entitiesObj) * nodeWidth * svgRectModule.defaultRectHeightPercentage;
-    }
-
     // Checks whether the group should be rendered or not
     const shouldRenderGroup = (architectureGroupObj, groupQuestionsObj, questionResponseMap) => {
         // Check if group is active
@@ -100,7 +84,6 @@ const Diagram = (props) => {
         }
     }
 
-
     // Create object for d3 tree
     const prepareDataForTreeLayout = (node, parentChildrenArray) => {
         let groupData = architectureDetails[node];
@@ -128,8 +111,6 @@ const Diagram = (props) => {
         nodeHeight = Math.max(...childNodesHeight) + nodeHeight + 1;
         return {nodeObj, nodeHeight};
     }
-
-    const treeDataObj = prepareDataForTreeLayout(rootNode, null);
 
     // Draw link between groups
     const drawLink = (pathDAttr) => {
@@ -261,12 +242,24 @@ const Diagram = (props) => {
         return groupsElement;
     }
 
-    // Render architecture diagram
-    const renderDiagram = (treeDataObj, architectureDetails) => {
+    // Returns active entity count for a group
+    const calcActiveEntityCount = (entitiesObj) => {
+        let count = 0;
+        for(let entity in entitiesObj) {
+            count += (entitiesObj[entity].isActive ? 1: 0); 
+        }
+        return count;
+    }
+
+    // Calculate group height depending on the count of active entities
+    const calcNodeHeight = (entitiesObj, nodeWidth) => {
+        return calcActiveEntityCount(entitiesObj) * nodeWidth * svgRectModule.defaultRectHeightPercentage;
+    }
+
+    // Calculate node width based on diagram size
+    const calcNodeWidth = (treeDataObj, diagramWidth, rectGap) => {
         let nodeWidth;
         let treeHeight = treeDataObj.nodeHeight;
-        let diagramWidth = diagramSize[0];
-        let rectGap = svgRectModule.calcRectGap(diagramWidth)
         let rectGapOffset = treeHeight*rectGap;
     
         if((treeHeight*svgRectModule.defaultRectWidth + rectGapOffset) < diagramWidth) {
@@ -274,6 +267,14 @@ const Diagram = (props) => {
         } else {
             nodeWidth = (diagramWidth - rectGapOffset)/treeHeight
         }
+        return nodeWidth;
+    }
+
+    // Render architecture diagram
+    const renderDiagram = (treeDataObj, architectureDetails) => {
+        let diagramWidth = diagramSize[0];
+        let rectGap = svgRectModule.calcRectGap(diagramWidth);
+        let nodeWidth = calcNodeWidth(treeDataObj, diagramWidth, rectGap);
 
         // Initialize tree layout with calculated size
         let layout = flextree(
@@ -301,7 +302,10 @@ const Diagram = (props) => {
             </g>
         )
     }
-    
+
+    const diagramSize = loadCount > 1 ? calcDiagramSize() : [];
+    const treeDataObj = prepareDataForTreeLayout(rootNode, null);
+
     return (
       <div id = 'architecture-container'>
         <div id = 'diagram-container'>
