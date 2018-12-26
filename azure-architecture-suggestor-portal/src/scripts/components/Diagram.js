@@ -11,6 +11,7 @@ import svgRectModule from '../utilities/svgRectModule';
 import svgImageModule from '../utilities/svgImageModule';
 import svgTextModule from '../utilities/svgTextModule';
 import svgPathModule from '../utilities/svgPathModule';
+import graphModule from '../utilities/graphModule';
 
 const Diagram = (props) => {
 
@@ -305,6 +306,9 @@ const Diagram = (props) => {
 
     const diagramSize = loadCount > 1 ? calcDiagramSize() : [];
     const treeDataObj = prepareDataForTreeLayout(rootNode, null);
+    const graph = graphModule.createGraph(architectureDetails);
+    const topologicalOrdering = graphModule.createTopologicalOrder(graph);
+    console.log(topologicalOrdering);
 
     return (
       <div id = 'architecture-container'>
