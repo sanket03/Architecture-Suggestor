@@ -337,7 +337,6 @@ const architectureDetails = {
         "isActive": false,
         "relatedGroups": {
           "2": null,
-          "3": null
         },
         "entities": {
           "101": {
@@ -364,7 +363,7 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          3:null
+          "3":null
         },
         "entities": {
           "103": {
@@ -445,7 +444,7 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          "9": null,
+          "7": null,
           "4": null
         },
         "entities": {
@@ -467,7 +466,6 @@ const architectureDetails = {
         "isActive": false,
         "relatedGroups": {
           "5": null,
-          "7": null
         },
         "entities": {
           "106": {
@@ -571,7 +569,6 @@ const architectureDetails = {
         "isActive": false,
         "relatedGroups": {
           "6":null,
-          "7": null
         },
         "entities": {
           "115": {
@@ -632,6 +629,7 @@ const architectureDetails = {
           "parentEntities": {
             "6": ["116", "117"],
             "5": ["115"],
+            "8": ["114"],
             "4": ["108","109","110","111","106"]
           },
           "questions": [
@@ -640,26 +638,7 @@ const architectureDetails = {
           "url": "Power BI Embedded.png"
         }
     }
-  },
-  "9" : {
-    "name": "",
-    "isActive": false,
-    "relatedGroups": {
-    },
-    "entities": {
-      "118": {
-        "name": "Power BI",
-        "isActive": true,
-        "parentEntities": {
-          "8": ["114"]
-        },
-        "questions": [
-        ],
-        "filteredBy": "",
-        "url": "Power BI Embedded.png"
-      }
   }
-}
   }
 }
   

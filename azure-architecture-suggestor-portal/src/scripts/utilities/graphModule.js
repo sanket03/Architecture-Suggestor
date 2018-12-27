@@ -1,8 +1,5 @@
 const graphModule = (() => {
     let graphPrototype = {
-        verticesCount: 0,
-        adjList: new Map(),
-
         // Set vertices count for a graph 
         incrementVerticesCount() {
             this.verticesCount += 1;
@@ -28,6 +25,18 @@ const graphModule = (() => {
             }
             return isPresentInAdjList;
         }
+    }
+
+    // Find parent node with longest path for all the nodes/vertices
+    const findParentNodeWithLongestPath = (graph, topologicalOrdering) => {
+        let longestPathMap = new Map();
+        topologicalOrdering.forEach((vertex) => {
+            let adjacentVertices = graph.adjList.get(vertex);
+            for(let adjacentVertex of adjacentVertices) {
+                longestPathMap.set(adjacentVertex, vertex);
+            }
+        });
+        return longestPathMap;
     }
 
     // Perform depth first search for a graph
@@ -60,7 +69,17 @@ const graphModule = (() => {
 
     // Creates graph with provided groups object
     const createGraph = (groupsObj) => {
-        let graph = Object.create(graphPrototype);
+        let graph = Object.create(graphPrototype, {
+            verticesCount: {
+                writable: true,
+                value: 0
+            },
+            adjList: {
+                writable: true,
+                value: new Map()
+            }
+        });
+
         for(let groupId in groupsObj) {
             graph.addVertex(groupId);
             let relatedGroups = groupsObj[groupId].relatedGroups;
@@ -68,13 +87,32 @@ const graphModule = (() => {
                 !(graph.checkVertexInAdjList(groupId, relatedGroupId)) && graph.addEdge(groupId, relatedGroupId);
             }
         }
-
+//         get all the vertices 
+//     var get_keys = graph.adjList.keys(); 
+  
+//     iterate over the vertices 
+//     for (var i of get_keys)  
+// { 
+//         great the corresponding adjacency list 
+//         for the vertex 
+//         var get_values = graph.adjList.get(i); 
+//         var conc = ""; 
+  
+//         iterate over the adjacency list 
+//         concatenate the values into a string 
+//         for (var j of get_values) 
+//             conc += j + " "; 
+  
+//         print the vertex and its adjacency list 
+//         console.log(i + " -> " + conc); 
+//     }
         return graph;
     }
 
     return {
         createGraph,
-        createTopologicalOrder
+        createTopologicalOrder,
+        findParentNodeWithLongestPath
     }
 })()
 

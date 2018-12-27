@@ -1,18 +1,14 @@
 import React, { Component } from 'react';
-import Header from '../components/Header';
-import ArchitecturesList from '../components/ArchitecturesList'
-import Utilities from '../components/Utilities';
+
 import Workspace from './Workspace';
-import ExportDiagram from '../components/ExportDiagram';
+import Header from '../components/Header';
 import ToggleWorkspace from './ToggleWorkspace';
+import ArchitecturesList from '../components/ArchitecturesList'
+import ExportDiagram from '../components/ExportDiagram';
+
 import appModule from '../utilities/config';
 import serviceModule from '../utilities/serviceCalls';
-
-import {    
-  architectureDetails,
-  solutionsList,
-  questionEntityMapping,
-  questionDetails} from '../utilities/data';
+import Utilities from '../components/Utilities';
 
 import '../../styles/App.scss';
 
@@ -37,8 +33,14 @@ export default class App extends Component {
     this.selectArchitecture = this.selectArchitecture.bind(this);
   }
 
-  // Fetch list of architectures and details for a default architecture
+
   async componentDidMount() {
+    this.selectArchitecture();
+  }
+
+  // Select architecture for which the diagram and questions will be populated
+  // Fetch list of architectures and details for a default architecture
+  async selectArchitecture() {
     let {
       url,
       controllers
@@ -51,30 +53,21 @@ export default class App extends Component {
       getQuestionEntityMapping
     } = controllers;
 
-    // // Fetch architectures List
-    // this.architecturesList = await serviceModule.fetchData(`${url}${getArchitecturesList}`);
+    let refNode = this.selectedDropdownNode.current;
+    let selectedNode =  !refNode ? this.defaultArchitectureId: refNode.value;
 
-    // // Fetch architecture details for a default architecture
-    // this.architectureDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getArchitectureDetails}/${this.defaultArchitectureId}`);
+    // Fetch architectures List
+    this.architecturesList = await serviceModule.fetchData(`${url}${getArchitecturesList}`);
 
-    // // Fetch question details for a default architecture
-    // this.questionDetails[this.defaultArchitectureId] = await serviceModule.fetchData(`${url}${getQuestionDetails}/${this.defaultArchitectureId}`);
+    // Fetch architecture details for a default architecture
+    this.architectureDetails[selectedNode] = await serviceModule.fetchData(`${url}${getArchitectureDetails}/${selectedNode}`);
 
-    // // Fetch question details for a default architecture
-    // this.questionEntityMapping = await serviceModule.fetchData(`${url}${getQuestionEntityMapping}`);
+    // Fetch question details for a default architecture
+    this.questionDetails[selectedNode] = await serviceModule.fetchData(`${url}${getQuestionDetails}/${selectedNode}`);
 
-    this.architecturesList = solutionsList;
-    this.architectureDetails = architectureDetails;
-    this.questionDetails = questionDetails;
-    this.questionEntityMapping = questionEntityMapping;
-    
-    this.setState(() => ({
-        architectureId:10
-      }))
-  }
+    // Fetch question entity mapping
+    this.questionEntityMapping = await serviceModule.fetchData(`${url}${getQuestionEntityMapping}`);
 
-  selectArchitecture() {
-    let selectedNode = this.selectedDropdownNode.current.value;
     // Get data for selected architecture
     this.setState(() => ({
       architectureId: selectedNode

@@ -11,9 +11,9 @@ import svgRectModule from '../utilities/svgRectModule';
 import svgImageModule from '../utilities/svgImageModule';
 import svgTextModule from '../utilities/svgTextModule';
 import svgPathModule from '../utilities/svgPathModule';
-import graphModule from '../utilities/graphModule';
 
 const Diagram = (props) => {
+    let diagramSize, treeDataObj;
 
     let {
         architectureDetails,
@@ -86,7 +86,7 @@ const Diagram = (props) => {
     }
 
     // Create object for d3 tree
-    const prepareDataForTreeLayout = (node, parentChildrenArray) => {
+    const prepareDataForTreeLayout = (node, architectureDetails, parentChildrenArray) => {
         let groupData = architectureDetails[node];
         let nodeHeight = 0;
         let childNodesHeight = [0];
@@ -96,15 +96,19 @@ const Diagram = (props) => {
             size: [],
             children: []
         };
-
+        let connectedGroups = groupData.longestPathGroups;
         if(shouldRenderGroup(architectureDetails[node], questionDetails[node], questionResponseMap)) {
             parentChildrenArray && parentChildrenArray.push(nodeObj);
-            for(let relatedGroupId in groupData.relatedGroups) {
-                childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, nodeObj.children).nodeHeight);
+            if(connectedGroups) {
+                for(let relatedGroupId of groupData.longestPathGroups) {
+                    childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, architectureDetails, nodeObj.children).nodeHeight);
+                }
             }
         } else {
-            for(let relatedGroupId in groupData.relatedGroups) {
-                childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, parentChildrenArray).nodeHeight);
+            if(connectedGroups) {
+                for(let relatedGroupId of groupData.longestPathGroups) {
+                    childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, architectureDetails, parentChildrenArray).nodeHeight);
+                }
             }
             nodeHeight = -1;
         }
@@ -142,23 +146,23 @@ const Diagram = (props) => {
                 let childNodeBoxDimensions = svgRectModule.getDimensions(childNodeId);
                 let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, childNodeBoxDimensions);
                 let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
-                linkElements.push(drawLink(pathDAttr))
+                linkElements.push(drawLink(pathDAttr));
                 traversedRelatedNodes.add(childNodeId);
             });
 
-            // To do: Write logic creating custom path
-            for(let relatedGroupId in relatedGroupsObj) {
-                if(!traversedRelatedNodes.has(relatedGroupId)) {
-                    let relatedGroupBoxDimensions = svgRectModule.getDimensions(relatedGroupId);
-                    let showLink = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
-                    if(showLink) {
-                        let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
-                        let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
-                        linkElements.push(drawLink(pathDAttr))
-                    }
-                    traversedRelatedNodes.add(relatedGroupId);
-                }
-            }
+            // // To do: Write logic creating custom path
+            // for(let relatedGroupId in relatedGroupsObj) {
+            //     if(!traversedRelatedNodes.has(relatedGroupId)) {
+            //         let relatedGroupBoxDimensions = svgRectModule.getDimensions(relatedGroupId);
+            //         let showLink = shouldRenderGroup(architectureDetails[relatedGroupId], questionDetails[relatedGroupId], questionResponseMap);
+            //         if(showLink) {
+            //             let pathCoordinates = svgPathModule.calcPath(groupBoxDimensions, relatedGroupBoxDimensions);
+            //             let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates);
+            //             linkElements.push(drawLink(pathDAttr))
+            //         }
+            //         traversedRelatedNodes.add(relatedGroupId);
+            //     }
+            // }
         });
         return linkElements;
     }
@@ -304,11 +308,11 @@ const Diagram = (props) => {
         )
     }
 
-    const diagramSize = loadCount > 1 ? calcDiagramSize() : [];
-    const treeDataObj = prepareDataForTreeLayout(rootNode, null);
-    const graph = graphModule.createGraph(architectureDetails);
-    const topologicalOrdering = graphModule.createTopologicalOrder(graph);
-    console.log(topologicalOrdering);
+    const initializeComponent = (() => {
+        diagramSize = loadCount > 1 ? calcDiagramSize() : [];
+        treeDataObj = prepareDataForTreeLayout(rootNode, architectureDetails, null);
+    })()
+    
 
     return (
       <div id = 'architecture-container'>
