@@ -11,6 +11,7 @@ import svgRectModule from '../utilities/svgRectModule';
 import svgImageModule from '../utilities/svgImageModule';
 import svgTextModule from '../utilities/svgTextModule';
 import svgPathModule from '../utilities/svgPathModule';
+import graphModule from '../utilities/graphModule';
 
 const Diagram = (props) => {
     let diagramSize, treeDataObj;
@@ -310,6 +311,7 @@ const Diagram = (props) => {
 
     const initializeComponent = (() => {
         diagramSize = loadCount > 1 ? calcDiagramSize() : [];
+        architectureDetails = graphModule.modifyArchDetailsObjForLongestPath(architectureDetails, )
         treeDataObj = prepareDataForTreeLayout(rootNode, architectureDetails, null);
     })()
     
