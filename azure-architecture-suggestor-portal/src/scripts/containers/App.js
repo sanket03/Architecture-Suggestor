@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import ArchitecturesList from '../components/ArchitecturesList'
-import Utilities from '../components/utilities';
+import Utilities from '../components/Utilities';
 import Workspace from './Workspace';
 import ExportDiagram from '../components/ExportDiagram';
 import ToggleWorkspace from './ToggleWorkspace';
@@ -19,7 +19,7 @@ import '../../styles/App.scss';
 export default class App extends Component {
   constructor() {
     super();
-    this.defaultArchitectureId = 1;
+    this.defaultArchitectureId = 10;
     this.architecturesList = {};
     this.architectureDetails = {};
     this.questionDetails = {};
@@ -69,7 +69,7 @@ export default class App extends Component {
     this.questionEntityMapping = questionEntityMapping;
     
     this.setState(() => ({
-        architectureId:1
+        architectureId:10
       }))
   }
 

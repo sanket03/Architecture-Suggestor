@@ -3,5 +3,13 @@
 }
 
 rect {
-    fill: #f7f7f7;
+    stroke: #4997da;
+    stroke-width: 2;
+    fill: none;
+}
+
+@media (min-width: 768px) {
+    rect {       
+        stroke-width: 3;
+    }
 }

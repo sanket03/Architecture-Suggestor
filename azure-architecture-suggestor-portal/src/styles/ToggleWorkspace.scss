@@ -1,4 +1,4 @@
-@import './common.scss';
+@import './Common.scss';
 
 #toggle-workspace {
     @include position($type: fixed, $bottom: 0, $right: 0);
@@ -6,7 +6,7 @@
     cursor: pointer;
     border: none;
     border-radius: 5px;
-        
+
     &:focus {
         outline: none !important;
     }

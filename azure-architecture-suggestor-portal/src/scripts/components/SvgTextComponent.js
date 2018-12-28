@@ -6,15 +6,19 @@ const SvgTextComponent = (props) =>  {
         x,
         y,
         height,
-        text
+        text,
+        fontSize
     } = props
     return (
 
-        <text               
+        <text
             x = {x}
-            y = {y}       
+            y = {y} 
             height = {height}
-        >{text}</text>
+            fontSize = {fontSize}
+        >
+            {text}
+        </text>
     );
 }
 

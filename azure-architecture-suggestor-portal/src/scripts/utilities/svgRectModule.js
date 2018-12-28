@@ -1,27 +1,18 @@
-
-
-import * as d3 from 'd3';
 const svgRectModule = (() => {
     const defaultRectWidth = 150;
-    const defaultRectHeight = 65;
     const defaultRectGap = 50;
-    const defaultGroupOffset = 10;
+    const strokeWidth = 2;
+    const defaultGroupOffsetPercentage = 6/100;
+    const defaultRectHeightPercentage = 43/100;
+    const defaultRectGapPercentage = 3/100;
     let dimensions = {};
     let rectPrototype = {
       'height': 0,
       'width': 0,
       'x': 0,
-      'y': 0,
-      calcRectHeight(groupId, entitiesObj) {
-        let activeEntityCount = 0;
-        for(let entityObj in entitiesObj) {
-          activeEntityCount = entitiesObj[entityObj].isActive ? activeEntityCount + 1 : activeEntityCount
-        }
-        this.height = defaultRectHeight*activeEntityCount + defaultGroupOffset;
-        setHeight(groupId, this.height);
-      }
+      'y': 0
     }
-  
+
     // Create entry for a group in dimensions object
     const createEntryInDimensionsObj = (groupId) => {
       dimensions[groupId] = !dimensions.hasOwnProperty(groupId) ? {} : dimensions[groupId];
@@ -107,14 +98,18 @@ const svgRectModule = (() => {
       }
     }
   
+    const calcRectGap = (diagramSize) => {
+      return diagramSize*defaultRectGapPercentage;
+    }
+    
     // Calculate x,y,height and width for group box and set them in dimensions object
-    const setRectAttributes = (groupNode) => {
+    const setRectAttributes = (groupNode, diagramSize) => {
       let rect = Object.create(rectPrototype);
       let groupId = groupNode.data.id;
       let groupNodeDepth = groupNode.depth;
       rect.height = groupNode.xSize;
       rect.width = groupNode.ySize;
-      rect.x = groupNode.y + defaultRectGap*groupNodeDepth;
+      rect.x = groupNode.y + calcRectGap(diagramSize)*groupNodeDepth;
       rect.y = groupNode.x - groupNode.xSize/2;
       createEntryInDimensionsObj(groupId);   
       setHeight(groupId, rect.height);
@@ -140,13 +135,15 @@ const svgRectModule = (() => {
   
     return {
       getDimensions,
+      strokeWidth,
       setRectAttributes,
-      defaultGroupOffset,
       defaultRectWidth,
       defaultRectGap,
-      defaultRectHeight,
+      defaultRectHeightPercentage,
+      defaultGroupOffsetPercentage,
       initializeDimensionsObject,
-      pupulateParentGroupList
+      pupulateParentGroupList,
+      calcRectGap
     }
   
   })()

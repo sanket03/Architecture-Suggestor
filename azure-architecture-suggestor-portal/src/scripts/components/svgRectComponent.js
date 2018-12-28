@@ -5,12 +5,18 @@ const SvgRectComponent = (props) =>  {
     let {
         height,
         width,
+        addStroke,
+        x,
+        y
     } = props
     return (
 
         <rect               
             height = {height}
-            width = {width}   
+            width = {width}
+            x = {x}
+            y = {y}
+            className = { addStroke ? 'rect-stroke' : ''}
         />
     );
 }

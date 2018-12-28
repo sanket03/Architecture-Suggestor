@@ -1,21 +1,23 @@
 import React from 'react';
 const QuestionComponent = (props) => {
     let {
+        questionObj,
         index,
-        question,
         group,
-        questionCount
+        questionCount,
+        isMultiple
     } = props;
 
     return (
         <div 
         className = 'question'
-        data-id = {question['id']}
+        data-id = {index}
         data-group = {group}
+        data-multiple = {isMultiple}
       >
         <span>{questionCount}.</span>
         <span className = 'question-title'>
-            {question['question']}
+            {questionObj['question']}
         </span>
         {props.children}
       </div>

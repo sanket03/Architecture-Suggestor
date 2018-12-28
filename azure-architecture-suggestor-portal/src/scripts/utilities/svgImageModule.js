@@ -1,38 +1,54 @@
 const svgImageModule = (() => {
-    const defaultImageHeight = 35;
-    const defaultImageWidth = 35;
-    let imagePrototype = {
-      'x' : 0,
-      'y' : 0,
-      'height': defaultImageHeight,
-      'width': defaultImageWidth,
-      'translateX': (defaultImageWidth/2)*(-1),
-      'url': '',
-      calcImageXcoord(groupBoxWidth) {
-        this.x = groupBoxWidth/2;
-      },
-      calcImageYcoord(yCoord) {
-        this.y = yCoord;
-      },
-      setImageUrl(url) {
-        this.url = url;
-      }
+  const defaultImagePercentage = 23/100;
+  let imagePrototype = {
+    'x' : 0,
+    'y' : 0,
+    'height': 0,
+    'width': 0,
+    'translateX': 0,
+    'url': '',
+    setImageXcoord(groupBoxWidth) {
+      this.x = groupBoxWidth/2;
+    },
+    setImageYcoord(yCoord) {
+      this.y = yCoord;
+    },
+    setImageUrl(url) {
+      this.url = url;
+    },
+    setImageDimensions(groupBoxWidth) {
+      this.height = truncateToTwoDecimal(groupBoxWidth*defaultImagePercentage);
+      this.width = truncateToTwoDecimal(groupBoxWidth*defaultImagePercentage);
+    },
+    setImageTranslateX() {
+      this.translateX = (this.width/2)*(-1)
     }
-  
-    const setImageAttributes = (url, groupBoxWidth, yCoord) => {
-      let image = Object.create(imagePrototype);
-      image.calcImageXcoord(groupBoxWidth);
-      image.calcImageYcoord(yCoord);
-      image.setImageUrl(url); 
-      return image;
-    }
-  
-    return {
-      defaultImageWidth,
-      defaultImageHeight,
-      setImageAttributes
-    }
-  })()
+  }
 
-  export default svgImageModule;
-  
+  // Truncate values to decimal places
+  const truncateToTwoDecimal = (value) => {
+      return parseInt(value*100)/100;
+  }
+
+  const setImageAttributes = (url, groupBoxWidth, yCoord) => {
+    let image = Object.create(imagePrototype);
+    image.setImageXcoord(groupBoxWidth);
+    image.setImageYcoord(yCoord);
+    image.setImageUrl(url);
+    image.setImageDimensions(groupBoxWidth);
+    image.setImageTranslateX();
+    return image;
+  }
+
+  // Calculate image height
+  const calcImageHeight = (groupBoxWidth) => { 
+    return truncateToTwoDecimal(groupBoxWidth*defaultImagePercentage);
+  }
+
+  return {
+    setImageAttributes,
+    calcImageHeight
+  }
+})()
+
+export default svgImageModule;

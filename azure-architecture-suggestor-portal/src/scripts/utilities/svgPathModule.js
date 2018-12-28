@@ -1,6 +1,9 @@
 import * as d3 from 'd3';
+import svgRectModule from './svgRectModule';
 const svgPathModule = (() => {
   
+    const arrowMarkerPercentage = 30/100;
+
     // Calculate path for drawing lines
     const calcPath = (groupBoxDimensions, relatedGroupBoxDimensions) => {
       let pathCoordinates = [];
@@ -8,6 +11,7 @@ const svgPathModule = (() => {
       return pathCoordinates;
     }
   
+    // Get 'd' attribute for svg path
     const getPathDAttr = (pathCoordinates) => {
       let lineAccessor =  d3.line()
                             .x(function(d) { return d.x; })
@@ -18,7 +22,8 @@ const svgPathModule = (() => {
   
     return {
       calcPath,
-      getPathDAttr
+      getPathDAttr,
+      arrowMarkerPercentage
     }
   })()
 
