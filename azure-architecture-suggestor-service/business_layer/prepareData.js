@@ -1,8 +1,9 @@
 const databaseHelper = require('../utilities/databaseHelper');
 const {appConfig} = require('../utilities/config');
+const graphModule = require('./graphModule');
 
-const prepareDataModule = (()=>{
-    
+const prepareDataModule = (() => {
+
     // Get list of available architectures
     const getArchitecturesList = async () => {
         let architecturesList = await databaseHelper.getDataFromDB(appConfig.storedProcedures.getArchitecturesList);
@@ -89,9 +90,11 @@ const prepareDataModule = (()=>{
                 !parentEntitiesObj[parentEntityGroupId].includes(parentEntity) && parentEntitiesObj[parentEntityGroupId].push(parentEntity);
             }
             // parentEntity !== null && !entity.parentEntities.includes(parentEntity) && entity.parentEntities.push(parentEntity);
-            questionId !== null && !entity.questions.includes(questionId) && entity.questions.push(questionId);   
-        })     
-        preparedDataObject.groups = entityGroups;
+            questionId !== null && !entity.questions.includes(questionId) && entity.questions.push(questionId);
+        })
+
+        // Set the architectureDetails with longestPathGroups for a particular architecture Id
+        preparedDataObject.groups = graphModule.modifyArchDetailsObjForLongestPath(entityGroups);
         return preparedDataObject;
     }
 
