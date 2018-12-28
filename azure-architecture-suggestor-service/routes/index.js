@@ -7,8 +7,6 @@ const {
     questionEntityMapping,
     questionDetails } =  require('../utilities/data');
 
-const graphModule = require('../business_layer/graphModule')
-
 
 // ******* Uncomment this during prod *****
 // router.get('/GetArchitecturesList', (req,res) => {
@@ -48,9 +46,7 @@ router.get('/GetArchitecturesList', (req,res) => {
 
 router.get('/GetArchitectureDetails/:architectureId', (req,res) => {
     res.setHeader('Content-Type', 'application/json');
-    let tempArchDetails = JSON.parse(JSON.stringify(architectureDetails));
-    tempArchDetails[req.params.architectureId].groups = graphModule.modifyArchDetailsObjForLongestPath(tempArchDetails[req.params.architectureId].groups);
-    res.send(tempArchDetails[req.params.architectureId]);
+    res.send(JSON.stringify(architectureDetails[req.params.architectureId]));
 });
 
 router.get('/GetQuestionDetails/:architectureId', (req,res) => {

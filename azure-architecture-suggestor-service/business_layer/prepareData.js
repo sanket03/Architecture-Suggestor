@@ -1,6 +1,5 @@
 const databaseHelper = require('../utilities/databaseHelper');
 const {appConfig} = require('../utilities/config');
-const graphModule = require('./graphModule');
 
 const prepareDataModule = (() => {
 
@@ -94,7 +93,7 @@ const prepareDataModule = (() => {
         })
 
         // Set the architectureDetails with longestPathGroups for a particular architecture Id
-        preparedDataObject.groups = graphModule.modifyArchDetailsObjForLongestPath(entityGroups);
+        preparedDataObject.groups = entityGroups;
         return preparedDataObject;
     }
 
