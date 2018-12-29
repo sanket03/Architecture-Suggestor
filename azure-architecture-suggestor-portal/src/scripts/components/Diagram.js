@@ -47,45 +47,6 @@ const Diagram = (props) => {
         return [diagramWidth, diagramHeight]
     }
 
-    // Checks whether the group should be rendered or not
-    const shouldRenderGroup = (architectureGroupObj, groupQuestionsObj, questionResponseMap) => {
-        // Check if group is active
-        let isActiveGroup = architectureGroupObj.isActive;
-
-        // Check if all the entities are inactive
-        let hasActiveEntities = false;
-        let entitiesObj = architectureGroupObj.entities;
-        for(let entityId in entitiesObj) {
-            if(entitiesObj[entityId].isActive) {
-                hasActiveEntities = true;
-                break;
-            }
-        }
-    
-        if(hasActiveEntities && isActiveGroup) {
-            // Check if all the questions are inactive
-            let allQuestionsInactive = true;
-            for(let questionId in groupQuestionsObj) {
-                if(groupQuestionsObj[questionId].isActive) {
-                allQuestionsInactive = false;
-                }
-            }
-            // Check for question Ids in question Response map
-            if(allQuestionsInactive) {
-                return true;
-            } else {
-                for(let questionId in groupQuestionsObj) {
-                    if(questionId in questionResponseMap) {
-                        return true
-                    }
-                }
-            }
-            return false;
-        } else {
-            return false;
-        }
-    }
-
     // Create object for d3 tree
     const prepareDataForTreeLayout = (node, architectureDetails, parentChildrenArray) => {
         let groupData = architectureDetails[node];
@@ -98,7 +59,7 @@ const Diagram = (props) => {
             children: []
         };
         let connectedGroups = groupData.longestPathGroups;
-        if(shouldRenderGroup(architectureDetails[node], questionDetails[node], questionResponseMap)) {
+        if(groupData.isActive) {
             parentChildrenArray && parentChildrenArray.push(nodeObj);
             if(connectedGroups) {
                 for(let relatedGroupId of groupData.longestPathGroups) {

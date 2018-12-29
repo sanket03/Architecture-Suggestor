@@ -71,9 +71,9 @@
         }
 
         // Reset group queue
-        resetGroupQueue(index) {
+        resetGroupQueue(index, architectureDetails) {
             this.setGroupQueuePointer(index);
-            this.setActiveGroup(this.props.architectureDetails)
+            this.setActiveGroup(architectureDetails)
         }
 
         // Check if any parent entity in any of the parent groups is active
@@ -229,8 +229,6 @@
         isEntityAlreadyTraversed(entity) {
             let {
                 architectureDetails,
-                questionDetails,
-                questionEntityMapping
             } = this.props;
 
             let entityQuestions = architectureDetails[this.activeGroup].entities[entity].questions;
@@ -263,7 +261,7 @@
 
         // Reset isActive flag for groups in architecture details object
         resetActiveGroups(groupId, architectureDetails) {
-            this.resetGroupQueue(this.groupQueue.indexOf(groupId));
+            this.resetGroupQueue(this.groupQueue.indexOf(groupId), architectureDetails);
             for(let group in architectureDetails) {
                 let indexInGroupQueue = this.groupQueue.indexOf(group);
                 if(this.groupQueue.includes(group) && indexInGroupQueue < this.groupQueuePointer) {
@@ -528,12 +526,55 @@
             }));    
         }
 
+        // Checks whether the group should be rendered or not
+        shouldRenderGroup(architectureGroupObj, groupQuestionsObj, questionResponseMap) {
+            // Check if group is active
+            let isActiveGroup = architectureGroupObj.isActive;
+    
+            // Check if all the entities are inactive
+            let hasActiveEntities = false;
+            let entitiesObj = architectureGroupObj.entities;
+            for(let entityId in entitiesObj) {
+                if(entitiesObj[entityId].isActive) {
+                    hasActiveEntities = true;
+                    break;
+                }
+            }
+        
+            if(hasActiveEntities && isActiveGroup) {
+                // Check if all the questions are inactive
+                let allQuestionsInactive = true;
+                for(let questionId in groupQuestionsObj) {
+                    if(groupQuestionsObj[questionId].isActive) {
+                    allQuestionsInactive = false;
+                    }
+                }
+                // Check for question Ids in question Response map
+                if(allQuestionsInactive) {
+                    return true;
+                } else {
+                    for(let questionId in groupQuestionsObj) {
+                        if(questionId in questionResponseMap) {
+                            return true
+                        }
+                    }
+                }
+                return false;
+            } else {
+                return false;
+            }
+        }
+
+        // 
+        modifyArchitectureDetailsObjForDiagram(architectureDetails, questionDetails, questionResponseMap) {
+            for(let groupId in architectureDetails) {
+                architectureDetails[groupId].isActive  = this.shouldRenderGroup(architectureDetails[groupId], questionDetails[groupId], questionResponseMap);
+            }
+            return architectureDetails;
+        }
+
         // Initialize all the queues
-        initializeComponent() {
-            let {
-                architectureDetails,
-                questionDetails
-            } = this.props;
+        initializeComponent(architectureDetails, questionDetails) {
 
             // Initialize group queue
             this.groupList = Object.keys(architectureDetails);
@@ -570,21 +611,25 @@
         }
 
         render() {
-            !this.isInitialized && this.initializeComponent();
+            let {
+                architectureDetails,
+                questionDetails,
+            } = this.props;
+
+            !this.isInitialized && this.initializeComponent(architectureDetails, questionDetails);
+            let architectureDetailsForDiagram = this.modifyArchitectureDetailsObjForDiagram(JSON.parse(JSON.stringify(architectureDetails)), questionDetails, this.questionResponseMap);
             this.incrementLoadCount();
             return (
                 <div id = 'workspace'>
                     <Questions 
-                        questionsObj = {this.props.questionDetails}
+                        questionsObj = {questionDetails}
                         onOptionSelectHandler = {this.onOptionSelectHandler}
                         questionResponseMap = {this.questionResponseMap}
                         questionQueue = {this.sliceQueue(this.questionQueue, this.questionQueuePointer)}
                         loadCount = {this.loadCount}
                     />
                     <Diagram
-                        architectureDetails = {JSON.parse(JSON.stringify(this.props.architectureDetails))}
-                        questionDetails = {this.props.questionDetails}
-                        questionResponseMap = {this.questionResponseMap}
+                        architectureDetails = {architectureDetailsForDiagram}
                         loadCount = {this.loadCount}
                         rootNode = {this.rootNode}
                     />  
