@@ -336,7 +336,14 @@ const architectureDetails = {
         "name": "Data Sources",
         "isActive": false,
         "relatedGroups": {
-          "2": null,
+          "2": {
+            "connector": null,
+            "shouldConn": true
+          },
+          "3": {
+            "connector": null,
+            "shouldConn": false
+          }
         },
         "entities": {
           "101": {
@@ -363,7 +370,10 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          "3":null
+          "3":{
+            "connector": null,
+            "shouldConn": true
+          }
         },
         "entities": {
           "103": {
@@ -384,7 +394,14 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          "8": null
+          "8": {
+            "connector": null,
+            "shouldConn": true
+          },
+          "4": {
+            "connector": null,
+            "shouldConn": false
+          }
         },
         "entities": {
           "104": {
@@ -444,8 +461,14 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          "7": null,
-          "4": null
+          "7": {
+            "connector": null,
+            "shouldConn": true
+          },
+          "4": {
+            "connector": null,
+            "shouldConn": true
+          }
         },
         "entities": {
           "114": {
@@ -465,7 +488,14 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          "5": null,
+          "5": {
+            "connector": null,
+            "shouldConn": true
+          },
+          "7": {
+            "connector": null,
+            "shouldConn": false
+          }
         },
         "entities": {
           "106": {
@@ -568,7 +598,14 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          "6":null,
+          "6":{
+            "connector": null,
+            "shouldConn": true
+          },
+          "7": {
+            "connector": null,
+            "shouldConn": false
+          }
         },
         "entities": {
           "115": {
@@ -588,7 +625,10 @@ const architectureDetails = {
         "name": "",
         "isActive": false,
         "relatedGroups": {
-          "7": null
+          "7": {
+            "connector": null,
+            "shouldConn": true
+          }
         },
         "entities": {
           "116": {

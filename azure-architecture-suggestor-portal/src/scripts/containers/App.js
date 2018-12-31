@@ -15,7 +15,7 @@ import '../../styles/App.scss';
 export default class App extends Component {
   constructor() {
     super();
-    this.defaultArchitectureId = 10;
+    this.defaultArchitectureId = 11;
     this.architecturesList = {};
     this.architectureDetails = {};
     this.questionDetails = {};

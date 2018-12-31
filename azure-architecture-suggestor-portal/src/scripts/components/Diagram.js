@@ -66,15 +66,7 @@ const Diagram = (props) => {
                     childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, architectureDetails, nodeObj.children).nodeHeight);
                 }
             }
-        } else {
-            if(connectedGroups) {
-                for(let relatedGroupId of groupData.longestPathGroups) {
-                    childNodesHeight.push(prepareDataForTreeLayout(relatedGroupId, architectureDetails, parentChildrenArray).nodeHeight);
-                }
-            }
-            nodeHeight = -1;
         }
-
         nodeHeight = Math.max(...childNodesHeight) + nodeHeight + 1;
         return {nodeObj, nodeHeight};
     }

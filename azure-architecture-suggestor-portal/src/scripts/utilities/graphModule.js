@@ -28,12 +28,14 @@ const graphModule = (() => {
     }
 
     // Find parent node with longest path for all the nodes/vertices
-    const findParentNodeWithLongestPath = (graph, topologicalOrdering) => {
+    const findParentNodeWithLongestPath = (graph, topologicalOrdering, groupsDetails) => {
         let longestPathMap = new Map();
         topologicalOrdering.forEach((vertex) => {
-            let adjacentVertices = graph.adjList.get(vertex);
-            for(let adjacentVertex of adjacentVertices) {
-                longestPathMap.set(adjacentVertex, vertex);
+            if(groupsDetails[vertex].isActive){
+                let adjacentVertices = graph.adjList.get(vertex);
+                for(let adjacentVertex of adjacentVertices) {
+                    longestPathMap.set(adjacentVertex, vertex);
+                }
             }
         });
         return longestPathMap;
@@ -94,7 +96,7 @@ const graphModule = (() => {
     const modifyArchDetailsObjForLongestPath = (groupsDetails) => {
         const graph = createGraph(groupsDetails);
         const topologicalOrdering = createTopologicalOrder(graph);
-        const longestPathMapping = findParentNodeWithLongestPath(graph, topologicalOrdering);
+        const longestPathMapping = findParentNodeWithLongestPath(graph, topologicalOrdering, groupsDetails);
         longestPathMapping.forEach((vertex, connectedVertex) => {
             if(!groupsDetails[vertex].longestPathGroups) {
               groupsDetails[vertex].longestPathGroups = [];

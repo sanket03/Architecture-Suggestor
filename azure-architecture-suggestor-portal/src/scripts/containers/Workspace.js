@@ -25,15 +25,20 @@
         }
 
         // Add related groups to group queue
-        addGroupsToQueue(groups) {
-            let relatedGroupsList = Object.keys(groups);
-
+        addGroupsToQueue(groups, questionDetails) {
+            let relatedGroupsList = Object.keys(groups).sort((groupA, groupB) => {
+                let questionsCountForGroupA = (groupA in questionDetails) ? Object.keys(questionDetails[groupA]).length : 0;
+                let questionsCountForGroupB = (groupB in questionDetails) ? Object.keys(questionDetails[groupB]).length : 0;
+                return questionsCountForGroupA - questionsCountForGroupB;
+            });
             // If related groups are present then add to the queue
             // Check if they are already present
             if(relatedGroupsList.length > 0)  {
-                relatedGroupsList.forEach((group)=> {
-                    !this.groupQueue.includes(group) && this.groupQueue.push(group);
-                })
+                relatedGroupsList.forEach((relatedGroup)=> {
+                    if(!this.groupQueue.includes(relatedGroup)) {
+                        this.groupQueue.push(relatedGroup);
+                    }
+                });
             }
         }
 
@@ -342,7 +347,7 @@
 
         // This marks the entry of new group to be considered for questions
         performActiveGroupUpdation(architectureDetails, questionDetails) {
-            this.addGroupsToQueue(architectureDetails[this.activeGroup].relatedGroups);
+            this.addGroupsToQueue(architectureDetails[this.activeGroup].relatedGroups, questionDetails);
             let shouldUpdateActiveGroup = true;
             if(this.ifGroupQueueHasElements()) {
                 this.setActiveGroup(architectureDetails);
@@ -565,7 +570,6 @@
             }
         }
 
-        // 
         modifyArchitectureDetailsObjForDiagram(architectureDetails, questionDetails, questionResponseMap) {
             for(let groupId in architectureDetails) {
                 architectureDetails[groupId].isActive  = this.shouldRenderGroup(architectureDetails[groupId], questionDetails[groupId], questionResponseMap);
@@ -600,7 +604,7 @@
             this.loadCount = 0;
 
             let activeGroup = this.activeGroup;
-            this.addGroupsToQueue(architectureDetails[activeGroup].relatedGroups);
+            this.addGroupsToQueue(architectureDetails[activeGroup].relatedGroups, questionDetails);
             this.setActiveGroup(architectureDetails);
             this.addEntitiesToQueue(architectureDetails[activeGroup].entities);
             this.setActiveEntity(architectureDetails[activeGroup].entities);
