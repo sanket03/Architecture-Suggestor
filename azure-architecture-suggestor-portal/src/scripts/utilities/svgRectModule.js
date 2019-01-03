@@ -1,3 +1,5 @@
+import commonModule from '../utilities/commonModule';
+
 const svgRectModule = (() => {
     const defaultRectWidth = 150;
     const defaultRectGap = 50;
@@ -109,8 +111,8 @@ const svgRectModule = (() => {
       let groupNodeDepth = groupNode.depth;
       rect.height = groupNode.xSize;
       rect.width = groupNode.ySize;
-      rect.x = groupNode.y + calcRectGap(diagramSize)*groupNodeDepth;
-      rect.y = groupNode.x - groupNode.xSize/2;
+      rect.x = commonModule.truncateToTwoDecimal(groupNode.y + calcRectGap(diagramSize)*groupNodeDepth);
+      rect.y = commonModule.truncateToTwoDecimal(groupNode.x - groupNode.xSize/2);
       createEntryInDimensionsObj(groupId);   
       setHeight(groupId, rect.height);
       setWidth(groupId, rect.width);

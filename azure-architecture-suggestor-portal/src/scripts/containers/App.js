@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 
 import Workspace from './Workspace';
-import Header from '../components/Header';
 import ToggleWorkspace from './ToggleWorkspace';
+import Header from '../components/Header';
 import ArchitecturesList from '../components/ArchitecturesList'
 import ExportDiagram from '../components/ExportDiagram';
+import Utilities from '../components/Utilities';
 
 import appModule from '../utilities/config';
 import serviceModule from '../utilities/serviceCalls';
-import Utilities from '../components/Utilities';
+import commonModule from '../utilities/commonModule';
 
 import '../../styles/App.scss';
 
@@ -91,9 +92,9 @@ export default class App extends Component {
                                                 <ExportDiagram />
                                               </Utilities>
                                               <Workspace 
-                                                architectureDetails = {JSON.parse(JSON.stringify(this.architectureDetails[this.state.architectureId].groups))} 
-                                                questionDetails = {JSON.parse(JSON.stringify(this.questionDetails[this.state.architectureId].groups))}
-                                                questionEntityMapping = {JSON.parse(JSON.stringify(this.questionEntityMapping))}
+                                                architectureDetails = {commonModule.parseJson(this.architectureDetails[this.state.architectureId].groups)} 
+                                                questionDetails = {commonModule.parseJson(this.questionDetails[this.state.architectureId].groups)}
+                                                questionEntityMapping = {commonModule.parseJson(this.questionEntityMapping)}
                                                 isInitialized = {false}
                                               />
                                             </>

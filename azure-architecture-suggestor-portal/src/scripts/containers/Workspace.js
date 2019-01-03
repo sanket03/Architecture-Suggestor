@@ -1,6 +1,9 @@
     import React, {Component} from 'react';
+
     import Questions from '../components/Questions';
     import Diagram from '../components/Diagram';
+
+    import commonModule from '../utilities/commonModule';
 
     import '../../styles/Workspace.scss';
 
@@ -596,7 +599,7 @@
             this.questionQueuePointer = 0;
             this.activeQuestion = '';
 
-            // Initialize question respons map
+            // Initialize question response map
             // This holds mapping between the question and the entity for which this question was asked
             this.questionResponseMap = {}
 
@@ -621,7 +624,7 @@
             } = this.props;
 
             !this.isInitialized && this.initializeComponent(architectureDetails, questionDetails);
-            let architectureDetailsForDiagram = this.modifyArchitectureDetailsObjForDiagram(JSON.parse(JSON.stringify(architectureDetails)), questionDetails, this.questionResponseMap);
+            let architectureDetailsForDiagram = this.modifyArchitectureDetailsObjForDiagram(commonModule.parseJson(architectureDetails), questionDetails, this.questionResponseMap);
             this.incrementLoadCount();
             return (
                 <div id = 'workspace'>

@@ -465,6 +465,11 @@ const architectureDetails = {
             "connector": null,
             "shouldConn": true
           },
+
+          "9": {
+            "connector": null,
+            "shouldConn": true
+          },
           "4": {
             "connector": null,
             "shouldConn": true
@@ -678,7 +683,27 @@ const architectureDetails = {
           "url": "Power BI Embedded.png"
         }
     }
+  },
+  "9": {
+    "name": "",
+    "isActive": false,
+    "relatedGroups": {
+    },
+    "entities": {
+      "118": {
+        "name": "Power BI",
+        "isActive": true,
+        "parentEntities": {
+          "8": ["114"],
+
+        },
+        "questions": [
+        ],
+        "filteredBy": "",
+        "url": "Power BI Embedded.png"
+      }
   }
+}
   }
 }
   

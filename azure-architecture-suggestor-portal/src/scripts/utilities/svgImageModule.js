@@ -17,19 +17,15 @@ const svgImageModule = (() => {
       this.url = url;
     },
     setImageDimensions(groupBoxWidth) {
-      this.height = truncateToTwoDecimal(groupBoxWidth*defaultImagePercentage);
-      this.width = truncateToTwoDecimal(groupBoxWidth*defaultImagePercentage);
+      this.height = groupBoxWidth*defaultImagePercentage;
+      this.width = groupBoxWidth*defaultImagePercentage;
     },
     setImageTranslateX() {
       this.translateX = (this.width/2)*(-1)
     }
   }
 
-  // Truncate values to decimal places
-  const truncateToTwoDecimal = (value) => {
-      return parseInt(value*100)/100;
-  }
-
+  // Set image attributes for an image instance
   const setImageAttributes = (url, groupBoxWidth, yCoord) => {
     let image = Object.create(imagePrototype);
     image.setImageXcoord(groupBoxWidth);
@@ -42,7 +38,7 @@ const svgImageModule = (() => {
 
   // Calculate image height
   const calcImageHeight = (groupBoxWidth) => { 
-    return truncateToTwoDecimal(groupBoxWidth*defaultImagePercentage);
+    return groupBoxWidth*defaultImagePercentage;
   }
 
   return {
