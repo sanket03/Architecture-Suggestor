@@ -159,9 +159,12 @@ const Diagram = (props) => {
                         pathCoordinates = svgPathModule.calcPathForTopmostRelatedGroups(maxYCoordAmongLevels, groupBoxDimensions, relatedGroupBoxDimensions, rectGap);
 
                     // Connect bottom-bottom nodes
-                    } else if(ifGroupBottommost(groupId, groupBoxDimensions, groupDepth, treeLevelsDimensions) && ifGroupBottommost(relatedGroupId, groupBoxDimensions, groupDepth, treeLevelsDimensions)) {
+                    } else if(ifGroupBottommost(groupId, groupBoxDimensions, groupDepth, treeLevelsDimensions) && ifGroupBottommost(relatedGroupId, relatedGroupBoxDimensions, relatedGroupDepth, treeLevelsDimensions)) {
                         let minYCoordAmongLevels = calcMinYCoordAmongLevels(groupDepth, relatedGroupDepth, treeLevelsDimensions);
                         pathCoordinates = svgPathModule.calcPathForBottommostRelatedGroups(minYCoordAmongLevels, groupBoxDimensions, relatedGroupBoxDimensions, rectGap);
+                    } 
+                    else {
+                        pathCoordinates = svgPathModule.calcPathForCustomRelatedGroups(groupBoxDimensions, relatedGroupBoxDimensions, rectGap);
                     }
 
                     let pathDAttr = svgPathModule.getPathDAttr(pathCoordinates, 'curveLinear');
@@ -293,13 +296,14 @@ const Diagram = (props) => {
         let bottomYRectAttr = topYRectAttr + nodeDim.height;
         architectureDetails[nodeId].depth = nodeDepth;
         if(!treeLevelsDimensions.has(nodeDepth)) {
-            treeLevelsDimensions.set(nodeDepth, {high: topYRectAttr, low: bottomYRectAttr })
+            treeLevelsDimensions.set(nodeDepth, { high: topYRectAttr, low: bottomYRectAttr })
         } else {
             if(topYRectAttr < levelDim.high) {
                 levelDim.high = topYRectAttr;
             } else if(bottomYRectAttr > levelDim.low) {
                 levelDim.low = bottomYRectAttr;
             }
+            treeLevelsDimensions.set(nodeDepth, { high: levelDim.high, low: levelDim.low })
         }
      })
     }

@@ -1,6 +1,6 @@
 path {
     stroke: grey;
-    stroke-width: 1;
+    stroke-width: 0.8;
     fill: none;
     marker-end: url(#arrow-marker);
 
@@ -11,6 +11,6 @@ path {
 
 @media (min-width: 768px) {
     path {       
-        stroke-width: 2;
+        stroke-width: 1.5;
     }
 }

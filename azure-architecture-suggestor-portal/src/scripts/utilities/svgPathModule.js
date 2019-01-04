@@ -43,7 +43,7 @@ const svgPathModule = (() => {
           x: relatedGroupBoxDimensions.x + relatedGroupBoxDimensions.width/2,
           y: relatedGroupBoxDimensions.y
         }
-      )
+      );
 
       pathCoordinates = truncateToTwoDecimal(pathCoordinates);
       return pathCoordinates;
@@ -69,11 +69,39 @@ const svgPathModule = (() => {
           x: relatedGroupBoxDimensions.x + relatedGroupBoxDimensions.width/2,
           y: relatedGroupBoxDimensions.y + relatedGroupBoxDimensions.height
         }
-      )
+      );
       pathCoordinates = truncateToTwoDecimal(pathCoordinates);
       return pathCoordinates;
     }
   
+    const calcPathForCustomRelatedGroups = (groupBoxDimensions, relatedGroupBoxDimensions, rectGap) => {
+      let pathCoordinates = [];
+      pathCoordinates.push(
+        {
+          x: groupBoxDimensions.x + groupBoxDimensions.width/2,
+          y: groupBoxDimensions.y
+        },
+        {
+          x: groupBoxDimensions.x + groupBoxDimensions.width/2,
+          y: groupBoxDimensions.y - rectGap/2
+        },
+        {
+          x: relatedGroupBoxDimensions.x - rectGap/2,
+          y: groupBoxDimensions.y - rectGap/2
+        },
+        {
+          x: relatedGroupBoxDimensions.x - rectGap/2,
+          y: relatedGroupBoxDimensions.y + relatedGroupBoxDimensions.height/2
+        },
+        {
+          x: relatedGroupBoxDimensions.x,
+          y: relatedGroupBoxDimensions.y + relatedGroupBoxDimensions.height/2
+        }
+      );
+      pathCoordinates = truncateToTwoDecimal(pathCoordinates);
+      return pathCoordinates;
+    }
+
     // Get 'd' attribute for svg path
     const getPathDAttr = (pathCoordinates, curveType) => {
       let lineAccessor =  d3.line()
@@ -87,6 +115,7 @@ const svgPathModule = (() => {
       calcPathForConnectedGroups,
       calcPathForTopmostRelatedGroups,
       calcPathForBottommostRelatedGroups,
+      calcPathForCustomRelatedGroups,
       getPathDAttr,
       arrowMarkerPercentage
     }
