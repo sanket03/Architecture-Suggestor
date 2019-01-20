@@ -37,7 +37,7 @@ const architectureDetails = {
       }
     },
     "2": {
-      "name": "",
+      "name": "Connector",
       "isActive": false,
       "relatedGroups": {
         "3":{
@@ -61,7 +61,7 @@ const architectureDetails = {
       }
     },
     "3" : {
-      "name": "",
+      "name": "Ingestion",
       "isActive": false,
       "relatedGroups": {
         "8": {
@@ -131,7 +131,7 @@ const architectureDetails = {
       }
     },
     "8":{
-      "name": "",
+      "name": "Stream Analytics",
       "isActive": false,
       "relatedGroups": {
         "7": {
@@ -166,7 +166,7 @@ const architectureDetails = {
       }
     },
     "4" : {
-      "name": "",
+      "name": "Storage",
       "isActive": false,
       "relatedGroups": {
         "5": {
@@ -174,14 +174,6 @@ const architectureDetails = {
           "shouldConn": true
         },
         "7": {
-          "connector": null,
-          "shouldConn": false
-        },
-        "9": {
-          "connector": null,
-          "shouldConn": false
-        },
-        "11": {
           "connector": null,
           "shouldConn": false
         }
@@ -284,7 +276,7 @@ const architectureDetails = {
       }
     },
     "5" : {
-      "name": "",
+      "name": "ADLA",
       "isActive": false,
       "relatedGroups": {
         "6":{
@@ -292,14 +284,6 @@ const architectureDetails = {
           "shouldConn": true
         },
         "7": {
-          "connector": null,
-          "shouldConn": false
-        },
-        "9": {
-          "connector": null,
-          "shouldConn": false
-        },
-        "11": {
           "connector": null,
           "shouldConn": false
         }
@@ -319,18 +303,10 @@ const architectureDetails = {
       }
     },
     "6" : {
-      "name": "",
+      "name": "Analysis services",
       "isActive": false,
       "relatedGroups": {
         "7": {
-          "connector": null,
-          "shouldConn": true
-        },
-        "9": {
-          "connector": null,
-          "shouldConn": true
-        },
-        "11": {
           "connector": null,
           "shouldConn": true
         }
@@ -363,51 +339,7 @@ const architectureDetails = {
       }
     },
     "7" : {
-      "name": "",
-      "isActive": false,
-      "relatedGroups": {
-      },
-      "entities": {
-        "118": {
-          "name": "Power BI",
-          "isActive": true,
-          "parentEntities": {
-            "6": ["116", "117"],
-            "5": ["115"],
-            "8": ["114"],
-            "4": ["108","109","110","111","106"]
-          },
-          "questions": [
-          ],
-          "filteredBy": "",
-          "url": "Power BI Embedded.png"
-        }
-    }
-    },
-    "9" : {
-      "name": "",
-      "isActive": false,
-      "relatedGroups": {
-      },
-      "entities": {
-        "118": {
-          "name": "Power BI",
-          "isActive": true,
-          "parentEntities": {
-            "6": ["116", "117"],
-            "5": ["115"],
-            "8": ["114"],
-            "4": ["108","109","110","111","106"]
-          },
-          "questions": [
-          ],
-          "filteredBy": "",
-          "url": "Power BI Embedded.png"
-        }
-    }
-    },
-    "11" : {
-      "name": "",
+      "name": "Power BI",
       "isActive": false,
       "relatedGroups": {
       },
@@ -505,56 +437,65 @@ const questionDetails = {
         "isActive": false,
         "multiple": false
       }
-    }
+    },
+    "5": {
+    },
+    "7": {
+    },
+    "8": {
+    },
+
     }
 }
 }
 
 const questionEntityMapping = {
-"1001": {
-  "101": "Logs & Files",
-  "102": "Events & Streams"
-},
-"1002": {
-  "103": "Yes"
-},
-"1003": {
-  "104": "Yes",
-  "105": "Yes",
-  "106": "Yes",
-  "107": "No"
-},
-"1004": {
-  "104": "Yes",
-  "105": "No",
-  "106": "No",
-},
-"1005": {
-  "105": "No",
-  "106": "Yes",
-},
-"1006": {
-  "106": "Yes",
-  "108": "No",
-  "109": "No",
-  "110": "No",
-  "111": "Yes",
-},
-"1007": {
-  "108": "Up to 250 GB",
-  "109": "More than 250 GB",
-  "110": "Up to 1 TB",
-},
-"1008": {
-  "112": "Yes"
-},
-"1009": {
-  "113": "Yes"
-},
-"1010": {
-  "116": "Yes",
-  "117": "Yes"
-}
+  "11" : {
+    "1001": {
+      "101": "Logs & Files",
+      "102": "Events & Streams"
+    },
+    "1002": {
+      "103": "Yes"
+    },
+    "1003": {
+      "104": "Yes",
+      "105": "Yes",
+      "106": "Yes",
+      "107": "No"
+    },
+    "1004": {
+      "104": "Yes",
+      "105": "No",
+      "106": "No",
+    },
+    "1005": {
+      "105": "No",
+      "106": "Yes",
+    },
+    "1006": {
+      "106": "Yes",
+      "108": "No",
+      "109": "No",
+      "110": "No",
+      "111": "Yes",
+    },
+    "1007": {
+      "108": "Up to 250 GB",
+      "109": "More than 250 GB",
+      "110": "Up to 1 TB",
+    },
+    "1008": {
+      "112": "Yes"
+    },
+    "1009": {
+      "113": "Yes"
+    },
+    "1010": {
+      "116": "Yes",
+      "117": "Yes"
+    }
+  }
 }
 
 const solutionsList = {

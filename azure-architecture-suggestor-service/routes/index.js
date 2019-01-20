@@ -39,6 +39,22 @@ const {
 
 
 // ******* Comment this during prod *****
+
+router.get('/GetEntityList', (req,res) => {
+    let groups = architectureDetails["11"].groups;
+    let entityList = {}
+    for(let groupId in groups) {
+        for(let entityId in groups[groupId].entities) {
+            if(!(entityId in entityList)) {
+                entityList[entityId] = groups[groupId].entities[entityId].name;
+            }
+        }
+    }
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify(entityList));
+});
+
+
 router.get('/GetArchitecturesList', (req,res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(solutionsList));
@@ -54,9 +70,9 @@ router.get('/GetQuestionDetails/:architectureId', (req,res) => {
     res.send(questionDetails[req.params.architectureId]);
 });
 
-router.get('/GetQuestionEntityMapping', (req,res) => {
+router.get('/GetQuestionEntityMapping/:architectureId', (req,res) => {
     res.setHeader('Content-Type', 'application/json');
-    res.send(questionEntityMapping);
+    res.send(questionEntityMapping[req.params.architectureId]);
 });
 
 module.exports = router;
